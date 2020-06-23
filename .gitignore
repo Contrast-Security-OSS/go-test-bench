@@ -11,6 +11,6 @@
 
 ### Above combination will ignore all files without extension ###
 
-contrast_security.yaml
-contrast_security.yml
+*.yaml
+*.yml
 contrast*log
