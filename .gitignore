@@ -1,0 +1,16 @@
+*log
+
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+### Above combination will ignore all files without extension ###
+
+contrast_security.yaml
+contrast_security.yml
+contrast*log
