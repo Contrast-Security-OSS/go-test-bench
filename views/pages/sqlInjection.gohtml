@@ -1,0 +1,24 @@
+{{define "sqlInjection"}}
+<h1 class="page-header">{{.Name}}</h1>
+{{template "ruleInfo" .}}
+{{$base := .Base}}
+{{range .Sinks}}
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">
+      <code>{{.Name}}</code>
+    </h4>
+    <form method="{{.Method}}" action="{{$base}}{{.Url}}/unsafe" target="_blank">
+      <div class="form-group">
+        <label>SELECT "${input}" as "test";</label>
+        <input name="input" class="form-control" value="Robert&quot;); DROP TABLE Students;--" />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+{{template "safeButtons" .}}
+{{end}}
+{{end}}
+
+{{template "sqlInjection" .}}

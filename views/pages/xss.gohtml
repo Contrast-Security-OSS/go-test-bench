@@ -1,0 +1,71 @@
+{{define "xss"}}
+<h1 class="page-header">Reflected XSS</h1>
+{{template "ruleInfo" .}}
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Query</h4>
+    <!--<% groupedSinkData.query.forEach(function(sink) { %>-->
+    <p>
+      <a
+        id = "queryunsafehere"
+        target="_blank"
+        href="/xss/query/reflectedXss/unsafe?input=%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E"
+        >
+        /xss/query/reflectedXss/unsafe?input=&lt;script&gt;alert(1);&lt;/script&gt;
+      </a>
+    </p>
+    <p>
+      <a
+        id = "querysafehere"
+        target="_blank"
+        href="/xss/query/reflectedXss/safe?input=%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E"
+        >
+        /xss/query/reflectedXss/safe?input=&lt;script&gt;alert(1);&lt;/script&gt;
+      </a>
+    </p>
+    <p>
+      <a
+        id = "querynoophere"
+        target="_blank"
+        href="/xss/query/reflectedXss/noop?input=%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E"
+        >
+        /xss/query/reflectedXss/noop?input=&lt;script&gt;alert(1);&lt;/script&gt;
+      </a>
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Params</h4>
+    <!--<% groupedSinkData.params.forEach(function(sink) { %>-->
+   <!-- <% ['unsafe', 'safe', 'noop'].forEach(function(safety) { %>-->
+    <p>
+      <a
+        target="_blank"
+        href="/xss/params/reflectedXss/%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E/unsafe"
+      >
+        /xss/params/reflectedXss/&lt;script&gt;alert(1);&lt;/script&gt;/unsafe
+      </a>
+    </p>
+    <p>
+      <a
+        target="_blank"
+        href="/xss/params/reflectedXss/%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E/safe"
+      >
+        /xss/params/reflectedXss/&lt;script&gt;alert(1);&lt;/script&gt;/safe
+      </a>
+    </p>
+    <p>
+      <a
+        target="_blank"
+        href="/xss/params/reflectedXss/%3Cscript%3Ealert(1)%3B%3C%2Fscript%3E/noop"
+      >
+       /xss/params/reflectedXss/&lt;script&gt;alert(1);&lt;/script&gt;/noop
+      </a>
+    </p>
+    <!--<% }); %> -->
+    <!--<% }); %> -->
+  </div>
+</div>
+{{template "safeButtons" .}}
+{{end}}

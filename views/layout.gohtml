@@ -1,0 +1,22 @@
+{{define "layout"}}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      {{template "head" .}}
+    </head>
+    <body>
+      {{template "header" .}}
+      <div class="container-fluid">
+        <div class="row">
+          {{template "nav" .}}
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {{.Body}}
+            {{template "footer" .}}
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>
+{{end}}
+
+{{template "layout" .}}

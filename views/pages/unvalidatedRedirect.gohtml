@@ -1,0 +1,21 @@
+{{define "unvalidatedRedirect"}}
+  <h1 class="page-header">Unvalidated Redirect</h1>
+  {{template "ruleInfo" .}}
+  {{range .Sinks}}
+    <div class="row" style="min-height: 200px;">
+      <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+        <h4 class="sub-header"><code>{{.Name}}</code></h4>
+        <form method="{{.Method}}" action="{{.Url}}unsafe" target="_blank">
+          <div class="form-group">
+            <label>URL</label>
+            <input name="input" class="form-control" value="http://www.example.com" />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  {{end}}
+  {{template "safeButtons" .}}
+{{end}}
+
+{{template "unvalidatedRedirect" .}}

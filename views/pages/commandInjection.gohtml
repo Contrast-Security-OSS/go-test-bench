@@ -1,0 +1,36 @@
+{{define "commandInjection"}}
+  <h1 class="page-header">Command Injection</h1>
+  {{template "ruleInfo" .}}
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+      <h4 class="sub-header">Query</h4>
+      {{range .Sinks}}
+        <h4><code>{{.Name}}</code></h4>
+        <form method="{{.Method}}" action="{{.Url}}/unsafe" target="_blank">
+          <div class="form-group">
+            <label>Path</label>
+            <input name="input" class="form-control" value="hello there!; echo hack hack hack">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      {{end}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+      <h4 class="sub-header">POST cookies</h4>
+      {{range .Sinks}}
+        <h4><code>{{.Name}}</code></h4>
+          <p><pre>curl http://localhost:8080{{.Url}}/unsafe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+          <p><pre>curl http://localhost:8080{{.Url}}/safe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+          <p><pre>curl http://localhost:8080{{.Url}}/noop -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+      {{end}}
+    </div>
+  </div>
+
+
+  {{template "safeButtons" .}}
+{{end}}
+
+{{template "commandInjection" .}}

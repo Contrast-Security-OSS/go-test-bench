@@ -1,0 +1,80 @@
+{{define "safeButtons"}}
+    <style type="text/css">
+    button.active:focus {
+        outline: none !important;
+    }
+    button.method.left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-right: 0.7em;
+        margin-right: 0;
+    }
+    button.method.middle {
+        border-radius: 0;
+        padding-left: 0.7em;
+        margin-left: 0;
+        padding-right: 0.7em;
+        margin-right: 0;
+    }
+    button.method.right {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding-left: 0.7em;
+        margin-left: 0;
+    }
+    </style>
+
+
+    <script type="text/javascript">
+    $(function() {
+        $('form').each((idx, elem) => {
+        $(elem)
+            .find('.form-group')
+            .after(
+            $('<button>')
+                .text('Unsafe')
+                .attr('type', 'button')
+                .addClass('method left btn btn-danger active')
+                .on('click', e => {
+                const elem = $(e.target);
+                const form = elem.closest('form');
+                elem.addClass('active');
+                elem.siblings('.method').removeClass('active');
+                const newUrl = form
+                    .attr('action')
+                    .replace(/\b((un)?safe|noop)\b/, 'unsafe');
+                form.attr('action', newUrl);
+                }),
+            $('<button>')
+                .text('Safe')
+                .attr('type', 'button')
+                .addClass('method middle btn btn-success')
+                .on('click', e => {
+                const elem = $(e.target);
+                const form = elem.closest('form');
+                elem.addClass('active');
+                elem.siblings('.method').removeClass('active');
+                const newUrl = form
+                    .attr('action')
+                    .replace(/\b((un)?safe|noop)\b/, 'safe');
+                form.attr('action', newUrl);
+                }),
+            $('<button>')
+                .text('Noop')
+                .attr('type', 'button')
+                .addClass('method right btn btn-warning')
+                .on('click', e => {
+                const elem = $(e.target);
+                const form = elem.closest('form');
+                elem.addClass('active');
+                elem.siblings('.method').removeClass('active');
+                const newUrl = form
+                    .attr('action')
+                    .replace(/\b((un)?safe|noop)\b/, 'noop');
+                form.attr('action', newUrl);
+                })
+            );
+        });
+    });
+    </script>
+{{end}}

@@ -1,0 +1,51 @@
+{{define "nav"}}
+  <div id="navbar" class="col-sm-3 col-md-2 sidebar ">
+
+    <label>Rules</label>
+    <ul class="nav nav-sidebar">
+      {{range .Rulebar}}
+          <li>
+              <a href="{{.Base}}">
+              {{.Name}}
+              {{range .Products}}
+                  <span class="badge pull-right {{if eq . "Protect"}} badge-info {{else}} badge-success {{end}}">
+                  {{.}}
+                  </span>
+              {{end}}
+              </a>
+          </li>
+      {{end}}
+    </ul>
+  </div>
+{{end}}
+
+<label>Our Navbar</label>
+<!-- <label>Headers</label> -->
+<ul class="nav nav-sidebar">
+  <li><a href="/header-injection">Header Injection</a></li>
+  <li><a href="/csp-header-insecure">Csp Header Insecure</a></li>
+</ul>
+
+<!-- <label>Crypto</label> -->
+<ul class="nav nav-sidebar">
+  <li><a href="/crypto/crypto-bad-mac">Crypto Bad Mac</a></li>
+  <li><a href="/crypto/crypto-bad-ciphers">Crypto Bad Ciphers</a></li>
+  <li><a href="/crypto/crypto-weak-random">Crypto Weak Random</a></li>
+</ul>
+
+<!-- <label>Config</label> -->
+<ul class="nav nav-sidebar">
+  <li>
+    <a href="/config">
+      Autocomplete Missing, Cache Controls Missing, Clickjacking Controls
+      Missing, Parameter Pollution
+    </a>
+  </li>
+</ul>
+
+<!-- <label>Misc.</label> -->
+<ul class="nav nav-sidebar">
+  <li><a href="/mongoose">Mongoose ODM</a></li>
+  <li><a href="/ddb">DynamoDB ODM</a></li>
+</ul>
+  

@@ -1,0 +1,21 @@
+{{define "nosql"}}
+<h1 class="page-header">{{.Name}}</h1>
+{{template "ruleInfo" .}}
+{{range .Sinks}}
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">
+      <code>{{.Name}}</code>
+    </h4>
+    <form method="{{.Method}}" action="{{.Url}}/unsafe" target="_blank">
+      <div class="form-group">
+        <label>Input</label>
+        <input name="input" class="form-control" value='" || "1" == "1'/>
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+</div>
+{{end}}
+{{template "safeButtons"}}
+{{end}}

