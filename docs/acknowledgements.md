@@ -33,5 +33,5 @@ Shri is member of the University of Maryland College Park Class of 2021 as a Com
 Melissa is a member of Johns Hopkins University Class of 2020 as a Computer Science major 
 and Applied Mathematics and Statistics. 
 
-[![Melissa Shohet LinkedIn](ln.png)](https://www.linkedin.com/in/ziyang-wang-170aa0143/)
-[![Melissa Shohet Github](GitHub-Mark-32px.png)](https://github.com/ziyangw)
+[![Melissa Shohet LinkedIn](ln.png)](https://www.linkedin.com/in/melissa-shohet-6599871b2/)
+[![Melissa Shohet Github](GitHub-Mark-32px.png)](https://github.com/melissashohet)
