@@ -13,7 +13,7 @@ the project.
 
 ## Ian Mangan
 Ian is a member of Columbia University Class of 2021 as a Computer Science major. 
-https://www.linkedin.com/in/ian-t-mangan?trk=people-guest_people_search-card
+
 [![Ian Mangan LinkedIn](ln.png)](https://www.linkedin.com/in/ian-t-mangan/)
 [![Ian Mangan Github](GitHub-Mark-32px.png)](https://github.com/Ian-Mangan)
 
