@@ -14,7 +14,7 @@
         <code>{{.Name}}</code>
         </h4>
         <h4 class="sub-header">Query</h4>
-        <form method="{{.Method}}" action="{{.Url}}/{{index $inputs 0}}/{{.Name}}/unsafe" target="_blank">
+        <form method="{{.Method}}" action="{{.URL}}/{{index $inputs 0}}/{{.Name}}/unsafe" target="_blank">
         <div class="form-group">
             <label for="exampleInputEmail1">Path</label>
             <input
@@ -33,7 +33,7 @@
          <!--<% }); %> -->
         <!--<% bodySink = groupedSinkData.body[i] %> -->
         <h4 class="sub-header">Body</h4>
-        <form method="POST" action="{{.Url}}/{{index $inputs 2}}/{{.Name}}/unsafe" target="_blank">
+        <form method="POST" action="{{.URL}}/{{index $inputs 2}}/{{.Name}}/unsafe" target="_blank">
         <div class="form-group">
             <label for="exampleInputEmail1">Path</label>
             <input

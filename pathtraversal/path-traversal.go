@@ -1,4 +1,4 @@
-package pathTraversal
+package pathtraversal
 
 import (
 	"bytes"
@@ -9,13 +9,18 @@ import (
 	"net/url"
 	"strings"
 
-	utils "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
 
-var templates = template.Must(template.ParseFiles("./views/partials/safeButtons.gohtml", "./views/pages/pathTraversal.gohtml", "./views/partials/ruleInfo.gohtml"))
+var templates = template.Must(template.ParseFiles(
+	"./views/partials/safeButtons.gohtml",
+	"./views/pages/pathTraversal.gohtml",
+	"./views/partials/ruleInfo.gohtml",
+))
 
-func defaultHandler(w http.ResponseWriter, r *http.Request, data utils.Parameters) (template.HTML, bool) {
+func pathTTemplate(w http.ResponseWriter, r *http.Request, data utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
+
 	err := templates.ExecuteTemplate(&buf, "pathTraversal", data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -90,16 +95,17 @@ func writeFileHandler(w http.ResponseWriter, r *http.Request, method string, inp
 	return template.HTML(data), false
 }
 
+//Handler is the API handler for path traversal
 func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
-	splitUrl := strings.Split(r.URL.Path, "/")
-	if len(splitUrl) < 4 {
-		return defaultHandler(w, r, pd)
+	splitURL := strings.Split(r.URL.Path, "/")
+	if len(splitURL) < 4 {
+		return pathTTemplate(w, r, pd)
 	}
-	if splitUrl[4] == "noop" {
+	if splitURL[4] == "noop" {
 		return template.HTML("NOOP"), false
 	}
 	var inputs string
-	switch splitUrl[2] {
+	switch splitURL[2] {
 	case "body":
 		b, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -119,11 +125,11 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	default:
 		return template.HTML("INVALID URL"), false
 	}
-	switch splitUrl[3] {
+	switch splitURL[3] {
 	case "ioutil.ReadFile":
-		return readFileHandler(w, r, splitUrl[4], inputs)
+		return readFileHandler(w, r, splitURL[4], inputs)
 	case "ioutil.WriteFile":
-		return writeFileHandler(w, r, splitUrl[4], inputs)
+		return writeFileHandler(w, r, splitURL[4], inputs)
 	default: //should be an error instead
 		return template.HTML("INVALID URL"), false
 	}

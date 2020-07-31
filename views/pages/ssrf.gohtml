@@ -66,24 +66,24 @@
  $(() => {
    const state = {
      action: '/ssrf/{lib}/{url}',
-     requestUrl: 'http://www.example.com',
+     requestURL: 'http://www.example.com',
      selectedLib: 'default',
-     selectedUrlPart: 'path'
+     selectedURLPart: 'path'
    };
 
-   $('#constructed-url').text(state.requestUrl);
+   $('#constructed-url').text(state.requestURL);
 
    $(`li[id='${state.selectedLib}-selection'] button`).toggleClass('active');
-   $(`li[id='${state.selectedUrlPart}-selection'] button`).toggleClass('active');
+   $(`li[id='${state.selectedURLPart}-selection'] button`).toggleClass('active');
 
    // set the initial value on load so it is not empty
-   if (state.selectedUrlPart === 'path') {
-    $('[name=input]').val(state.requestUrl.substring(7));
+   if (state.selectedURLPart === 'path') {
+    $('[name=input]').val(state.requestURL.substring(7));
    }
 
    $('#url-list button')
      .on('click', (e) => {
-       state.selectedUrlPart = $(e.target).text();
+       state.selectedURLPart = $(e.target).text();
        toggleActiveSelection(e);
        setAction();
      });
@@ -97,10 +97,10 @@
 
    $('[name=input]').on('keyup', (e) => {
      const url = (e.currentTarget.value)
-      ? (state.selectedUrlPart === 'path')
+      ? (state.selectedURLPart === 'path')
       ? "http://"+e.currentTarget.value
-      : state.requestUrl + "?input=" + e.currentTarget.value
-      : state.requestUrl
+      : state.requestURL + "?input=" + e.currentTarget.value
+      : state.requestURL
       
      $('#constructed-url').text(url)
    });
@@ -111,7 +111,7 @@
      const action = state
        .action
        .replace('{lib}', state.selectedLib)
-       .replace('{url}', state.selectedUrlPart);
+       .replace('{url}', state.selectedURLPart);
 
      $('form').attr('action', action);
    }

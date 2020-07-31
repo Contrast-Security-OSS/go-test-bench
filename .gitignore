@@ -1,21 +1,26 @@
+go-test-bench
+# Removing Vendor
+vendor/
+
+# Removing .json files which will be used for configs
+*.json
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
 *log
 
-# Ignore all
-*
-
-# Unignore all with extensions
-!*.*
-
-# Unignore all dirs
-!*/
-
-### Above combination will ignore all files without extension ###
-
-*.yaml
-*.yml
+contrast*.yaml
+contrast*.yml
 contrast*log
 .DS_Store
-
-!Dockerfile
-!docker-compose.yml
-
