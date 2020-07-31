@@ -13,9 +13,9 @@ the project.
 
 ## Ian Mangan
 Ian is a member of Columbia University Class of 2021 as a Computer Science major. 
-
-[![Ian Mangan LinkedIn](ln.png)](https://www.linkedin.com/in/<user>)
-[![Ian Mangan Github](GitHub-Mark-32px.png)](https://github.com/<user>)
+https://www.linkedin.com/in/ian-t-mangan?trk=people-guest_people_search-card
+[![Ian Mangan LinkedIn](ln.png)](https://www.linkedin.com/in/ian-t-mangan/)
+[![Ian Mangan Github](GitHub-Mark-32px.png)](https://github.com/Ian-Mangan)
 
 ## Elizabeth Mathew
 Elizabeth is a member of Johns Hopkins University Class of 2020 as a Computer Science major.
@@ -26,8 +26,8 @@ Elizabeth is a member of Johns Hopkins University Class of 2020 as a Computer Sc
 ## Yashashri Pendse
 Shri is member of the University of Maryland College Park Class of 2021 as a Computer Science major and Asian American Studies minor.
 
-[![Yashashri Pendse LinkedIn](ln.png)](https://www.linkedin.com/in/<user>)
-[![Yashashri Pendse Github](GitHub-Mark-32px.png)](https://github.com/<user>)
+[![Yashashri Pendse LinkedIn](ln.png)](https://www.linkedin.com/in/yashashri/)
+[![Yashashri Pendse Github](GitHub-Mark-32px.png)](https://github.com/yashashripendse)
 
 ## Melissa Shohet
 Melissa is a member of Johns Hopkins University Class of 2021, majoring in Computer Science
