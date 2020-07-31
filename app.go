@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,21 +12,22 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"bytes"
 	"time"
-	unvalidatedRedirect "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/unvalidatedRedirect"
-	utils "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/utils"
-	ssrf  "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/ssrf"
-	nosql  "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/nosqlInjection"
-	commandInjection "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/commandInjection"
-	sqlInjection "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/sqlInjection"
-	pathTraversal "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/pathTraversal"
-	xss "bitbucket.org/contrastsecurity/go-test-apps/go-test-bench/xss"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/nosql"
+	"github.com/Contrast-Security-OSS/go-test-bench/pathtraversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/sqli"
+	"github.com/Contrast-Security-OSS/go-test-bench/ssrf"
+	"github.com/Contrast-Security-OSS/go-test-bench/unvalidated"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/xss"
 )
 
 var pd utils.Parameters
 var t *template.Template
 
+// Port is the port that the API runs on
 const Port = 8080
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +40,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		pd.Body = template.HTML(buf.String())//"<h1> Under Construction</h1>\n <img src=\"https://golang.org/doc/gopher/pencil/gopherswrench.jpg\">"
+		pd.Body = template.HTML(buf.String()) //"<h1> Under Construction</h1>\n <img src=\"https://golang.org/doc/gopher/pencil/gopherswrench.jpg\">"
 	}
 	pd.Year = time.Now().Year()
 	err := t.ExecuteTemplate(w, "layout.gohtml", &pd)
@@ -49,19 +51,19 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, utils.Parameters) (template.HTML, bool), name string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var use_layout bool
+		var useLayout bool
 		pd.Year = time.Now().Year()
 		pd.Name = name
-		pd.Body, use_layout = fn(w, r, pd)
-		if use_layout {
+		pd.Body, useLayout = fn(w, r, pd)
+		if useLayout {
 			err := t.ExecuteTemplate(w, "layout.gohtml", &pd)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 		} else {
-			fmt.Fprintf(w, string(pd.Body))
+			_, _ = fmt.Fprint(w, string(pd.Body))
 		}
-		
+
 	}
 }
 
@@ -101,8 +103,8 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonFile.Close()
-	json.Unmarshal([]byte(byteValue), &pd.Rulebar)
+	_ = jsonFile.Close()
+	_ = json.Unmarshal([]byte(byteValue), &pd.Rulebar)
 
 	log.Println("Server Startup at: localhost" + pd.Port)
 	nosql.MongoInit()
@@ -110,11 +112,11 @@ func main() {
 
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/ssrf/", makeHandler(ssrf.Handler, "ssrf"))
-	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidatedRedirect.Handler, "unvalidatedRedirect"))
-	http.HandleFunc("/cmdInjection/", makeHandler(commandInjection.Handler, "cmdInjection"))
+	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidated.Handler, "unvalidatedRedirect"))
+	http.HandleFunc("/cmdInjection/", makeHandler(cmdi.Handler, "cmdInjection"))
 	http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
-	http.HandleFunc("/pathTraversal/", makeHandler(pathTraversal.Handler, "pathTraversal"))
-	http.HandleFunc("/sqlInjection/", makeHandler(sqlInjection.Handler, "sqlInjection"))
+	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
+	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("public"))))
