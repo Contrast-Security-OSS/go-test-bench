@@ -24,7 +24,7 @@ Elizabeth is a member of Johns Hopkins University Class of 2020 as a Computer Sc
 [![Elizabeth Mathew Github](GitHub-Mark-32px.png)](https://github.com/elizabethkm)
 
 ## Yashashri Pendse
-Yashashri is member of the University of Maryland College Park Class of 2021 as a Computer Science major.
+Yashashri is a member of the University of Maryland College Park Class of 2021 as a Computer Science major.
 
 [![Yashashri Pendse LinkedIn](ln.png)](https://www.linkedin.com/in/yashashri/)
 [![Yashashri Pendse Github](GitHub-Mark-32px.png)](https://github.com/yashashripendse)
