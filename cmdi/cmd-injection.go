@@ -32,7 +32,7 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 		command = exec.Command("echo", userInput)
 
 	case "unsafe":
-		command = exec.Command("sh", "-c", "echo "+userInput)
+		command = exec.Command(userInput)
 
 	case "noop":
 		return template.HTML("NOOP"), false
