@@ -12,7 +12,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 )
@@ -56,8 +55,10 @@ func sqlite3Handler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 		res, err := sqlite3Database.Exec(query)
 		log.Println("Result: ", res, " Error: ", err)
 	case "safe":
-		query = url.QueryEscape(query)
-		res, err := sqlite3Database.Exec(query)
+		// Safe uses a parameterized query which is built by exec from
+		// parameters which are passed in along with a static query string
+		query := "SELECT '?' as '?'"
+		res, err := sqlite3Database.Exec(query, r.URL.Query().Get("input"), "test")
 		log.Println("Result: ", res, " Error: ", err)
 	default:
 		log.Println(splitURL[4])
