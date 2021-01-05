@@ -3,23 +3,14 @@ name: CI
 # this is triggered on push to the repository
 on: [push, pull_request]
 
-env:
-  GOBIN: /home/runner/work/bin
-
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: SETUP GOBIN PATH
-        run: |
-          mkdir -p /home/runner/work/bin
-          echo "::add-path::/home/runner/work/bin"
-      - name: Install Go
-        uses: actions/setup-go@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.15.x
-      - name: Checkout code
-        uses: actions/checkout@v2
       - name: Run gofmt
         run: gofmt -s .
       - name: Execute golint
@@ -43,19 +34,17 @@ jobs:
       fail-fast: true
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.15.x
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Test
-      run: go test -v ./... -race -coverprofile=coverage.txt -covermode=atomic
-    - name: Push Coverage to codecov.io
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.txt
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.x
+      - name: Test
+        run: go test -v ./... -race -coverprofile=coverage.txt -covermode=atomic
+      - name: Push Coverage to codecov.io
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
   build:
     strategy:
       matrix:
@@ -64,11 +53,12 @@ jobs:
       fail-fast: true
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{ matrix.go-version }}
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Build
-      run: go build ./...
+      - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build
+        run: go build ./...
