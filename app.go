@@ -5,6 +5,7 @@ import (
 
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -27,8 +28,8 @@ import (
 var pd utils.Parameters
 var t *template.Template
 
-// Port is the port that the API runs on
-const Port = 8080
+// DefaultPort is the port that the API runs on if no command line argument is specified
+const DefaultPort = 8080
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
@@ -82,8 +83,14 @@ func parseTemplates() (*template.Template, error) {
 }
 
 func main() {
+
+	// Setup command line flags
+	portPtr := flag.Int("port", DefaultPort, "listen on this port")
+	flag.Parse()
+	port := *portPtr
+
 	var err error
-	pd.Port = fmt.Sprintf(":%d", Port)
+	pd.Port = fmt.Sprintf(":%d", port)
 	log.Println("Loading Templates: ")
 	log.Println("----------------------------------")
 	t, err = parseTemplates()
