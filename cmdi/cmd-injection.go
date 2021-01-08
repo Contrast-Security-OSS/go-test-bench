@@ -45,7 +45,7 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 	command.Stdout = &out
 	err := command.Run()
 	if err != nil {
-		log.Printf("Could not run command in %v: err = %v", mode, err)
+		log.Printf("Could not run command in %s: err = %s", mode, err)
 	}
 
 	return template.HTML(out.String()), false
