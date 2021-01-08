@@ -34,7 +34,7 @@ func MongoInit() {
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongo:27017"))
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Could not connect the Mongo client: err = %v",err)
 	}
 	mongoDB = mongoClient.Database("go-test-bench")
 	collection = mongoDB.Collection("colors")
@@ -69,11 +69,11 @@ func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 		)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Could not query Mongo in %v: err = %v", mode, err)
 		}
 		var results []bson.M
 		if err = cursor.All(context.TODO(), &results); err != nil {
-			log.Fatal(err)
+			log.Printf("Could not get cursor in %v: err = %v", mode, err)
 		}
 		var output string
 		output = fmt.Sprintln(results)
@@ -88,11 +88,11 @@ func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 			opts,
 		)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Could not query Mongo in %v: err = %v", mode, err)
 		}
 		var results []bson.M
 		if err = cursor.All(context.TODO(), &results); err != nil {
-			log.Fatal(err)
+			log.Printf("Could not get cursor in %v: err = %v", mode, err)
 		}
 		var output string
 		output = fmt.Sprintln(results)

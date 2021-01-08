@@ -34,7 +34,7 @@ func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.
 	command.Stdout = &out
 	err := command.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Could not run command: err = %v", err)
 	}
 
 	return template.HTML(out.String()), false
