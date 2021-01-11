@@ -51,10 +51,10 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 	return template.HTML(out.String()), false
 }
 
-func cmdiTemplate(w http.ResponseWriter, r *http.Request, routeInfo utils.Route) (template.HTML, bool) {
+func cmdiTemplate(w http.ResponseWriter, r *http.Request, params utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
 
-	err := templates.ExecuteTemplate(&buf, "commandInjection", routeInfo)
+	err := templates.ExecuteTemplate(&buf, "commandInjection", params)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -70,7 +70,7 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	case "osExec":
 		return osExecHandler(w, r, pd.Rulebar[pd.Name], splitURL)
 	case "":
-		return cmdiTemplate(w, r, pd.Rulebar[pd.Name])
+		return cmdiTemplate(w, r, pd)
 
 	default:
 		log.Fatal("commandInjection Handler reached incorrectly")
