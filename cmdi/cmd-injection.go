@@ -51,6 +51,7 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 	return template.HTML(out.String()), false
 }
 
+// Feed the commandInjection template with page parameters
 func cmdiTemplate(w http.ResponseWriter, r *http.Request, params utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
 
