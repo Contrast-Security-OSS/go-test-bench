@@ -1,11 +1,13 @@
 {{define "commandInjection"}}
+{{$routeInfo := index .Rulebar .Name}}
+{{$port := .Port}}
   <h1 class="page-header">Command Injection</h1>
-  {{template "ruleInfo" .}}
+  {{template "ruleInfo" $routeInfo}}
 
   <div class="row">
     <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
       <h4 class="sub-header">Query</h4>
-      {{range .Sinks}}
+      {{range $routeInfo.Sinks}}
         <h4><code>{{.Name}}</code></h4>
         <form method="{{.Method}}" action="{{.URL}}/unsafe" target="_blank">
           <div class="form-group">
@@ -20,11 +22,11 @@
   <div class="row">
     <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
       <h4 class="sub-header">POST cookies</h4>
-      {{range .Sinks}}
+      {{range $routeInfo.Sinks}}
         <h4><code>{{.Name}}</code></h4>
-          <p><pre>curl http://localhost:8080{{.URL}}/unsafe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
-          <p><pre>curl http://localhost:8080{{.URL}}/safe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
-          <p><pre>curl http://localhost:8080{{.URL}}/noop -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+          <p><pre>curl http://localhost{{$port}}{{.URL}}/unsafe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+          <p><pre>curl http://localhost{{$port}}{{.URL}}/safe -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
+          <p><pre>curl http://localhost{{$port}}{{.URL}}/noop -X POST -b "input=hello there! && echo hack hack hack"</pre></p>
       {{end}}
     </div>
   </div>
