@@ -190,7 +190,7 @@
         "name"     :  "Reflected XSS",
         "link"     :  "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
         "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "params"],
+        "inputs"   :  ["query", "params", "body"],
         "sinks"    :  [
             {
                 "name"   : "",

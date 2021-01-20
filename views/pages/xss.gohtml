@@ -67,5 +67,21 @@
     <!--<% }); %> -->
   </div>
 </div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Post Body</h4>
+    <form method="POST" action="/xss/body/reflectedXss/unsafe" target="_blank">
+      <div class="form-group">
+        <label for="exampleInputEmail1">input</label>
+        <input
+                name="input"
+                class="form-control"
+                value="&lt;script&gt;alert(1);&lt;/script&gt;"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 {{template "safeButtons" .}}
 {{end}}

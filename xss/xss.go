@@ -41,6 +41,26 @@ func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (templ
 
 }
 
+func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
+	if r.Method == http.MethodGet {
+		return template.HTML("Cannot GET " + r.URL.Path), false
+	}
+
+	err := r.ParseForm()
+	if err != nil {
+		return template.HTML(err.Error()), false
+	}
+	input := r.Form.Get("input")
+
+	if safety == "safe" {
+		input = url.QueryEscape(input)
+	} else if safety == "noop" {
+		return template.HTML("NOOP"), false
+	}
+
+	return template.HTML(input), false
+}
+
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
 
@@ -59,6 +79,8 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 		return queryHandler(w, r, splitURL[4])
 	case "params":
 		return paramsHandler(w, r, splitURL[6])
+	case "body":
+		return bodyHandler(w, r, splitURL[4])
 	default:
 		return xssTemplate(w, r, pd)
 	}
