@@ -2,6 +2,7 @@ package pathtraversal
 
 import (
 	"bytes"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -107,21 +108,15 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	var inputs string
 	switch splitURL[2] {
 	case "body":
-		b, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			return template.HTML(err.Error()), false
-		}
-		//the request body should only have the user input
-		inputs, err = url.QueryUnescape(string(b)) //Couldn't find whether POST request inputs get sanitizied ALWAYS.
-		splitInput := strings.Split(inputs, "input=")
-		inputs = splitInput[1]
+		var err error
+		inputs, err = input.PostInput(r, input.INPUT)
 		if err != nil {
 			return template.HTML(err.Error()), false
 		}
 	case "headers":
-		inputs = r.Header["Input"][0]
+		inputs = input.HeaderInput(r, input.INPUT)
 	case "query":
-		inputs = r.URL.Query().Get("input")
+		inputs = input.GetQueryInput(r, input.INPUT)
 	default:
 		return template.HTML("INVALID URL"), false
 	}

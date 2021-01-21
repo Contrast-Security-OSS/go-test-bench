@@ -2,6 +2,7 @@ package xss
 
 import (
 	"bytes"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -29,9 +30,7 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 }
 
 func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	splitURL := strings.Split(r.URL.Path, "/")
-	var s string
-	s = splitURL[4] + "/" + splitURL[5]
+	s := input.GetParameterInput(r, 4, 5)
 	if safety == "safe" {
 		s = url.QueryEscape(s)
 	} else if safety == "noop" {
@@ -46,19 +45,15 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (templat
 		return template.HTML("Cannot GET " + r.URL.Path), false
 	}
 
-	err := r.ParseForm()
-	if err != nil {
-		return template.HTML(err.Error()), false
-	}
-	input := r.Form.Get("input")
+	inputs := input.FormValueInput(r, input.INPUT)
 
 	if safety == "safe" {
-		input = url.QueryEscape(input)
+		inputs = url.QueryEscape(inputs)
 	} else if safety == "noop" {
 		return template.HTML("NOOP"), false
 	}
 
-	return template.HTML(input), false
+	return template.HTML(inputs), false
 }
 
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {

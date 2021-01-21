@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 	// database import for sqlite3
@@ -34,7 +35,7 @@ func sqliTemplate(w http.ResponseWriter, r *http.Request, routeInfo utils.Route)
 }
 
 func sqlite3Handler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, splitURL []string) (template.HTML, bool) {
-	query := fmt.Sprintf("SELECT '%s' as '%s'", r.URL.Query().Get("input"), "test")
+	query := fmt.Sprintf("SELECT '%s' as '%s'", input.GetQueryInput(r, input.INPUT), "test")
 	_ = os.Remove("tempDatabase.db")
 	log.Println("Creating tempDatabase.db...")
 	file, err := os.Create("tempDatabase.db")
@@ -58,7 +59,7 @@ func sqlite3Handler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 		// Safe uses a parameterized query which is built by exec from
 		// parameters which are passed in along with a static query string
 		query := "SELECT '?' as '?'"
-		res, err := sqlite3Database.Exec(query, r.URL.Query().Get("input"), "test")
+		res, err := sqlite3Database.Exec(query, input.GetQueryInput(r, input.INPUT), "test")
 		log.Println("Result: ", res, " Error: ", err)
 	default:
 		log.Println(splitURL[4])

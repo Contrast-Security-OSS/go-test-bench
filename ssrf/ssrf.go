@@ -4,6 +4,7 @@ package ssrf
 import (
 	//"fmt"
 	"bytes"
+	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -46,14 +47,14 @@ func httpHandler(w http.ResponseWriter, r *http.Request, method string) {
 	var err error
 	switch method {
 	case "query":
-		inputs := r.URL.Query().Get("input")
+		inputs := input.GetQueryInput(r, input.INPUT)
 		if inputs != "" {
 			res, err = http.Get("http://example.com?input=" + inputs)
 		} else {
 			res, err = http.Get("http://example.com")
 		}
 	case "path":
-		url := r.URL.Query().Get("input")
+		url := input.GetQueryInput(r, input.INPUT)
 		if url == "" {
 			url = "example.com"
 		}
