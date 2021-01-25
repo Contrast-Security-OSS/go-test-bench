@@ -33,7 +33,7 @@ func PostInput(r *http.Request, key string) (string, error) {
 		return "", err
 	}
 	//the request body should only have the user input
-	inputs, err := url.QueryUnescape(string(b)) //Couldn't find whether POST request inputs get sanitizied ALWAYS.
+	inputs, _ := url.QueryUnescape(string(b)) //Couldn't find whether POST request inputs get sanitizied ALWAYS.
 	splitInput := strings.Split(inputs, key+"=")
 
 	return splitInput[1], nil
