@@ -22,8 +22,8 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 	var userInput string
 	mode := splitURL[len(splitURL)-1]
 
-	if userInput = utils.GetQueryInput(r, utils.INPUT); userInput == "" {
-		userInput = utils.CookieInput(r, utils.INPUT)
+	if userInput = utils.GetParamValue(r, utils.INPUT); userInput == "" {
+		userInput = utils.GetCookieValue(r, utils.INPUT)
 	}
 
 	switch mode {

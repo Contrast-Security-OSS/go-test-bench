@@ -57,7 +57,7 @@ func MongoKill() {
 }
 
 func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, mode string) (template.HTML, bool) {
-	formValue := utils.FormValueInput(r, utils.INPUT)
+	formValue := utils.GetFormValue(r, utils.INPUT)
 
 	switch mode {
 	case "safe":

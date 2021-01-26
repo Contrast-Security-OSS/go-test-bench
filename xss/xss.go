@@ -29,7 +29,7 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 }
 
 func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	s := utils.GetParameterInput(r, 4, 5)
+	s := utils.GetPathValue(r, 4, 5)
 	if safety == "safe" {
 		s = url.QueryEscape(s)
 	} else if safety == "noop" {
@@ -44,7 +44,7 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (templat
 		return template.HTML("Cannot GET " + r.URL.Path), false
 	}
 
-	inputs := utils.FormValueInput(r, utils.INPUT)
+	inputs := utils.GetFormValue(r, utils.INPUT)
 
 	if safety == "safe" {
 		inputs = url.QueryEscape(inputs)

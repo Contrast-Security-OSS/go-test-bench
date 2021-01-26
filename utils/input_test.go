@@ -6,20 +6,20 @@ import (
 	"testing"
 )
 
-func TestGetQueryInput(t *testing.T) {
+func TestGetParamValue(t *testing.T) {
 	desiredVal := "get_value"
 	r := strings.NewReader("test")
 	request, err := http.NewRequest(http.MethodGet, "/getQuery/testing?input="+desiredVal, r)
 	if err != nil {
 		t.Error(err.Error())
 	}
-	value := GetQueryInput(request, INPUT)
+	value := GetParamValue(request, INPUT)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}
 }
 
-func TestGetParameterInput(t *testing.T) {
+func TestGetPathValue(t *testing.T) {
 	desiredVal := "<scipt>alert(1);</script>"
 	r := strings.NewReader("test")
 	request, err := http.NewRequest(http.MethodGet, "/getQuery/parameter/"+desiredVal+"/testing", r)
@@ -27,26 +27,26 @@ func TestGetParameterInput(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	value := GetParameterInput(request, 3, 4)
+	value := GetPathValue(request, 3, 4)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}
 }
 
-func TestPostInput(t *testing.T) {
+func TestGetPostBody(t *testing.T) {
 	desiredVal := "post_value"
 	r := strings.NewReader("input=" + desiredVal)
 	request, err := http.NewRequest(http.MethodPost, "/postQuery/testing", r)
 	if err != nil {
 		t.Error(err.Error())
 	}
-	value, _ := PostInput(request, INPUT)
+	value, _ := GetPostBody(request, INPUT)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}
 }
 
-func TestFormValueInput(t *testing.T) {
+func TestGetFormValue(t *testing.T) {
 	desiredVal := "form_value"
 	r := strings.NewReader("input=" + desiredVal)
 	request, err := http.NewRequest(http.MethodPost, "/form/testing", r)
@@ -55,13 +55,13 @@ func TestFormValueInput(t *testing.T) {
 	}
 	request.Header.Set("Content-type", "application/x-www-form-urlencoded")
 
-	value := FormValueInput(request, INPUT)
+	value := GetFormValue(request, INPUT)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}
 }
 
-func TestCookieInput(t *testing.T) {
+func TestGetCookieValue(t *testing.T) {
 	desiredVal := "cookie_value"
 	r := strings.NewReader("test")
 	request, err := http.NewRequest(http.MethodGet, "/cookie/testing", r)
@@ -74,13 +74,13 @@ func TestCookieInput(t *testing.T) {
 		Path:  "/cookie/testing",
 	})
 
-	value := CookieInput(request, INPUT)
+	value := GetCookieValue(request, INPUT)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}
 }
 
-func TestHeaderInput(t *testing.T) {
+func TestGetHeaderValue(t *testing.T) {
 	desiredVal := "header_value"
 	r := strings.NewReader("test")
 	request, err := http.NewRequest(http.MethodGet, "/header/testing", r)
@@ -89,7 +89,7 @@ func TestHeaderInput(t *testing.T) {
 	}
 	request.Header.Add(INPUT, desiredVal)
 
-	value := HeaderInput(request, INPUT)
+	value := GetHeaderValue(request, INPUT)
 	if value != desiredVal {
 		t.Error("got:", value, ",want:", desiredVal)
 	}

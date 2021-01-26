@@ -107,15 +107,18 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	var inputs string
 	switch splitURL[2] {
 	case "body":
-		var err error
-		inputs, err = utils.PostInput(r, utils.INPUT)
+		body, err := utils.GetPostBody(r, utils.INPUT)
+		//the request body should only have the user input
+		body, _ = url.QueryUnescape(body) //Couldn't find whether POST request inputs get sanitizied ALWAYS.
+		splitInput := strings.Split(body, "input=")
+		inputs = splitInput[1]
 		if err != nil {
 			return template.HTML(err.Error()), false
 		}
 	case "headers":
-		inputs = utils.HeaderInput(r, utils.INPUT)
+		inputs = utils.GetHeaderValue(r, utils.INPUT)
 	case "query":
-		inputs = utils.GetQueryInput(r, utils.INPUT)
+		inputs = utils.GetParamValue(r, utils.INPUT)
 	default:
 		return template.HTML("INVALID URL"), false
 	}

@@ -46,14 +46,14 @@ func httpHandler(w http.ResponseWriter, r *http.Request, method string) {
 	var err error
 	switch method {
 	case "query":
-		inputs := utils.GetQueryInput(r, utils.INPUT)
+		inputs := utils.GetParamValue(r, utils.INPUT)
 		if inputs != "" {
 			res, err = http.Get("http://example.com?input=" + inputs)
 		} else {
 			res, err = http.Get("http://example.com")
 		}
 	case "path":
-		url := utils.GetQueryInput(r, utils.INPUT)
+		url := utils.GetParamValue(r, utils.INPUT)
 		if url == "" {
 			url = "example.com"
 		}
