@@ -101,32 +101,20 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	if len(splitURL) < 4 {
 		return pathTTemplate(w, r, pd)
 	}
+	if splitURL[2] != "body" && splitURL[2] != "headers" && splitURL[2] != "query" {
+		return template.HTML("INVALID URL"), false
+	}
 	if splitURL[4] == "noop" {
 		return template.HTML("NOOP"), false
 	}
-	var inputs string
-	switch splitURL[2] {
-	case "body":
-		body, err := utils.GetPostBody(r, utils.INPUT)
-		//the request body should only have the user input
-		body, _ = url.QueryUnescape(body) //Couldn't find whether POST request inputs get sanitizied ALWAYS.
-		splitInput := strings.Split(body, "input=")
-		inputs = splitInput[1]
-		if err != nil {
-			return template.HTML(err.Error()), false
-		}
-	case "headers":
-		inputs = utils.GetHeaderValue(r, utils.INPUT)
-	case "query":
-		inputs = utils.GetParamValue(r, utils.INPUT)
-	default:
-		return template.HTML("INVALID URL"), false
-	}
+
+	userInput := utils.GetUserInput(r)
+
 	switch splitURL[3] {
 	case "ioutil.ReadFile":
-		return readFileHandler(w, r, splitURL[4], inputs)
+		return readFileHandler(w, r, splitURL[4], userInput)
 	case "ioutil.WriteFile":
-		return writeFileHandler(w, r, splitURL[4], inputs)
+		return writeFileHandler(w, r, splitURL[4], userInput)
 	default: //should be an error instead
 		return template.HTML("INVALID URL"), false
 	}

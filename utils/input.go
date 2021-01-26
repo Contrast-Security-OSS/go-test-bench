@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -10,12 +9,47 @@ import (
 //INPUT used as the standard input name across the project and forms
 const INPUT = "input"
 
+//GetUserInput returns the first value found in the request with the given key
+// the order of precedence when getting the result is:
+//
+// - query parameter
+//
+// - form value
+//
+// - cookie value
+//
+// - header value
+//
+func GetUserInput(r *http.Request) string {
+	if value := GetParamValue(r, INPUT); value != "" {
+		return value
+	}
+
+	if value := GetFormValue(r, INPUT); value != "" {
+		return value
+	}
+
+	if value := GetCookieValue(r, INPUT); value != "" {
+		return value
+	}
+
+	if value := GetHeaderValue(r, INPUT); value != "" {
+		return value
+	}
+
+	return ""
+}
+
+
 //GetParamValue returns the input value for the given key of a GET request query
 func GetParamValue(r *http.Request, key string) string {
 	return r.URL.Query().Get(key)
 }
 
 //GetPathValue returns the input value as a string included in the URL - e.g. /<script>.....</script>/....
+//
+// since the path is split by "/" there is a need to combine multiple pieces into one in order to get the full
+// value accordingly, positions - holds the indices of the split string to concatenate
 func GetPathValue(r *http.Request, positions ...int) string {
 	splitURL := strings.Split(r.URL.Path, "/")
 	var param []string
@@ -23,15 +57,6 @@ func GetPathValue(r *http.Request, positions ...int) string {
 		param = append(param, splitURL[v])
 	}
 	return strings.Join(param, "/")
-}
-
-//GetPostBody returns the input value from the POST body of the request
-func GetPostBody(r *http.Request, key string) (string, error) {
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return "", err
-	}
-	return string(b), nil
 }
 
 //GetFormValue returns the input value for the given key from the submitted form
@@ -43,7 +68,8 @@ func GetFormValue(r *http.Request, key string) string {
 func GetCookieValue(r *http.Request, key string) string {
 	cookie, err := r.Cookie(key)
 	if err != nil {
-		log.Printf("Could not get %s cooke value, error:%s\n", key, err.Error())
+		log.Printf("Could not get \"%s\" cooke value, error: %s\n", key, err.Error())
+		return ""
 	}
 
 	return cookie.Value

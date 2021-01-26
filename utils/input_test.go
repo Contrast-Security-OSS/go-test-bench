@@ -33,19 +33,6 @@ func TestGetPathValue(t *testing.T) {
 	}
 }
 
-func TestGetPostBody(t *testing.T) {
-	desiredVal := "post_value"
-	r := strings.NewReader("input=" + desiredVal)
-	request, err := http.NewRequest(http.MethodPost, "/postQuery/testing", r)
-	if err != nil {
-		t.Error(err.Error())
-	}
-	value, _ := GetPostBody(request, INPUT)
-	if value != desiredVal {
-		t.Error("got:", value, ",want:", desiredVal)
-	}
-}
-
 func TestGetFormValue(t *testing.T) {
 	desiredVal := "form_value"
 	r := strings.NewReader("input=" + desiredVal)
