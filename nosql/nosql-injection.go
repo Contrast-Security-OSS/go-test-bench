@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"log"
 	"net/http"
@@ -58,7 +57,7 @@ func MongoKill() {
 }
 
 func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, mode string) (template.HTML, bool) {
-	formValue := input.FormValueInput(r, input.INPUT)
+	formValue := utils.FormValueInput(r, utils.INPUT)
 
 	switch mode {
 	case "safe":

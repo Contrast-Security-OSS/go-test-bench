@@ -2,7 +2,6 @@ package unvalidated
 
 import (
 	"bytes"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -19,7 +18,7 @@ var templates = template.Must(template.ParseFiles(
 
 func httpRedirectHandler(w http.ResponseWriter, r *http.Request, pd utils.Parameters, splitURL []string) (template.HTML, bool) {
 	mode := splitURL[len(splitURL)-1]
-	formValue := input.FormValueInput(r, input.INPUT)
+	formValue := utils.FormValueInput(r, utils.INPUT)
 
 	if mode == "unsafe" {
 		http.Redirect(w, r, formValue, http.StatusFound)

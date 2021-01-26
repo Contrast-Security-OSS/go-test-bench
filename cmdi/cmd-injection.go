@@ -2,7 +2,6 @@ package cmdi
 
 import (
 	"bytes"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"log"
 	"net/http"
@@ -23,8 +22,8 @@ func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route
 	var userInput string
 	mode := splitURL[len(splitURL)-1]
 
-	if userInput = input.GetQueryInput(r, input.INPUT); userInput == "" {
-		userInput = input.CookieInput(r, input.INPUT)
+	if userInput = utils.GetQueryInput(r, utils.INPUT); userInput == "" {
+		userInput = utils.CookieInput(r, utils.INPUT)
 	}
 
 	switch mode {

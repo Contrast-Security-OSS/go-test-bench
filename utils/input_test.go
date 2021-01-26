@@ -1,4 +1,4 @@
-package input
+package utils
 
 import (
 	"net/http"

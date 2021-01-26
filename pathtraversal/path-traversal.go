@@ -2,7 +2,6 @@ package pathtraversal
 
 import (
 	"bytes"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils/input"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -109,14 +108,14 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	switch splitURL[2] {
 	case "body":
 		var err error
-		inputs, err = input.PostInput(r, input.INPUT)
+		inputs, err = utils.PostInput(r, utils.INPUT)
 		if err != nil {
 			return template.HTML(err.Error()), false
 		}
 	case "headers":
-		inputs = input.HeaderInput(r, input.INPUT)
+		inputs = utils.HeaderInput(r, utils.INPUT)
 	case "query":
-		inputs = input.GetQueryInput(r, input.INPUT)
+		inputs = utils.GetQueryInput(r, utils.INPUT)
 	default:
 		return template.HTML("INVALID URL"), false
 	}
