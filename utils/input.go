@@ -37,6 +37,10 @@ func GetUserInput(r *http.Request) string {
 		return value
 	}
 
+	// GetPathValue is not included because we need to have the positions already defined
+	// Currently it is used directly in XSS parsing <script> ... </script> from the query path
+	// TODO - need to update the logic for the positional parameters
+
 	return ""
 }
 
