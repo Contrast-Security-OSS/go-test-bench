@@ -44,20 +44,19 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 func httpHandler(w http.ResponseWriter, r *http.Request, method string) {
 	var res *http.Response
 	var err error
+	userInput := utils.GetUserInput(r)
 	switch method {
 	case "query":
-		inputs := r.URL.Query().Get("input")
-		if inputs != "" {
-			res, err = http.Get("http://example.com?input=" + inputs)
+		if userInput != "" {
+			res, err = http.Get("http://example.com?input=" + userInput)
 		} else {
 			res, err = http.Get("http://example.com")
 		}
 	case "path":
-		url := r.URL.Query().Get("input")
-		if url == "" {
-			url = "example.com"
+		if userInput == "" {
+			userInput = "example.com"
 		}
-		res, err = http.Get("http://" + url)
+		res, err = http.Get("http://" + userInput)
 		//don't want http.Redirect(w, r, "http://" + url, http.StatusFound)
 	default:
 		log.Println("THIS IS NOT A METHOD")

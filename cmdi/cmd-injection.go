@@ -19,13 +19,9 @@ var templates = template.Must(template.ParseFiles(
 
 func osExecHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, splitURL []string) (template.HTML, bool) {
 	var command *exec.Cmd
-	var userInput string
 	mode := splitURL[len(splitURL)-1]
 
-	if userInput = r.FormValue("input"); userInput == "" {
-		cookie, _ := r.Cookie("input")
-		userInput = cookie.Value
-	}
+	userInput := utils.GetUserInput(r)
 
 	switch mode {
 	case "safe":

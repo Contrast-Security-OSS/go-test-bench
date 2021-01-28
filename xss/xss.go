@@ -17,27 +17,29 @@ var templates = template.Must(template.ParseFiles(
 ))
 
 func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	s := r.URL.Query().Get("input")
+	input := utils.GetUserInput(r)
 	if safety == "safe" {
-		s = url.QueryEscape(s)
+		input = url.QueryEscape(input)
 	} else if safety == "noop" {
 		return template.HTML("NOOP"), false
 	}
 	//execute input script
-	return template.HTML(s), false
+	return template.HTML(input), false
 
 }
 
 func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	splitURL := strings.Split(r.URL.Path, "/")
-	var s string
-	s = splitURL[4] + "/" + splitURL[5]
+	// since the attack mode as a last parameter in the query path - e.g. /unsafe, /safe, /noop
+	// the user input is placed in the middle and it includes the "/" symbol so we need to combine two pieces
+	// /xss/params/reflectedXss/<script>alert(1);</script>/unsafe
+	// therefore we specify exact positions of the path to be considered as the user input value
+	input := utils.GetPathValue(r, 4, 5)
 	if safety == "safe" {
-		s = url.QueryEscape(s)
+		input = url.QueryEscape(input)
 	} else if safety == "noop" {
 		return template.HTML("NOOP"), false
 	}
-	return template.HTML(s), false
+	return template.HTML(input), false
 
 }
 
@@ -46,11 +48,7 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (templat
 		return template.HTML("Cannot GET " + r.URL.Path), false
 	}
 
-	err := r.ParseForm()
-	if err != nil {
-		return template.HTML(err.Error()), false
-	}
-	input := r.Form.Get("input")
+	input := utils.GetUserInput(r)
 
 	if safety == "safe" {
 		input = url.QueryEscape(input)
