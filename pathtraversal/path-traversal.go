@@ -42,7 +42,7 @@ func readFileHandler(w http.ResponseWriter, r *http.Request, method string, inpu
 		} else if string(content) == "" {
 			return template.HTML("Congrats, you are safe! No data was read."), false
 		} else {
-			log.Fatal("ERROR: pathTraversal readFile safe button not properly implemented")
+			data = string(content)
 		}
 	case "unsafe":
 		content, err := ioutil.ReadFile(inputs)
@@ -53,8 +53,7 @@ func readFileHandler(w http.ResponseWriter, r *http.Request, method string, inpu
 		if data == "" || err != nil {
 			data = "Done!"
 		} else {
-			//if you want to see the actual data, remove this else statement
-			data = "stuff"
+			data = string(content)
 		}
 	default:
 		data = "INVALID URL"
@@ -68,17 +67,18 @@ func writeFileHandler(w http.ResponseWriter, r *http.Request, method string, inp
 	switch method {
 	case "safe":
 		inputs = url.QueryEscape(inputs)
-		message := []byte("")
+		message := []byte("pathTraversal")
 		err := ioutil.WriteFile(inputs, message, 0644)
 		if err != nil {
 			return template.HTML("Congrats, you are safe! Error from writeFile: " + err.Error()), false
 		} else if string(message) == "" {
 			return template.HTML("Congrats, you are safe! No data was written."), false
 		} else { //something was written!
-			log.Fatal("ERROR: pathTraversal writeFile safe button not properly implemented")
+			data = "Wrote \"" + string(message) + "\" to: " + inputs
+			log.Printf("%s was written with pathTraversal\n", inputs)
 		}
 	case "unsafe":
-		message := []byte("")
+		message := []byte("pathTraversal")
 		err := ioutil.WriteFile(inputs, message, 0644)
 		data = string(message)
 		if err != nil {
@@ -87,7 +87,7 @@ func writeFileHandler(w http.ResponseWriter, r *http.Request, method string, inp
 		if data == "" || err != nil {
 			data = "Done!"
 		} else {
-			data = "Wrote to: " + data
+			data = "Wrote \"" + data + "\" to: " + inputs
 		}
 	default:
 		data = "INVALID URL"
