@@ -28,6 +28,26 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 
 }
 
+// bufferedQueryHandler used as a handler which uses bytes.Buffer for source input ignoring the user input
+func bufferedQueryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
+	var buf bytes.Buffer
+	buf.Write([]byte("<script>"))
+	buf.WriteString("alert('buffered input - ")
+	buf.WriteRune('©')
+	buf.WriteString("');")
+	buf.WriteString("</script")
+	buf.WriteByte(byte('>'))
+
+	input := string(buf.Bytes())
+
+	if safety == "safe" {
+		input = url.QueryEscape(input)
+	} else if safety == "noop" {
+		return template.HTML("NOOP"), false
+	}
+	return template.HTML(input), false
+}
+
 func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
 	// since the attack mode as a last parameter in the query path - e.g. /unsafe, /safe, /noop
 	// the user input is placed in the middle and it includes the "/" symbol so we need to combine two pieces
@@ -59,6 +79,24 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (templat
 	return template.HTML(input), false
 }
 
+// bufferedBodyHandler used as a handler which uses bytes.Buffer for source input
+func bufferedBodyHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
+	if r.Method == http.MethodGet {
+		return template.HTML("Cannot GET " + r.URL.Path), false
+	}
+
+	buf := bytes.NewBufferString(utils.GetUserInput(r))
+	input := buf.String()
+
+	if safety == "safe" {
+		input = url.QueryEscape(input)
+	} else if safety == "noop" {
+		return template.HTML("NOOP"), false
+	}
+
+	return template.HTML(input), false
+}
+
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
 
@@ -75,10 +113,14 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	switch splitURL[2] {
 	case "query":
 		return queryHandler(w, r, splitURL[4])
+	case "buffered-query":
+		return bufferedQueryHandler(w, r, splitURL[4])
 	case "params":
 		return paramsHandler(w, r, splitURL[6])
 	case "body":
 		return bodyHandler(w, r, splitURL[4])
+	case "buffered-body":
+		return bufferedBodyHandler(w, r, splitURL[4])
 	default:
 		return xssTemplate(w, r, pd)
 	}
