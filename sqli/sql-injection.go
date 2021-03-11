@@ -43,7 +43,9 @@ func headersHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	err := json.Unmarshal([]byte(r.Header.Get("credentials")), &credentials)
+	rawCredentials := r.Header.Get("credentials")
+	credBytes := []byte(rawCredentials)
+	err := json.Unmarshal(credBytes, &credentials)
 	if err != nil {
 		log.Printf("Could not parse headers to json, err = %s", err)
 	}
@@ -81,7 +83,7 @@ func setupSqlite3() (*sql.DB, error) {
 	return sqlite3Database, nil
 }
 
-func getSqliteSafetyQuery(db *sql.DB, userInput, safety string) string{
+func getSqliteSafetyQuery(db *sql.DB, userInput, safety string) string {
 	var query string
 	switch safety {
 	case "unsafe":
