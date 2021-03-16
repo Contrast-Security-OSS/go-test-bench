@@ -36,6 +36,38 @@
 </div>
 <div class="row">
   <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Buffered Query</h4>
+    <p>
+      <a
+        id = "queryunsafehere"
+        target="_blank"
+        href="/xss/buffered-query/reflectedXss/unsafe"
+        >
+        /xss/buffered-query/reflectedXss/unsafe
+      </a>
+    </p>
+    <p>
+      <a
+        id = "querysafehere"
+        target="_blank"
+        href="/xss/buffered-query/reflectedXss/safe"
+        >
+        /xss/buffered-query/reflectedXss/safe
+      </a>
+    </p>
+    <p>
+      <a
+        id = "querynoophere"
+        target="_blank"
+        href="/xss/buffered-query/reflectedXss/noop"
+        >
+        /xss/buffered-query/reflectedXss/noop
+      </a>
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
     <h4 class="sub-header">Params</h4>
     <!--<% groupedSinkData.params.forEach(function(sink) { %>-->
    <!-- <% ['unsafe', 'safe', 'noop'].forEach(function(safety) { %>-->
@@ -77,6 +109,22 @@
                 name="input"
                 class="form-control"
                 value="&lt;script&gt;alert(1);&lt;/script&gt;"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <form method="POST" action="/xss/buffered-body/reflectedXss/unsafe" target="_blank">
+      <div class="form-group">
+        <label for="">Buffered input</label>
+        <input type="hidden" value="buffered_input" />
+        <input
+                name="input"
+                class="form-control"
+                value="&lt;script&gt;alert('buffered input - &copy;');&lt;/script&gt;"
         />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>

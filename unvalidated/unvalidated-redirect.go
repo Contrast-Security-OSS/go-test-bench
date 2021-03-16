@@ -18,20 +18,20 @@ var templates = template.Must(template.ParseFiles(
 
 func httpRedirectHandler(w http.ResponseWriter, r *http.Request, pd utils.Parameters, splitURL []string) (template.HTML, bool) {
 	mode := splitURL[len(splitURL)-1]
-	formValue := utils.GetUserInput(r)
 
-	if mode == "unsafe" {
+	switch mode {
+	case "safe":
+		formValue := utils.GetUserInput(r)
+		sanitizedURL := url.PathEscape(formValue)
+		http.Redirect(w, r, sanitizedURL, http.StatusFound)
+	case "unsafe":
+		formValue := utils.GetUserInput(r)
 		http.Redirect(w, r, formValue, http.StatusFound)
-
-	} else if mode == "noop" {
+	case "noop":
 		http.Redirect(w, r, "http://www.example.com", http.StatusFound)
-
-	} else if mode == "safe" {
-		sanatizedURL := url.PathEscape(formValue)
-		http.Redirect(w, r, sanatizedURL, http.StatusFound)
 	}
-	return "", false
 
+	return "", false
 }
 
 func unvalidatedTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
