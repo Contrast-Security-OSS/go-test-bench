@@ -1,13 +1,21 @@
 {{define "sqlInjection"}}
-<h1 class="page-header">{{.Name}}</h1>
-{{template "ruleInfo" .}}
-{{$base := .Base}}
-{{range .Sinks}}
+{{$routeInfo := index .Rulebar .Name}}
+{{$base := $routeInfo.Base}}
+{{$port := .Port}}
+{{$inputs := $routeInfo.Inputs}}
+<h1 class="page-header">{{$routeInfo.Name}}</h1>
+{{template "ruleInfo" $routeInfo}}
+{{range $routeInfo.Sinks}}
 <div class="row">
   <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
     <h4 class="sub-header">
       <code>{{.Name}}</code>
     </h4>
+    <h4 class="sub-header">Headers - JSON</h4>
+    <p><pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/json/unsafe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre></p>
+    <p><pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/json/safe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre></p>
+    <p><pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/json/noop -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre></p>
+    <h4 class="sub-header">Query</h4>
     <form method="{{.Method}}" action="{{$base}}{{.URL}}/unsafe" target="_blank">
       <div class="form-group">
         <label>SELECT '${input}' as 'test';</label>
