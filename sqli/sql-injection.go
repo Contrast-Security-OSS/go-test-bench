@@ -48,37 +48,13 @@ func jsonHeadersHandler(w http.ResponseWriter, r *http.Request, splitURL []strin
 		log.Printf("Could not parse headers to json, err = %s", err)
 	}
 
-	// setting up a database to execute the built query
-	var sqlite3Database *sql.DB
-	sqlite3Database, err = setupSqlite3()
+	var query string
+	query, err = getSqliteQuery(credentials.Username, splitURL[4])
 	if err != nil {
 		return template.HTML(err.Error()), false
 	}
-	defer func() {
-		_ = sqlite3Database.Close()
-	}()
 
-	query := getSqliteSafetyQuery(sqlite3Database, credentials.Username, splitURL[4])
-
-	_ = os.Remove("tempDatabase.db")
 	return template.HTML(query), false //change to out desired output
-}
-
-// setupSqlite3 helper function to initialize the database
-// closing db connection is executed in the context where it's used
-func setupSqlite3() (*sql.DB, error) {
-	_ = os.Remove("tempDatabase.db")
-	log.Println("Creating tempDatabase.db...")
-	file, err := os.Create("tempDatabase.db")
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	_ = file.Close()
-	log.Println("tempDatabase.db created")
-	sqlite3Database, _ := sql.Open("sqlite3", "./tempDatabase.db")
-
-	return sqlite3Database, nil
 }
 
 func getSqliteSafetyQuery(db *sql.DB, userInput, safety string) string {
@@ -110,17 +86,12 @@ func sqlite3Handler(w http.ResponseWriter, r *http.Request, splitURL []string) (
 	case "body":
 		return bodyHandler(w, r, splitURL)
 	case "query":
-		sqlite3Database, err := setupSqlite3()
+		var err error
+		userInput := utils.GetUserInput(r)
+		query, err = getSqliteQuery(userInput, splitURL[4])
 		if err != nil {
 			return template.HTML(err.Error()), false
 		}
-		defer func() {
-			_ = sqlite3Database.Close()
-		}()
-
-		userInput := utils.GetUserInput(r)
-		query = getSqliteSafetyQuery(sqlite3Database, userInput, splitURL[4])
-		_ = os.Remove("tempDatabase.db")
 	default:
 		log.Printf("Invalid source type '%s' for sql injection", splitURL[2])
 	}
@@ -148,19 +119,35 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, splitURL []string) (tem
 	}
 	userInput = strings.TrimPrefix(userInput, "input=")
 
-	// setting up a database to execute the built query
-	var sqlite3Database *sql.DB
-	sqlite3Database, err = setupSqlite3()
+	query, err := getSqliteQuery(userInput, splitURL[4])
 	if err != nil {
 		return template.HTML(err.Error()), false
 	}
+	return template.HTML(query), false //change to out desired output
+}
+
+func getSqliteQuery(userInput, safety string) (string, error){
+	// setting up a database to execute the built query
+	_ = os.Remove("tempDatabase.db")
+	log.Println("Creating tempDatabase.db...")
+	file, err := os.Create("tempDatabase.db")
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	_ = file.Close()
+	log.Println("tempDatabase.db created")
+	sqlite3Database, _ := sql.Open("sqlite3", "./tempDatabase.db")
+
 	defer func() {
 		_ = sqlite3Database.Close()
 	}()
-	query := getSqliteSafetyQuery(sqlite3Database, userInput, splitURL[4])
+
+	query := getSqliteSafetyQuery(sqlite3Database, userInput, safety)
 
 	_ = os.Remove("tempDatabase.db")
-	return template.HTML(query), false //change to out desired output
+
+	return query, nil
 }
 
 // Handler is the API handler for sql injection
