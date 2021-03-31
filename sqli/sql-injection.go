@@ -6,6 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"io"
+	"net/url"
+
 	// database import for sqlite3
 	_ "github.com/mattn/go-sqlite3"
 
@@ -33,12 +36,7 @@ func sqliTemplate(w http.ResponseWriter, r *http.Request, params utils.Parameter
 
 }
 
-func headersHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, splitURL []string) (template.HTML, bool) {
-	// Currently we pass only json credentials in headers for SQL Injection
-	if splitURL[3] != "json" {
-		return template.HTML("INVALID URL"), false
-	}
-
+func jsonHeadersHandler(w http.ResponseWriter, r *http.Request, splitURL []string) (template.HTML, bool) {
 	var credentials struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -103,16 +101,62 @@ func getSqliteSafetyQuery(db *sql.DB, userInput, safety string) string {
 	return query
 }
 
-func sqlite3Handler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, splitURL []string) (template.HTML, bool) {
-	sqlite3Database, err := setupSqlite3()
+func sqlite3Handler(w http.ResponseWriter, r *http.Request, splitURL []string) (template.HTML, bool) {
+	// Split by source
+	var query string
+	switch splitURL[2] {
+	case "headers-json":
+		return jsonHeadersHandler(w, r, splitURL)
+	case "body":
+		return bodyHandler(w, r, splitURL)
+	case "query":
+		sqlite3Database, err := setupSqlite3()
+		if err != nil {
+			return template.HTML(err.Error()), false
+		}
+		defer func() {
+			_ = sqlite3Database.Close()
+		}()
+
+		userInput := utils.GetUserInput(r)
+		query = getSqliteSafetyQuery(sqlite3Database, userInput, splitURL[4])
+		_ = os.Remove("tempDatabase.db")
+	default:
+		log.Printf("Invalid source type '%s' for sql injection", splitURL[2])
+	}
+
+	return template.HTML(query), false //change to out desired output
+}
+
+func bodyHandler(w http.ResponseWriter, r *http.Request, splitURL []string) (template.HTML, bool) {
+	var (
+		err       error
+		n         int
+		ret       []byte
+		userInput string
+		bCnt      = 10
+		bRet      = make([]byte, bCnt)
+	)
+	for err != io.EOF {
+		n, err = r.Body.Read(bRet)
+		ret = append(ret, bRet[0:n]...)
+	}
+	userInput, err = url.QueryUnescape(string(ret)) // POST body comes encoded but we need it in raw format
+	if err != nil {
+		log.Printf("Could not escape body: %s", err)
+		return template.HTML(err.Error()), false
+	}
+	userInput = strings.TrimPrefix(userInput, "input=")
+
+	// setting up a database to execute the built query
+	var sqlite3Database *sql.DB
+	sqlite3Database, err = setupSqlite3()
 	if err != nil {
 		return template.HTML(err.Error()), false
 	}
 	defer func() {
 		_ = sqlite3Database.Close()
 	}()
-
-	userInput := utils.GetUserInput(r)
 	query := getSqliteSafetyQuery(sqlite3Database, userInput, splitURL[4])
 
 	_ = os.Remove("tempDatabase.db")
@@ -128,13 +172,10 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	if splitURL[4] == "noop" {
 		return template.HTML("NOOP"), false
 	}
-	if splitURL[2] == "headers" {
-		return headersHandler(w, r, pd.Rulebar[pd.Name], splitURL)
-	}
-
+	// Split by sink
 	switch splitURL[3] {
 	case "sqlite3Exec":
-		return sqlite3Handler(w, r, pd.Rulebar[pd.Name], splitURL)
+		return sqlite3Handler(w, r, splitURL)
 	case "":
 		return sqliTemplate(w, r, pd)
 	default:

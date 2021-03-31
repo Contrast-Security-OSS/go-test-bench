@@ -85,7 +85,7 @@
         "name"     :  "SQL Injection",
         "link"     :  "https://www.owasp.org/index.php/SQL_Injection",
         "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "headers"],
+        "inputs"   :  ["query", "headers-json", "body"],
         "sinks"    :  [
             {
                 "name"   : "sqlit3.exec",
