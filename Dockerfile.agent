@@ -1,0 +1,42 @@
+FROM golang:latest AS builder
+
+#RUN git clone https://github.com/Contrast-Security-OSS/go-test-bench.git /build
+WORKDIR /build
+COPY . .
+
+# Install the necessary ubuntu dependencies
+RUN apt-get update
+RUN apt-get install -y gnupg2 ca-certificates curl software-properties-common
+
+# Add the contrast public key
+ADD https://pkg.contrastsecurity.com/api/gpg/key/public ./publickey
+RUN apt-key add ./publickey
+RUN add-apt-repository "deb https://pkg.contrastsecurity.com/debian-public/ focal contrast"
+
+# Install contrast-go
+RUN apt-get update
+RUN apt-get install -y contrast-go
+
+# Fetch dependencies.
+RUN go get -d -v
+
+# Build the binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 contrast-go build \
+    -ldflags='-w -s -extldflags "-static"' -a \
+    -o app .
+
+# Move the finished build to a scratch container
+FROM scratch
+
+# Copy the testbench to the new scratch container
+COPY --from=builder /build/views ./views
+COPY --from=builder /build/public ./public
+COPY --from=builder /build/app ./app
+
+# Copy the contrast_security.yaml
+COPY ./contrast_security.yaml .
+
+#EXPOSE 8080
+
+# Execute the testbench agent
+ENTRYPOINT ["./app"]

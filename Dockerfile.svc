@@ -1,0 +1,20 @@
+FROM ubuntu:20.04
+
+# Install the necessary ubuntu dependencies
+RUN apt-get update && apt-get install -y gnupg2 ca-certificates curl software-properties-common
+
+# Add the contrast public key
+ADD https://pkg.contrastsecurity.com/api/gpg/key/public ./publickey
+RUN apt-key add ./publickey
+RUN add-apt-repository "deb https://pkg.contrastsecurity.com/debian-public/ focal contrast"
+
+# Install contrast-go
+RUN apt-get update && apt-get install -y contrast-service
+
+# Copy the contrast_security.yaml
+COPY ./contrast_security.yaml .
+
+#EXPOSE 30555
+
+# Execute the testbench agent
+ENTRYPOINT ["contrast-service"]
