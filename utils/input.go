@@ -44,7 +44,6 @@ func GetUserInput(r *http.Request) string {
 	return ""
 }
 
-
 //GetParamValue returns the input value for the given key of a GET request query
 func GetParamValue(r *http.Request, key string) string {
 	return r.URL.Query().Get(key)

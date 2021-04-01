@@ -34,7 +34,7 @@ func MongoInit() {
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongo:27017"))
 	if err != nil {
-		log.Printf("Could not connect the Mongo client: err = %s",err)
+		log.Printf("Could not connect the Mongo client: err = %s", err)
 	}
 	mongoDB = mongoClient.Database("go-test-bench")
 	collection = mongoDB.Collection("colors")
