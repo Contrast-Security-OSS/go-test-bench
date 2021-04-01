@@ -17,12 +17,12 @@ FROM alpine:latest
 
 WORKDIR /
 
-# Copy the atomizer agent to thee new scratch container
+# Copy the testbench to the new scratch container
 COPY ./views /views
 COPY ./public /public
 COPY --from=builder /go/bin/app /app
 
 EXPOSE 8080
 
-# Execute the atomizer agent
+# Execute the testbench agent
 ENTRYPOINT ["./app"]

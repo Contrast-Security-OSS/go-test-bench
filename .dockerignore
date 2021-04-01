@@ -19,3 +19,5 @@ contrast*log
 !Dockerfile
 !docker-compose.yml
 
+# Unignore contrast_security.yaml for demo purposes
+!contrast_security.yaml
