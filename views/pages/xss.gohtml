@@ -131,5 +131,21 @@
     </form>
   </div>
 </div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Response</h4>
+    <form method="POST" action="/xss/response/reflectedXss/unsafe" target="_blank">
+      <div class="form-group">
+        <label for="">input</label>
+        <input
+                name="input"
+                class="form-control"
+                value="&lt;script&gt;alert('response writer');&lt;/script&gt;"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 {{template "safeButtons" .}}
 {{end}}
