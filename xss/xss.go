@@ -130,15 +130,12 @@ func bufferedBodyHandler(w http.ResponseWriter, r *http.Request, safety string) 
 
 func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
 	userInput := utils.GetUserInput(r)
-	var ret []byte
 	switch safety {
 	case "safe":
 		userInput = url.QueryEscape(userInput)
-		ret = []byte(userInput)
-		w.Write(ret)
+		w.Write([]byte(userInput))
 	case "unsafe":
-		ret = []byte(userInput)
-		w.Write(ret)
+		w.Write([]byte(userInput))
 	case "noop":
 		return template.HTML("NOOP"), false
 	default:
