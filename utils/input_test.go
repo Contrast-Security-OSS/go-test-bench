@@ -18,7 +18,7 @@ func TestGetUserInput_GetParamValue(t *testing.T) {
 
 func TestGetUserInput_GetFormValue(t *testing.T) {
 	desiredVal := "form_value"
-	request := getMockRequest(t, http.MethodPost, "/form/testing", "input=" + desiredVal)
+	request := getMockRequest(t, http.MethodPost, "/form/testing", "input="+desiredVal)
 
 	request.Header.Set("Content-type", "application/x-www-form-urlencoded")
 
@@ -78,7 +78,7 @@ func TestGetPathValue(t *testing.T) {
 
 func TestGetFormValue(t *testing.T) {
 	desiredVal := "form_value"
-	request := getMockRequest(t, http.MethodPost, "/form/testing", "input=" + desiredVal)
+	request := getMockRequest(t, http.MethodPost, "/form/testing", "input="+desiredVal)
 
 	request.Header.Set("Content-type", "application/x-www-form-urlencoded")
 

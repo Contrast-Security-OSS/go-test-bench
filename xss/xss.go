@@ -3,6 +3,7 @@ package xss
 import (
 	"bytes"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -128,6 +129,46 @@ func bufferedBodyHandler(w http.ResponseWriter, r *http.Request, safety string) 
 	return template.HTML(input), false
 }
 
+func getSimpleHTTPResponse(userInput string) *http.Response {
+	return &http.Response{
+		Status:     "200 OK",
+		StatusCode: 200,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		Body:       ioutil.NopCloser(strings.NewReader(userInput)),
+		Header: http.Header{
+			"Content-Type": []string{"text/plain; charset=utf-8"},
+			"input":        []string{userInput},
+		},
+	}
+}
+
+func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
+	userInput := utils.GetUserInput(r)
+	switch safety {
+	case "safe":
+		userInput = url.QueryEscape(userInput)
+		response := getSimpleHTTPResponse(userInput)
+		var buf bytes.Buffer
+		response.Write(&buf)
+
+		return template.HTML(userInput), false
+	case "unsafe":
+		response := getSimpleHTTPResponse(userInput)
+		var buf bytes.Buffer
+		response.Write(&buf)
+
+		return template.HTML(userInput), false
+	case "noop":
+		return template.HTML("NOOP"), false
+	default:
+		log.Fatal("Error running responseHandler. No option passed")
+	}
+
+	return template.HTML(""), false
+}
+
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
 	var buf bytes.Buffer
 
@@ -152,6 +193,8 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 		return bodyHandler(w, r, splitURL[4])
 	case "buffered-body":
 		return bufferedBodyHandler(w, r, splitURL[4])
+	case "response":
+		return responseHandler(w, r, splitURL[4])
 	default:
 		return xssTemplate(w, r, pd)
 	}
