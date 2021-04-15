@@ -23,6 +23,7 @@ Move into the go-test-bench directory.
 
 ## Step 3 - Copy contrast_security.yaml to the go-test-bench directory
 
+Download your configuration YAML file from the Contrast environment by selecting the "Add agent" button.
 `cp /path/to/config/contrast_security.yaml .`
 
 ## Step 4 - Start the DEMO environment
