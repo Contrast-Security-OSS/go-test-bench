@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmdi"
-	"github.com/Contrast-Security-OSS/go-test-bench/nosql"
 	"github.com/Contrast-Security-OSS/go-test-bench/pathtraversal"
 	"github.com/Contrast-Security-OSS/go-test-bench/sqli"
 	"github.com/Contrast-Security-OSS/go-test-bench/ssrf"
@@ -114,14 +113,23 @@ func main() {
 	_ = json.Unmarshal([]byte(byteValue), &pd.Rulebar)
 
 	log.Println("Server Startup at: localhost" + pd.Port)
-	nosql.MongoInit()
-	defer nosql.MongoKill()
+
+	// Attempt to connect to MongoDB with a 30 second timeout
+	// err = nosql.MongoInit(time.Second * 30)
+	// if err != nil {
+	// 	log.Printf("Could not connect the Mongo client: err = %s", err)
+	// 	os.Exit(1)
+	// }
+
+	//defer nosql.MongoKill()
 
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/ssrf/", makeHandler(ssrf.Handler, "ssrf"))
 	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidated.Handler, "unvalidatedRedirect"))
 	http.HandleFunc("/cmdInjection/", makeHandler(cmdi.Handler, "cmdInjection"))
-	http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
+
+	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
+
 	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
 	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))

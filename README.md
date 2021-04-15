@@ -6,12 +6,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > Intentionally vulnerable go app. Used Go's standard library, `net/http`,
-for client/server implentations. For more info on this framework, visit
+for client/server implementations. For more info on this framework, visit
 [net/http](https://golang.org/pkg/net/http/).
 
 The go-test-bench application includes vulnerabilities from the OWASP Top
 10 and is intended to be used as an educational tool for developers and
 security professionals. Any maintainers are welcome to make pull requests.
+
+> For customer demonstrations [click here to follow the Demo.md readme](./Demo.md).
 
 ## Installation/Requirements
 
@@ -43,4 +45,3 @@ View app at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 ## Acknowledgements
 
 The development [team](docs/acknowledgements.md).
-
