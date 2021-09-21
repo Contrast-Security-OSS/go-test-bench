@@ -1,28 +1,21 @@
-FROM golang:1.14 AS builder
+FROM golang:1.16 AS builder
+ARG FRAMEWORK=std
 
-# Set the working directory and copy the code over
-WORKDIR $GOPATH/src/mypackage/myapp/
-COPY . .
+COPY . /build
+WORKDIR /build/cmd/${FRAMEWORK}
 
-# Fetch dependencies.
-RUN go get -d -v
+RUN go mod download
+RUN go build \
+      -ldflags='-w -s -extldflags "-static"' \
+      -o /build/go-test-bench
 
-# Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
-      -ldflags='-w -s -extldflags "-static"' -a \
-      -o /go/bin/app .
-
-# Create the atomizer container
-FROM alpine:latest
-
+FROM scratch
 WORKDIR /
 
-# Copy the testbench to the new scratch container
-COPY ./views /views
-COPY ./public /public
-COPY --from=builder /go/bin/app /app
+COPY --from=builder /build/views /views
+COPY --from=builder /build/public /public
+COPY --from=builder /build/go-test-bench /go-test-bench
 
 EXPOSE 8080
 
-# Execute the testbench agent
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["/go-test-bench"]

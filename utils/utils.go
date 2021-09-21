@@ -25,9 +25,10 @@ type Route struct {
 
 // Parameters are the parameters for a specific page
 type Parameters struct {
-	Body    template.HTML
-	Year    int
-	Rulebar map[string]Route
-	Port    string
-	Name    string
+	Year      int
+	Rulebar   map[string]Route
+	Port      string
+	Name      string
+	Logo      string
+	Framework string
 }

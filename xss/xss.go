@@ -12,12 +12,6 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
 
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/xss.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
-
 func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
 	var input string
 
@@ -155,6 +149,7 @@ func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (tem
 
 		return template.HTML(userInput), false
 	case "unsafe":
+		// FIXME: This doesn't actually use the response
 		response := getSimpleHTTPResponse(userInput)
 		var buf bytes.Buffer
 		response.Write(&buf)
@@ -170,13 +165,7 @@ func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (tem
 }
 
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "xss", pd.Rulebar[pd.Name])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
+	return "xss.gohtml", true
 }
 
 // Handler is the API handler for XSS

@@ -15,16 +15,16 @@ security professionals. Any maintainers are welcome to make pull requests.
 
 > For customer demonstrations [click here to follow the Demo.md readme](./Demo.md).
 
-## Installation/Requirements
+## Installation Requirements
 
-- On a mac, first install go (>=1.13).
+- [Go toolchain](https://golang.org/dl/)
 
-- Install [Docker for Mac](https://www.docker.com/docker-mac)
+- *Optional* [Docker for Mac](https://www.docker.com/docker-mac)
 
 ## How to Run Locally
 
 ```bash
-    go build app.go
+    go build -o app ./cmd/std # or ./cmd/gin for Gin framework
     ./app
 ```
 
@@ -33,10 +33,12 @@ View app at [http://localhost:8080](http://localhost:8080)
 ## How to Run Using Docker
 
 ```bash
-    # To stand up application with mongo
-    docker-compose up -d
+    # To stand up application with standard library
+    docker-compose up std -d
+    # Alternative: To stand up application with Gin framework
+    # docker-compose up gin -d
 
-    # To stop app container and related service containers (ie mongo)
+    # To stop app container and related service containers
     docker-compose down
 ```
 

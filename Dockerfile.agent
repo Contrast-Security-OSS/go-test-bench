@@ -1,7 +1,8 @@
-FROM golang:latest AS builder
+FROM golang:1.16 AS builder
+ARG FRAMEWORK=std
 
-WORKDIR /build
-COPY . .
+COPY . /build
+WORKDIR /build/cmd/${FRAMEWORK}
 
 # Install the necessary ubuntu dependencies
 RUN apt-get update
@@ -17,12 +18,12 @@ RUN apt-get update
 RUN apt-get install -y contrast-go
 
 # Fetch dependencies.
-RUN go get -d -v
+RUN go mod download
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 contrast-go build \
-    -ldflags='-w -s -extldflags "-static"' -a \
-    -o app .
+RUN contrast-go build \
+    -ldflags='-w -s -extldflags "-static"' \
+    -o /build/app .
 
 # Move the finished build to a scratch container
 FROM scratch
