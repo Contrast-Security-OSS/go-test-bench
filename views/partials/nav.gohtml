@@ -1,22 +1,22 @@
 {{define "nav"}}
-  <div id="navbar" class="col-sm-3 col-md-2 sidebar ">
+<div id="navbar" class="col-sm-3 col-md-2 sidebar ">
 
-    <label>Rules</label>
-    <ul class="nav nav-sidebar">
-      {{range .Rulebar}}
-          <li>
-              <a href="{{.Base}}">
-              {{.Name}}
-              {{range .Products}}
-                  <span class="badge pull-right {{if eq . "Protect"}} badge-info {{else}} badge-success {{end}}">
-                  {{.}}
-                  </span>
-              {{end}}
-              </a>
-          </li>
-      {{end}}
-    </ul>
-  </div>
+  <label>Rules</label>
+  <ul class="nav nav-sidebar">
+    {{range .Rulebar}}
+    <li>
+      <a href="{{.Base}}">
+        {{.Name}}
+        {{range .Products}}
+        <span class="badge pull-right {{if eq . " Protect"}} badge-info {{else}} badge-success {{end}}">
+          {{.}}
+        </span>
+        {{end}}
+      </a>
+    </li>
+    {{end}}
+  </ul>
+</div>
 {{end}}
 
 <label>Our Navbar</label>
@@ -48,4 +48,3 @@
   <li><a href="/mongoose">Mongoose ODM</a></li>
   <li><a href="/ddb">DynamoDB ODM</a></li>
 </ul>
-  

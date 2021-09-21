@@ -1,28 +1,27 @@
-FROM golang:1.14 AS builder
+FROM golang:1.17 AS builder
+ARG FRAMEWORK=std
 
-# Set the working directory and copy the code over
-WORKDIR $GOPATH/src/mypackage/myapp/
+WORKDIR /build
 COPY . .
 
-# Fetch dependencies.
-RUN go get -d -v
+RUN go mod download
+RUN go build \
+      -ldflags='-w -s -extldflags "-static"' \
+      -o go-test-bench \
+      ./cmd/${FRAMEWORK}
 
-# Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
-      -ldflags='-w -s -extldflags "-static"' -a \
-      -o /go/bin/app .
+# Create /etc/passwd to help showcase path traversal vulnerability.
+RUN echo "root:x:0:0:root:/root:/bin/bash" >> ./fakepasswd && \
+      echo "catty:x:42:42:boh:/etc/contrastsecurity:/bin/bash" >> ./fakepasswd
 
-# Create the atomizer container
-FROM alpine:latest
-
+FROM scratch
 WORKDIR /
 
-# Copy the testbench to the new scratch container
-COPY ./views /views
-COPY ./public /public
-COPY --from=builder /go/bin/app /app
+COPY --from=builder /build/views /views
+COPY --from=builder /build/public /public
+COPY --from=builder /build/go-test-bench /go-test-bench
+COPY --from=builder /build/fakepasswd /etc/passwd
 
 EXPOSE 8080
 
-# Execute the testbench agent
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["/go-test-bench"]

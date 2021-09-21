@@ -1,4 +1,5 @@
-FROM golang:latest AS builder
+FROM golang:1.17 AS builder
+ARG FRAMEWORK=std
 
 WORKDIR /build
 COPY . .
@@ -17,12 +18,17 @@ RUN apt-get update
 RUN apt-get install -y contrast-go
 
 # Fetch dependencies.
-RUN go get -d -v
+RUN go mod download
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 contrast-go build \
-    -ldflags='-w -s -extldflags "-static"' -a \
-    -o app .
+RUN contrast-go build \
+    -ldflags='-w -s -extldflags "-static"' \
+    -o app \
+    ./cmd/${FRAMEWORK}
+
+# Create /etc/passwd to help showcase path traversal vulnerability.
+RUN echo "root:x:0:0:root:/root:/bin/bash" >> ./fakepasswd && \
+    echo "catty:x:42:42:boh:/etc/contrastsecurity:/bin/bash" >> ./fakepasswd
 
 # Move the finished build to a scratch container
 FROM scratch
@@ -31,6 +37,7 @@ FROM scratch
 COPY --from=builder /build/views ./views
 COPY --from=builder /build/public ./public
 COPY --from=builder /build/app ./app
+COPY --from=builder /build/fakepasswd /etc/passwd
 
 # Copy the contrast_security.yaml
 COPY ./contrast_security.yaml .

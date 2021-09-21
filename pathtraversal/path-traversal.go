@@ -14,20 +14,8 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
 
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/pathTraversal.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
-
 func pathTTemplate(w http.ResponseWriter, r *http.Request, data utils.Parameters) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "pathTraversal", data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
+	return "pathTraversal.gohtml", true
 }
 
 func readFileHandler(w http.ResponseWriter, r *http.Request, method string, inputs string, isBuffered bool) (template.HTML, bool) {

@@ -1,13 +1,13 @@
 package sqli
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 	"io"
 	"net/url"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 
 	// database import for sqlite3
 	_ "github.com/mattn/go-sqlite3"
@@ -19,21 +19,8 @@ import (
 	"strings"
 )
 
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/sqlInjection.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
-
 func sqliTemplate(w http.ResponseWriter, r *http.Request, params utils.Parameters) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "sqlInjection", params)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
-
+	return "sqlInjection.gohtml", true
 }
 
 func jsonHeadersHandler(w http.ResponseWriter, r *http.Request, splitURL []string) (template.HTML, bool) {
@@ -126,7 +113,7 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, splitURL []string) (tem
 	return template.HTML(query), false //change to out desired output
 }
 
-func getSqliteQuery(userInput, safety string) (string, error){
+func getSqliteQuery(userInput, safety string) (string, error) {
 	// setting up a database to execute the built query
 	_ = os.Remove("tempDatabase.db")
 	log.Println("Creating tempDatabase.db...")

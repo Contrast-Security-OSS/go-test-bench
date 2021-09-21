@@ -10,10 +10,26 @@ services:
       - demo.env 
     networks:
       - extbridge
-  web:
+  std:
+    depends_on: 
+      - svc
     build: 
       context: .
       dockerfile: Dockerfile.agent
+    ports:
+      - 8080:8080
+    env_file:
+      - demo.env
+    networks:
+      - extbridge
+  gin:
+    depends_on: 
+      - svc
+    build: 
+      context: .
+      dockerfile: Dockerfile.agent
+      args:
+        FRAMEWORK: gin
     ports:
       - 8080:8080
     env_file:

@@ -1,7 +1,6 @@
 package nosql
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"html/template"
@@ -15,12 +14,6 @@ import (
 	mongo "go.mongodb.org/mongo-driver/mongo"
 	options "go.mongodb.org/mongo-driver/mongo/options"
 )
-
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/nosqlInjection.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
 
 var mongoClient *mongo.Client
 var mongoDB *mongo.Database
@@ -56,7 +49,7 @@ func MongoKill() {
 	cancel()
 }
 
-func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, mode string) (template.HTML, bool) {
+func mongoDBHandler(w http.ResponseWriter, r *http.Request, mode string) (template.HTML, bool) {
 	formValue := utils.GetUserInput(r)
 
 	switch mode {
@@ -109,15 +102,8 @@ func mongoDBHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Rout
 	return template.HTML("?"), false
 }
 
-func nosqlTemplate(w http.ResponseWriter, r *http.Request, routeInfo utils.Route) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "nosql", routeInfo)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
-
+func nosqlTemplate(w http.ResponseWriter, r *http.Request) (template.HTML, bool) {
+	return "nosqlInjection.gohtml", true
 }
 
 // Handler is the nosql endpoint API handler
@@ -128,14 +114,14 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 	case "query":
 		switch splitURL[3] {
 		case "mongodbCollectionFind":
-			return mongoDBHandler(w, r, pd.Rulebar[pd.Name], splitURL[len(splitURL)-1])
+			return mongoDBHandler(w, r, splitURL[len(splitURL)-1])
 		default:
 			log.Println("noSQL Injection Handler reached incorrectly") //It may not be the best to Kill here
 			return "", false
 		}
 
 	case "":
-		return nosqlTemplate(w, r, pd.Rulebar[pd.Name])
+		return nosqlTemplate(w, r)
 	default:
 		log.Fatal("noSQL Injection Handler reached incorrectly") //or here
 		return "", false
