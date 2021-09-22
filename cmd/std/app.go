@@ -59,7 +59,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, utils.Parameters) (
 }
 
 func parseTemplates() error {
-	templatesDir := filepath.Clean("../../views")
+	templatesDir := filepath.Clean("./views")
 	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
 	if err != nil {
 		return err
@@ -93,8 +93,8 @@ func main() {
 	}
 	log.Println("Templates loaded.")
 
-	log.Println("Loading routes.json from /views/routes.json")
-	jsonFile, err := os.Open("../../views/routes.json")
+	log.Println("Loading routes.json from ./views/routes.json")
+	jsonFile, err := os.Open("./views/routes.json")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -128,7 +128,7 @@ func main() {
 	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../../public"))))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
 
 	log.Fatal(http.ListenAndServe(pd.Port, nil))
 }

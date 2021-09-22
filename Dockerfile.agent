@@ -1,8 +1,8 @@
 FROM golang:1.16 AS builder
 ARG FRAMEWORK=std
 
-COPY . /build
-WORKDIR /build/cmd/${FRAMEWORK}
+WORKDIR /build
+COPY . .
 
 # Install the necessary ubuntu dependencies
 RUN apt-get update
@@ -23,7 +23,8 @@ RUN go mod download
 # Build the binary
 RUN contrast-go build \
     -ldflags='-w -s -extldflags "-static"' \
-    -o /build/app .
+    -o app \
+    ./cmd/${FRAMEWORK}
 
 # Move the finished build to a scratch container
 FROM scratch

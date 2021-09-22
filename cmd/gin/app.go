@@ -23,7 +23,7 @@ func templateData(name string) gin.H {
 }
 
 func loadTemplates() multitemplate.Renderer {
-	templatesDir := filepath.Clean("../../views")
+	templatesDir := filepath.Clean("./views")
 	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
 	if err != nil {
 		panic(err.Error())
@@ -55,7 +55,7 @@ func main() {
 	router.HTMLRender = loadTemplates()
 	log.Println("Templates loaded.")
 
-	router.StaticFS("/assets/", http.Dir("../../public/gin"))
+	router.StaticFS("/assets/", http.Dir("./public/gin"))
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.gohtml", templateData(""))
 	})

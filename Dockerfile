@@ -1,13 +1,14 @@
 FROM golang:1.16 AS builder
 ARG FRAMEWORK=std
 
-COPY . /build
-WORKDIR /build/cmd/${FRAMEWORK}
+WORKDIR /build
+COPY . .
 
 RUN go mod download
 RUN go build \
       -ldflags='-w -s -extldflags "-static"' \
-      -o /build/go-test-bench
+      -o go-test-bench \
+      ./cmd/${FRAMEWORK}
 
 FROM scratch
 WORKDIR /
