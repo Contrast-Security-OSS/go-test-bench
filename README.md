@@ -17,7 +17,7 @@ security professionals. Any maintainers are welcome to make pull requests.
 
 ## Installation Requirements
 
-- [Go toolchain](https://golang.org/dl/)
+- [Go 1.16 or higher](https://golang.org/dl/)
 
 - *Optional* [Docker for Mac](https://www.docker.com/docker-mac)
 
