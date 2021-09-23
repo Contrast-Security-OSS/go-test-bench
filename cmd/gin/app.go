@@ -47,7 +47,8 @@ func main() {
 	// Setup command line flags
 	portPtr := flag.Int("port", DefaultPort, "listen on this port")
 	flag.Parse()
-	base["Port"] = *portPtr
+	portAddr := fmt.Sprintf(":%d", *portPtr)
+	base["Port"] = portAddr
 
 	router := gin.Default()
 
@@ -74,6 +75,6 @@ func main() {
 	defer os.Remove(dbSrc.Name())
 	addSQLi(router, dbSrc)
 
-	log.Printf("Server startup at: localhost:%d\n", base["Port"])
-	log.Fatal(router.Run(fmt.Sprintf(":%d", base["Port"])))
+	log.Printf("Server startup at: localhost%s\n", portAddr)
+	log.Fatal(router.Run(portAddr))
 }

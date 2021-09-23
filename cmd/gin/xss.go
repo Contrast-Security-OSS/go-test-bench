@@ -30,5 +30,6 @@ func xssHandlerFunc(c *gin.Context) {
 	case "unsafe":
 	}
 
-	c.String(http.StatusOK, payload)
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Writer.WriteString(payload)
 }

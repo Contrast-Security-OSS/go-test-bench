@@ -22,7 +22,6 @@ func addPathTraversal(r *gin.Engine) {
 func ptHandlerFunc(c *gin.Context) {
 	source := c.Param("source")
 	payload := extractInput(c, source)
-	fmt.Println("payload", payload)
 
 	switch c.Param("type") {
 	case "noop":
