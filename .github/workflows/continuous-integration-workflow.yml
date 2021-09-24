@@ -26,7 +26,9 @@ jobs:
           go get -u github.com/client9/misspell/cmd/misspell
           misspell ./...
       - name: Execute go vet
-        run: go vet -race ./...
+        run: |
+          go mod download
+          go vet -race ./...
   test:
     strategy:
       matrix:
