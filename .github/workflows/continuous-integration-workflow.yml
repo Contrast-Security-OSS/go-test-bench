@@ -1,7 +1,6 @@
 name: CI
 
-# this is triggered on push to the repository
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   lint:
@@ -26,9 +25,7 @@ jobs:
           go get -u github.com/client9/misspell/cmd/misspell
           misspell ./...
       - name: Execute go vet
-        run: |
-          go mod download
-          go vet -race ./...
+        run: go vet -race ./...
   test:
     strategy:
       matrix:
