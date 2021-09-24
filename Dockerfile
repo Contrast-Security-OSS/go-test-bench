@@ -16,6 +16,8 @@ WORKDIR /
 COPY --from=builder /build/views /views
 COPY --from=builder /build/public /public
 COPY --from=builder /build/go-test-bench /go-test-bench
+# Copy /etc/passwd for easy path-traversal
+COPY --from=builder /etc/passwd /etc/passwd
 
 EXPOSE 8080
 
