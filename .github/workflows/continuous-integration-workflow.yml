@@ -9,21 +9,21 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.16.7
-      - name: Run gofmt
-        run: gofmt -s .
-      - name: Execute golint
-        run: |
-          go get -u golang.org/x/lint/golint
-          golint -set_exit_status ./...
-      - name: Execute ineffassign
-        run: |
-          go get -u github.com/gordonklaus/ineffassign
-          ineffassign ./...
-      - name: Execute misspell
-        run: |
-          go get -u github.com/client9/misspell/cmd/misspell
-          misspell ./...
+          go-version: 1.16
+      # - name: Run gofmt
+      #   run: gofmt -s .
+      # - name: Execute golint
+      #   run: |
+      #     go get -u golang.org/x/lint/golint
+      #     golint -set_exit_status ./...
+      # - name: Execute ineffassign
+      #   run: |
+      #     go get -u github.com/gordonklaus/ineffassign
+      #     ineffassign ./...
+      # - name: Execute misspell
+      #   run: |
+      #     go get -u github.com/client9/misspell/cmd/misspell
+      #     misspell ./...
       - name: Execute go vet
         run: go vet -race ./...
   # test:
