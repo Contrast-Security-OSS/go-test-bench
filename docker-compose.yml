@@ -1,7 +1,16 @@
 version: '3.7'
 services:
-  web:
+  std:
     build: .
+    ports:
+      - '8080:8080'
+    #depends_on:
+      #- mongo
+  gin:
+    build: 
+      context: .
+      args:
+        FRAMEWORK: gin
     ports:
       - '8080:8080'
     #depends_on:

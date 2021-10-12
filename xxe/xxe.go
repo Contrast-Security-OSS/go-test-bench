@@ -12,6 +12,8 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
 
+// FIXME: These don't appear to be XXE vulnerabilities to me... Can we delete this package?
+
 func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, mode string) (template.HTML, bool) {
 	var command *exec.Cmd
 	var userInput string
@@ -41,14 +43,7 @@ func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.
 }
 
 func xxeTemplate(w http.ResponseWriter, r *http.Request, routeInfo utils.Route) (template.HTML, bool) {
-	var buf bytes.Buffer
-	templates := template.Must(template.ParseFiles("./views/partials/safeButtons.gohtml", "./views/pages/xxe.gohtml", "./views/partials/ruleInfo.gohtml"))
-	err := templates.ExecuteTemplate(&buf, "xxe", routeInfo)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
-
+	return "xxe.gohtml", true
 }
 
 // Handler is the API handler for XXE

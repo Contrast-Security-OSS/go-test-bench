@@ -1,7 +1,6 @@
 package unvalidated
 
 import (
-	"bytes"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -9,12 +8,6 @@ import (
 
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
-
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/unvalidatedRedirect.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
 
 func httpRedirectHandler(w http.ResponseWriter, r *http.Request, pd utils.Parameters, splitURL []string) (template.HTML, bool) {
 	mode := splitURL[len(splitURL)-1]
@@ -35,13 +28,7 @@ func httpRedirectHandler(w http.ResponseWriter, r *http.Request, pd utils.Parame
 }
 
 func unvalidatedTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "unvalidatedRedirect", pd.Rulebar[pd.Name])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
+	return "unvalidatedRedirect.gohtml", true
 }
 
 // Handler is the API handler for unvalidated redirect

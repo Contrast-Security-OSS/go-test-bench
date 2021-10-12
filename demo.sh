@@ -1,15 +1,15 @@
 #!/bin/bash
 
 function clean() {
-    echo Stopping Go Demo Containers
+    echo "Stopping Go Demo Containers"
     docker-compose -f docker-compose.demo.yml stop
 
-    echo Removing Go Demo Containers
+    echo "Removing Go Demo Containers"
     docker-compose -f docker-compose.demo.yml rm
 }
 
 function rebuild() {
-    echo Re-Building Go Demo Environment
+    echo "Re-Building Go Demo Environment"
     docker-compose -f docker-compose.demo.yml build --no-cache
 }
 
@@ -21,13 +21,12 @@ elif [[ "$1" == "update" ]] ; then
     
     clean
 
-    echo Updating Go Test Bench
+    echo "Updating Go Test Bench"
     git stash
     git pull origin
 
     rebuild
 else
-    echo Starting Go Demo Container
-
-    docker-compose -f docker-compose.demo.yml up
+    echo "Starting Go Demo Container for standard library"
+    docker-compose -f docker-compose.demo.yml up std
 fi

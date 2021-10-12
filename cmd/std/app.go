@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -12,8 +11,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmdi"
 	"github.com/Contrast-Security-OSS/go-test-bench/pathtraversal"
@@ -24,61 +21,61 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/xss"
 )
 
-var pd utils.Parameters
-var t *template.Template
+var pd = utils.Parameters{
+	Year: 2020,
+	Logo: "https://blog.golang.org/gopher/header.jpg",
+}
+var templates = make(map[string]*template.Template)
 
 // DefaultPort is the port that the API runs on if no command line argument is specified
 const DefaultPort = 8080
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
+	var t *template.Template
 	if r.URL.Path == "/" {
-		pd.Body = "<h1 class=\"page-header\">Contrast Go Test Bench</h1>\n <img src=\"https://blog.golang.org/gopher/header.jpg\">"
+		t = templates["index.gohtml"]
 	} else {
-		//var templates = template.Must(template.ParseFiles("./views/pages/underConstruction.gohtml"))
-		var buf bytes.Buffer
-		err := t.ExecuteTemplate(&buf, "underConstruction.gohtml", nil)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-		pd.Body = template.HTML(buf.String()) //"<h1> Under Construction</h1>\n <img src=\"https://golang.org/doc/gopher/pencil/gopherswrench.jpg\">"
+		t = templates["underConstruction.gohtml"]
 	}
-	pd.Year = time.Now().Year()
-	err := t.ExecuteTemplate(w, "layout.gohtml", &pd)
+	err := t.ExecuteTemplate(w, "layout.gohtml", pd)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Print(err.Error())
 	}
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, utils.Parameters) (template.HTML, bool), name string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var useLayout bool
-		pd.Year = time.Now().Year()
 		pd.Name = name
-		pd.Body, useLayout = fn(w, r, pd)
+		data, useLayout := fn(w, r, pd)
 		if useLayout {
-			err := t.ExecuteTemplate(w, "layout.gohtml", &pd)
+			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &pd)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				log.Print(err.Error())
 			}
 		} else {
-			_, _ = fmt.Fprint(w, string(pd.Body))
+			fmt.Fprint(w, data)
 		}
-
 	}
 }
 
-func parseTemplates() (*template.Template, error) {
-	templ := template.New("")
-	err := filepath.Walk("./views", func(path string, info os.FileInfo, err error) error {
-		if strings.Contains(path, ".gohtml") {
-			if _, err = templ.ParseFiles(path); err != nil {
-				log.Println(err)
-			}
-			log.Println("Loading - " + path)
-		}
+func parseTemplates() error {
+	templatesDir := filepath.Clean("./views")
+	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
+	if err != nil {
 		return err
-	})
-	return templ, err
+	}
+	partials, err := filepath.Glob(filepath.Join(templatesDir, "partials", "*.gohtml"))
+	if err != nil {
+		return err
+	}
+	layout := filepath.Join(templatesDir, "layout.gohtml")
+
+	for _, p := range pages {
+		files := append([]string{layout, p}, partials...)
+		templates[filepath.Base(p)] = template.Must(template.ParseFiles(files...))
+	}
+
+	return nil
 }
 
 func main() {
@@ -88,18 +85,15 @@ func main() {
 	flag.Parse()
 	port := *portPtr
 
-	var err error
 	pd.Port = fmt.Sprintf(":%d", port)
-	log.Println("Loading Templates: ")
-	log.Println("----------------------------------")
-	t, err = parseTemplates()
+	log.Println("Loading templates...")
+	err := parseTemplates()
 	if err != nil {
 		log.Fatalln("Cannot parse templates:", err)
 	}
-	log.Println("----------------------------------")
-	log.Println("Templates Loaded ")
+	log.Println("Templates loaded.")
 
-	log.Println("Loading routes.json from /views/routes.json")
+	log.Println("Loading routes.json from ./views/routes.json")
 	jsonFile, err := os.Open("./views/routes.json")
 	if err != nil {
 		log.Fatalln(err)
@@ -112,7 +106,7 @@ func main() {
 	_ = jsonFile.Close()
 	_ = json.Unmarshal([]byte(byteValue), &pd.Rulebar)
 
-	log.Println("Server Startup at: localhost" + pd.Port)
+	log.Println("Server startup at: localhost" + pd.Port)
 
 	// Attempt to connect to MongoDB with a 30 second timeout
 	// err = nosql.MongoInit(time.Second * 30)
@@ -134,7 +128,7 @@ func main() {
 	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("public"))))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
 
 	log.Fatal(http.ListenAndServe(pd.Port, nil))
 }

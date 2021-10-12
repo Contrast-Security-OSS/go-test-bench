@@ -12,12 +12,6 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/utils"
 )
 
-var templates = template.Must(template.ParseFiles(
-	"./views/partials/safeButtons.gohtml",
-	"./views/pages/xss.gohtml",
-	"./views/partials/ruleInfo.gohtml",
-))
-
 func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
 	var input string
 
@@ -39,6 +33,7 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 
 // bufferedQueryHandler used as a handler which uses bytes.Buffer for source input ignoring the user input
 func bufferedQueryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
+	// FIXME(GO-1031): This buffer is populated with constant strings. There is no vulnerability here.
 	var buf bytes.Buffer
 	buf.Write([]byte("<script>"))
 	buf.WriteString("alert('buffered input - ")
@@ -72,10 +67,10 @@ func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (templ
 
 	switch safety {
 	case "safe":
-		input = utils.GetPathValue(r, 4, 5)
+		input = utils.GetPathValue(r, 5, 6)
 		input = url.QueryEscape(input)
 	case "unsafe":
-		input = utils.GetPathValue(r, 4, 5)
+		input = utils.GetPathValue(r, 5, 6)
 	case "noop":
 		return template.HTML("NOOP"), false
 	default:
@@ -170,32 +165,31 @@ func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (tem
 }
 
 func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
-	var buf bytes.Buffer
-
-	err := templates.ExecuteTemplate(&buf, "xss", pd.Rulebar[pd.Name])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	return template.HTML(buf.String()), true
+	return "xss.gohtml", true
 }
 
 // Handler is the API handler for XSS
 func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
+	var handler func(http.ResponseWriter, *http.Request, string) (template.HTML, bool)
 	switch splitURL[2] {
 	case "query":
-		return queryHandler(w, r, splitURL[4])
+		handler = queryHandler
 	case "buffered-query":
-		return bufferedQueryHandler(w, r, splitURL[4])
+		handler = bufferedQueryHandler
 	case "params":
-		return paramsHandler(w, r, splitURL[6])
+		handler = paramsHandler
 	case "body":
-		return bodyHandler(w, r, splitURL[4])
+		handler = bodyHandler
 	case "buffered-body":
-		return bufferedBodyHandler(w, r, splitURL[4])
+		handler = bufferedBodyHandler
 	case "response":
-		return responseHandler(w, r, splitURL[4])
+		handler = responseHandler
 	default:
+	}
+	if handler == nil {
 		return xssTemplate(w, r, pd)
 	}
+	safety := splitURL[4]
+	return handler(w, r, safety)
 }
