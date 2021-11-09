@@ -37,6 +37,8 @@ Download your configuration YAML file from the Contrast environment by selecting
 
 `./demo.sh $FRAMEWORK`
 
+example: `./demo.sh std`
+
 The Go Test Bench supports the following frameworks:
 
 * std (standard library `net/http`)
