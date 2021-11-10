@@ -4,22 +4,21 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
+	"log"
+	"net/http"
 	"net/url"
+	"os"
+	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 
 	// database import for sqlite3
 	_ "github.com/mattn/go-sqlite3"
-
-	"html/template"
-	"log"
-	"net/http"
-	"os"
-	"strings"
 )
 
-func sqliTemplate(w http.ResponseWriter, r *http.Request, params utils.Parameters) (template.HTML, bool) {
+func sqliTemplate(w http.ResponseWriter, r *http.Request, params common.Parameters) (template.HTML, bool) {
 	return "sqlInjection.gohtml", true
 }
 
@@ -74,7 +73,7 @@ func sqlite3Handler(w http.ResponseWriter, r *http.Request, splitURL []string) (
 		return bodyHandler(w, r, splitURL)
 	case "query":
 		var err error
-		userInput := utils.GetUserInput(r)
+		userInput := common.GetUserInput(r)
 		query, err = getSqliteQuery(userInput, splitURL[4])
 		if err != nil {
 			return template.HTML(err.Error()), false
@@ -138,7 +137,7 @@ func getSqliteQuery(userInput, safety string) (string, error) {
 }
 
 // Handler is the API handler for sql injection
-func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 	if len(splitURL) < 4 {
 		return sqliTemplate(w, r, pd)

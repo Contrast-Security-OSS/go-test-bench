@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	bson "go.mongodb.org/mongo-driver/bson"
 	mongo "go.mongodb.org/mongo-driver/mongo"
 	options "go.mongodb.org/mongo-driver/mongo/options"
@@ -50,7 +50,7 @@ func MongoKill() {
 }
 
 func mongoDBHandler(w http.ResponseWriter, r *http.Request, mode string) (template.HTML, bool) {
-	formValue := utils.GetUserInput(r)
+	formValue := common.GetUserInput(r)
 
 	switch mode {
 	case "safe":
@@ -107,7 +107,7 @@ func nosqlTemplate(w http.ResponseWriter, r *http.Request) (template.HTML, bool)
 }
 
 // Handler is the nosql endpoint API handler
-func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 	switch splitURL[2] {
 

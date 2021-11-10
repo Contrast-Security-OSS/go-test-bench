@@ -3,12 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
@@ -16,15 +20,23 @@ import (
 // DefaultPort is the port that the API runs on if no command line argument is specified
 const DefaultPort = 8080
 
-var base = gin.H{"Rulebar": rules, "Framework": "Gin", "Logo": "https://raw.githubusercontent.com/gin-gonic/logo/master/color.png"}
+var base = gin.H{"Framework": "Gin", "Logo": "https://raw.githubusercontent.com/gin-gonic/logo/master/color.png"}
 
+//return a copy of 'base', with Name updated. uses a copy to avoid race conditions.
 func templateData(name string) gin.H {
-	base["Name"] = name
-	return base
+	cpy := make(gin.H)
+	for k, v := range base {
+		cpy[k] = v
+	}
+	cpy["Name"] = name
+	return cpy
 }
 
 func loadTemplates() multitemplate.Renderer {
-	templatesDir := filepath.Clean("./views")
+	templatesDir, err := common.FindViewsDir()
+	if err != nil {
+		panic(err.Error())
+	}
 	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
 	if err != nil {
 		panic(err.Error())
@@ -35,21 +47,52 @@ func loadTemplates() multitemplate.Renderer {
 	}
 	layout := filepath.Join(templatesDir, "layout.gohtml")
 
+	fmap := template.FuncMap{"tolower": strings.ToLower}
+
 	r := multitemplate.NewRenderer()
 	for _, p := range pages {
 		files := append([]string{layout, p}, partials...)
-		r.AddFromFiles(filepath.Base(p), files...)
+		r.AddFromFilesFuncs(filepath.Base(p), fmap, files...)
 	}
 
 	return r
 }
 
+//add a handler to gin
+func add(router *gin.Engine, rt common.Route) {
+	base := router.Group(rt.Base)
+	base.GET("", func(c *gin.Context) {
+		c.HTML(http.StatusOK, rt.TmplFile, templateData(rt.Base))
+	})
+	for _, s := range rt.Sinks {
+		sinkFn := func(c *gin.Context) {
+			mode := c.Param("mode")
+			source := c.Param("source")
+			payload := extractInput(c, source)
+
+			tmpl, b := s.Handler(mode, payload)
+			if b {
+				log.Fatal("error: bool arg is not handled")
+			}
+			c.String(http.StatusOK, string(tmpl))
+		}
+		sinkPg := base.Group("/" + s.URL)
+		sinkPg.GET("/:source/:mode", sinkFn)
+		sinkPg.POST("/:source/:mode", sinkFn)
+	}
+}
+
 func main() {
 	// Setup command line flags
-	portPtr := flag.Int("port", DefaultPort, "listen on this port")
+	port := flag.Int("port", DefaultPort, "listen on this `port` on localhost")
 	flag.Parse()
-	portAddr := fmt.Sprintf(":%d", *portPtr)
-	base["Port"] = portAddr
+	addr := fmt.Sprintf("localhost:%d", *port)
+	base["Addr"] = addr
+
+	//register all routes at this point, before AllRoutes is used.
+	cmdi.RegisterRoutes("gin")
+
+	base["Rulebar"] = common.PopulateRouteMap(common.AllRoutes)
 
 	router := gin.Default()
 
@@ -57,12 +100,14 @@ func main() {
 	router.HTMLRender = loadTemplates()
 	log.Println("Templates loaded.")
 
-	router.StaticFS("/assets/", http.Dir("./public/gin"))
+	router.StaticFS("/assets/", http.Dir("./public"))
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.gohtml", templateData(""))
 	})
 
-	addCMDi(router)
+	for _, h := range common.AllRoutes {
+		add(router, h)
+	}
 	addPathTraversal(router)
 	addReflectedXSS(router)
 	addSSRF(router)
@@ -88,6 +133,6 @@ func main() {
 		os.Exit(0)
 	}()
 
-	log.Printf("Server startup at: localhost%s\n", portAddr)
-	log.Fatal(router.Run(portAddr))
+	log.Printf("Server startup at: %s\n", addr)
+	log.Fatal(router.Run(addr))
 }

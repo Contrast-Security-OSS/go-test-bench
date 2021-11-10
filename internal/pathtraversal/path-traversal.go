@@ -11,10 +11,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
-func pathTTemplate(w http.ResponseWriter, r *http.Request, data utils.Parameters) (template.HTML, bool) {
+func pathTTemplate(w http.ResponseWriter, r *http.Request, data common.Parameters) (template.HTML, bool) {
 	return "pathTraversal.gohtml", true
 }
 
@@ -157,7 +157,7 @@ func writeFile(filename, message string) error {
 }
 
 //Handler is the API handler for path traversal
-func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 	if len(splitURL) < 4 {
 		return pathTTemplate(w, r, pd)
@@ -171,7 +171,7 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 
 	isBuffered := strings.Contains(splitURL[2], "buffered")
 
-	userInput := utils.GetUserInput(r)
+	userInput := common.GetUserInput(r)
 
 	switch splitURL[3] {
 	case "ioutil.ReadFile":

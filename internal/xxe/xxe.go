@@ -9,12 +9,12 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
 // FIXME: These don't appear to be XXE vulnerabilities to me... Can we delete this package?
 
-func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route, mode string) (template.HTML, bool) {
+func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo common.Route, mode string) (template.HTML, bool) {
 	var command *exec.Cmd
 	var userInput string
 
@@ -42,12 +42,12 @@ func encodingXMLHandler(w http.ResponseWriter, r *http.Request, routeInfo utils.
 	return template.HTML(out.String()), false
 }
 
-func xxeTemplate(w http.ResponseWriter, r *http.Request, routeInfo utils.Route) (template.HTML, bool) {
+func xxeTemplate(w http.ResponseWriter, r *http.Request, routeInfo common.Route) (template.HTML, bool) {
 	return "xxe.gohtml", true
 }
 
 // Handler is the API handler for XXE
-func Handler(w http.ResponseWriter, r *http.Request, routeInfo utils.Route) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, routeInfo common.Route) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 	fmt.Println(splitURL)
 	switch splitURL[2] {

@@ -2,28 +2,27 @@ package main
 
 import (
 	"html/template"
+	"strings"
 
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/cmdi"
-	"github.com/Contrast-Security-OSS/go-test-bench/pathtraversal"
-	"github.com/Contrast-Security-OSS/go-test-bench/sqli"
-	"github.com/Contrast-Security-OSS/go-test-bench/ssrf"
-	"github.com/Contrast-Security-OSS/go-test-bench/unvalidated"
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
-	"github.com/Contrast-Security-OSS/go-test-bench/xss"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/ssrf"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/unvalidated"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/xss"
 )
 
-var pd = utils.Parameters{
-	Year: 2020,
-	Logo: "https://blog.golang.org/gopher/header.jpg",
+var pd = common.ConstParams{
+	Year:      2020,
+	Logo:      "https://blog.golang.org/gopher/header.jpg",
+	Framework: "stdlib",
 }
 var templates = make(map[string]*template.Template)
 
@@ -43,12 +42,47 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func makeHandler(fn func(http.ResponseWriter, *http.Request, utils.Parameters) (template.HTML, bool), name string) http.HandlerFunc {
+func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) (template.HTML, bool), name string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		pd.Name = name
-		data, useLayout := fn(w, r, pd)
+		var parms = common.Parameters{
+			ConstParams: pd,
+			Name:        name,
+		}
+		data, useLayout := fn(w, r, parms)
 		if useLayout {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &pd)
+			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+			if err != nil {
+				log.Print(err.Error())
+			}
+		} else {
+			fmt.Fprint(w, data)
+		}
+	}
+}
+
+func newHandler(v common.Route) http.HandlerFunc {
+	log.Printf("handler %s: p=%q f=%q", v.Name, v.Base, v.TmplFile)
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println(v.Name, r.URL.Path)
+		var parms = common.Parameters{
+			ConstParams: pd,
+			Name:        v.Base,
+		}
+		var data = template.HTML(v.TmplFile)
+		isTmpl := true
+		elems := strings.Split(r.URL.Path, "/")
+		// To figure out whether we're serving a sink or the main page, check the
+		// element with index 2 against each Sink.URL; if no match, serve main page.
+		// Seems like there should be a less ugly way...
+		for _, s := range v.Sinks {
+			if len(elems) > 2 && elems[2] == s.URL {
+				mode := elems[len(elems)-1]
+				data, isTmpl = s.Handler(mode, common.GetUserInput(r))
+				break
+			}
+		}
+		if isTmpl {
+			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
 			}
@@ -59,33 +93,53 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, utils.Parameters) (
 }
 
 func parseTemplates() error {
-	templatesDir := filepath.Clean("./views")
+	templatesDir, err := common.FindViewsDir()
+	if err != nil {
+		return err
+	}
 	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
 	if err != nil {
 		return err
+	}
+	if len(pages) == 0 {
+		log.Fatal("nothing found in ./views/pages")
 	}
 	partials, err := filepath.Glob(filepath.Join(templatesDir, "partials", "*.gohtml"))
 	if err != nil {
 		return err
 	}
+	if len(partials) == 0 {
+		log.Fatal("nothing found in ./views/partials")
+	}
 	layout := filepath.Join(templatesDir, "layout.gohtml")
+
+	fmap := template.FuncMap{"tolower": strings.ToLower}
 
 	for _, p := range pages {
 		files := append([]string{layout, p}, partials...)
-		templates[filepath.Base(p)] = template.Must(template.ParseFiles(files...))
+		tmpl, err := template.New(p).Funcs(fmap).ParseFiles(files...)
+		if err != nil {
+			log.Fatal(err)
+		}
+		templates[filepath.Base(p)] = tmpl
 	}
 
 	return nil
 }
 
 func main() {
-
-	// Setup command line flags
-	portPtr := flag.Int("port", DefaultPort, "listen on this port")
+	// set up command line flag
+	port := flag.Int("port", DefaultPort, "listen on this `port` on localhost")
+	flag.BoolVar(&common.Verbose, "v", true, "increase verbosity")
 	flag.Parse()
-	port := *portPtr
+	pd.Addr = fmt.Sprintf("localhost:%d", *port)
 
-	pd.Port = fmt.Sprintf(":%d", port)
+	setup()
+	log.Fatal(http.ListenAndServe(pd.Addr, nil))
+}
+
+//split out for testing
+func setup() {
 	log.Println("Loading templates...")
 	err := parseTemplates()
 	if err != nil {
@@ -93,20 +147,12 @@ func main() {
 	}
 	log.Println("Templates loaded.")
 
-	log.Println("Loading routes.json from ./views/routes.json")
-	jsonFile, err := os.Open("./views/routes.json")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	//register all routes at this point.
+	cmdi.RegisterRoutes("stdlib")
 
-	byteValue, err := ioutil.ReadAll(jsonFile)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	_ = jsonFile.Close()
-	_ = json.Unmarshal([]byte(byteValue), &pd.Rulebar)
+	pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
-	log.Println("Server startup at: localhost" + pd.Port)
+	log.Println("Server startup at: " + pd.Addr)
 
 	// Attempt to connect to MongoDB with a 30 second timeout
 	// err = nosql.MongoInit(time.Second * 30)
@@ -118,9 +164,13 @@ func main() {
 	//defer nosql.MongoKill()
 
 	http.HandleFunc("/", rootHandler)
+
+	for _, r := range common.AllRoutes {
+		http.HandleFunc(r.Base+"/", newHandler(r))
+	}
+
 	http.HandleFunc("/ssrf/", makeHandler(ssrf.Handler, "ssrf"))
 	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidated.Handler, "unvalidatedRedirect"))
-	http.HandleFunc("/cmdInjection/", makeHandler(cmdi.Handler, "cmdInjection"))
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
@@ -129,6 +179,4 @@ func main() {
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
-
-	log.Fatal(http.ListenAndServe(pd.Port, nil))
 }

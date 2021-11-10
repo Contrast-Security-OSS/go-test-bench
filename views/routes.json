@@ -1,20 +1,4 @@
 {
-
-    "cmdInjection" :  {
-        "base"     :  "/cmdInjection",
-        "name"     :  "Command Injection",
-        "link"     :  "https://www.owasp.org/index.php/Command_Injection",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "cookies"],
-        "sinks"    :  [
-            {
-                "name"   : "os.Exec",
-                "url"    : "\/cmdInjection\/osExec",
-                "method" : "GET"
-            }
-        ]
-    },
-
     "cmdInjectionSemanticChainedCommands" :  {
         "base"     :  "/cmdInjectionSemanticChainedCommands",
         "name"     :  "Command Injection Semantic Chained Commands",
@@ -53,9 +37,10 @@
         "inputs"   :  ["query"], 
         "sinks"    :  [
             {
-                "name"   : "mongodb.Collection.Find",
-                "url"    : "\/nosqlInjection\/query\/mongodbCollectionFind",
-                "method" : "GET"
+                "thisSink": "disabled",
+                "_name"   : "mongodb.Collection.Find",
+                "url"     : "\/nosqlInjection\/query\/mongodbCollectionFind",
+                "method"  : "GET"
             }
         ]
     },

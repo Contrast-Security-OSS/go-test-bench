@@ -1,20 +1,17 @@
 package ssrf
 
-//if we want to get this package we just call "ssrf" as an import now
 import (
-	//"fmt"
-
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
 // Handler is the API handler for SSRF
-func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	if r.URL.Path == "/ssrf/" { //or "/ssrf"
 		return bodyHandler(w, r)
 	}
@@ -38,7 +35,7 @@ func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (templ
 func httpHandler(w http.ResponseWriter, r *http.Request, method string) {
 	var res *http.Response
 	var err error
-	userInput := utils.GetUserInput(r)
+	userInput := common.GetUserInput(r)
 	switch method {
 	case "query":
 		if userInput != "" {

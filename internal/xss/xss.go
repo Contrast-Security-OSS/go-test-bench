@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/utils"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
 func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
@@ -17,10 +17,10 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 
 	switch safety {
 	case "safe":
-		input = utils.GetUserInput(r)
+		input = common.GetUserInput(r)
 		input = url.QueryEscape(input)
 	case "unsafe":
-		input = utils.GetUserInput(r)
+		input = common.GetUserInput(r)
 	case "noop":
 		return template.HTML("NOOP"), false
 	default:
@@ -67,10 +67,10 @@ func paramsHandler(w http.ResponseWriter, r *http.Request, safety string) (templ
 
 	switch safety {
 	case "safe":
-		input = utils.GetPathValue(r, 5, 6)
+		input = common.GetPathValue(r, 5, 6)
 		input = url.QueryEscape(input)
 	case "unsafe":
-		input = utils.GetPathValue(r, 5, 6)
+		input = common.GetPathValue(r, 5, 6)
 	case "noop":
 		return template.HTML("NOOP"), false
 	default:
@@ -88,10 +88,10 @@ func bodyHandler(w http.ResponseWriter, r *http.Request, safety string) (templat
 
 	switch safety {
 	case "safe":
-		input = utils.GetUserInput(r)
+		input = common.GetUserInput(r)
 		input = url.QueryEscape(input)
 	case "unsafe":
-		input = utils.GetUserInput(r)
+		input = common.GetUserInput(r)
 	case "noop":
 		return template.HTML("NOOP"), false
 	default:
@@ -107,7 +107,7 @@ func bufferedBodyHandler(w http.ResponseWriter, r *http.Request, safety string) 
 		return template.HTML("Cannot GET " + r.URL.Path), false
 	}
 	var input string
-	buf := bytes.NewBufferString(utils.GetUserInput(r))
+	buf := bytes.NewBufferString(common.GetUserInput(r))
 
 	switch safety {
 	case "safe":
@@ -140,7 +140,7 @@ func getSimpleHTTPResponse(userInput string) *http.Response {
 }
 
 func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	userInput := utils.GetUserInput(r)
+	userInput := common.GetUserInput(r)
 	switch safety {
 	case "safe":
 		userInput = url.QueryEscape(userInput)
@@ -164,12 +164,12 @@ func responseHandler(w http.ResponseWriter, r *http.Request, safety string) (tem
 	return template.HTML(""), false
 }
 
-func xssTemplate(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func xssTemplate(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	return "xss.gohtml", true
 }
 
 // Handler is the API handler for XSS
-func Handler(w http.ResponseWriter, r *http.Request, pd utils.Parameters) (template.HTML, bool) {
+func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 	var handler func(http.ResponseWriter, *http.Request, string) (template.HTML, bool)
 	switch splitURL[2] {

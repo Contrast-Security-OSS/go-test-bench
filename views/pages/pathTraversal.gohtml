@@ -2,7 +2,7 @@
 <h1 class="page-header">Path Traversal</h1>
 {{$routeInfo := index .Rulebar .Name}}
 {{$base := $routeInfo.Base}}
-{{$port := .Port}}
+{{$addr := .Addr}}
 {{$inputs := $routeInfo.Inputs}}
 {{template "ruleInfo" $routeInfo}}
 <!-- <% groupedSinkData.query.forEach(function(sink, i) { %> -->
@@ -32,13 +32,13 @@
         <h4 class="sub-header">Headers</h4>
         <!--<% headerSink = groupedSinkData.headers[i] %> -->
         <p>
-        <pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/{{.Name}}/unsafe -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
+        <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/{{.Name}}/unsafe -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
         </p>
         <p>
-        <pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/{{.Name}}/safe -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
+        <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/{{.Name}}/safe -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
         </p>
         <p>
-        <pre>curl http://localhost{{$port}}{{$base}}/{{index $inputs 1}}/{{.Name}}/noop -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
+        <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/{{.Name}}/noop -H "input: ../../../../../../../../../../../../etc/passwd"</pre>
         </p>
         <!--<% }); %> -->
         <!--<% bodySink = groupedSinkData.body[i] %> -->
