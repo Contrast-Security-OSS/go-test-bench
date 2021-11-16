@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,6 +36,10 @@ func ptHandlerFunc(c *gin.Context) {
 	var out string
 	switch c.Param("rw") {
 	case "gin.File":
+		if _, err := os.Stat(payload); err != nil {
+			// disambiguate - the 404 is for the file, not for an incorrect endpoint
+			fmt.Fprintf(c.Writer, "endpoint hit; gin.File returns 404 for not found\n")
+		}
 		c.File(payload)
 		return
 	case "ioutil.ReadFile":

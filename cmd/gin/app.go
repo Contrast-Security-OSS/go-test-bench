@@ -92,8 +92,29 @@ func main() {
 	//register all routes at this point, before AllRoutes is used.
 	cmdi.RegisterRoutes("gin")
 
-	base["Rulebar"] = common.PopulateRouteMap(common.AllRoutes)
+	rmap := common.PopulateRouteMap(common.AllRoutes)
 
+	//temporary fix up to path traversal route data - gin supports an additional method
+	//this will go into path traversal's RegisterRoutes() func when it's migrated
+	pt, ok := rmap["pathTraversal"]
+	if !ok {
+		for k := range rmap {
+			log.Println(k)
+		}
+		log.Fatal("missing")
+	}
+	log.Println(pt)
+	pt.Sinks = append(
+		pt.Sinks,
+		common.Sink{
+			Name:   "gin.File",
+			URL:    "/pathTraversal",
+			Method: "GET",
+		},
+	)
+	rmap["pathTraversal"] = pt
+
+	base["Rulebar"] = rmap
 	router := gin.Default()
 
 	log.Println("Loading templates...")
