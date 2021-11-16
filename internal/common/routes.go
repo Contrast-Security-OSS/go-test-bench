@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// Verbose increases the verbosity of logging.
 var Verbose bool
 
 // HandlerFn is a framework-agnostic function to handle a vulnerable endpoint.
@@ -51,7 +52,10 @@ func (r *Route) String() string {
 	return strings.Join(lines, "    \n")
 }
 
+// RouteMap is a map from base path to Route
 type RouteMap map[string]Route
+
+// Routes is a slice of Route
 type Routes []Route
 
 func (rs Routes) String() string {
@@ -92,7 +96,7 @@ func Register(r Route) {
 	AllRoutes = append(AllRoutes, r)
 }
 
-//Look for views dir in working dir
+// FindViewsDir looks for views dir in working dir or two dirs up, where it's likely to be found in tests
 func FindViewsDir() (string, error) {
 	path := "views"
 	fi, err := os.Stat(path)

@@ -11,6 +11,7 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
+// RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
 func RegisterRoutes( /* framework - unused */ string) {
 	common.Register(common.Route{
 		Name:     "Command Injection",
