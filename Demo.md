@@ -7,6 +7,12 @@ Install Git and Docker to your system
 * [Git](https://git-scm.com/)
 * [Docker](https://docs.docker.com/get-docker/)
 
+Make sure the Docker daemon is running. You can check this by running
+
+`docker info`
+
+If that command succeeds, then you're ready to continue to the next step.
+
 ## Step 2 - Clone the go-test-bench application
 
 Open the terminal on your local system and navigate to a safe working directory.
@@ -29,7 +35,16 @@ Download your configuration YAML file from the Contrast environment by selecting
 
 ## Step 4 - Start the DEMO environment
 
-`./demo.sh`
+`./demo.sh $FRAMEWORK`
+
+example: `./demo.sh std`
+
+The Go Test Bench supports the following frameworks:
+
+* std (standard library `net/http`)
+* [gin](https://github.com/gin-gonic/gin)
+
+If no framework is specified, the standard library is used.
 
 **NOTE: The first execution will take time because it has to build the environment**
 
