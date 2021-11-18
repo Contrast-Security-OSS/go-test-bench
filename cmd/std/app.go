@@ -61,7 +61,6 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) 
 }
 
 func newHandler(v common.Route) http.HandlerFunc {
-	log.Printf("handler %s: p=%q f=%q", v.Name, v.Base, v.TmplFile)
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println(v.Name, r.URL.Path)
 		var parms = common.Parameters{
