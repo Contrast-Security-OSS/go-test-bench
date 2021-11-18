@@ -24,7 +24,7 @@ var base = gin.H{"Framework": "Gin", "Logo": "https://raw.githubusercontent.com/
 
 //return a copy of 'base', with Name updated. uses a copy to avoid race conditions.
 func templateData(name string) gin.H {
-	cpy := make(gin.H)
+	cpy := make(gin.H, len(base)+1)
 	for k, v := range base {
 		cpy[k] = v
 	}
@@ -77,8 +77,7 @@ func add(router *gin.Engine, rt common.Route) {
 			c.String(http.StatusOK, string(tmpl))
 		}
 		sinkPg := base.Group("/" + s.URL)
-		sinkPg.GET("/:source/:mode", sinkFn)
-		sinkPg.POST("/:source/:mode", sinkFn)
+		sinkPg.Handle(s.Method, "/:source/:mode", sinkFn)
 	}
 }
 
@@ -103,7 +102,6 @@ func main() {
 		}
 		log.Fatal("missing")
 	}
-	log.Println(pt)
 	pt.Sinks = append(
 		pt.Sinks,
 		common.Sink{
