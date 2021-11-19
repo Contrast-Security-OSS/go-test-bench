@@ -77,6 +77,7 @@ func add(router *gin.Engine, rt common.Route) {
 			c.String(http.StatusOK, string(tmpl))
 		}
 		sinkPg := base.Group("/" + s.URL)
+		//route data isn't a perfect match for the method(s) we actually use, so just accept anything
 		sinkPg.Any("/:source/:mode", sinkFn)
 	}
 }
@@ -93,24 +94,8 @@ func main() {
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
-	//temporary fix up to path traversal route data - gin supports an additional method
-	//this will go into path traversal's RegisterRoutes() func when it's migrated
-	pt, ok := rmap["pathTraversal"]
-	if !ok {
-		for k := range rmap {
-			log.Println(k)
-		}
-		log.Fatal("missing")
-	}
-	pt.Sinks = append(
-		pt.Sinks,
-		common.Sink{
-			Name:   "gin.File",
-			URL:    "/pathTraversal",
-			Method: "GET",
-		},
-	)
-	rmap["pathTraversal"] = pt
+	//until all routes are migrated to the new model, we need to do a few fixups
+	rmap = preMigrationFixups(rmap)
 
 	base["Rulebar"] = rmap
 	router := gin.Default()
@@ -154,4 +139,40 @@ func main() {
 
 	log.Printf("Server startup at: %s\n", addr)
 	log.Fatal(router.Run(addr))
+}
+
+//temporary fixes until remainder of code migrates to new model
+func preMigrationFixups(rmap common.RouteMap) common.RouteMap {
+	//for path traversal, gin supports an additional method
+	//this will go into path traversal's RegisterRoutes() func when it's migrated
+	pt, ok := rmap["pathTraversal"]
+	if !ok {
+		for k := range rmap {
+			log.Println(k)
+		}
+		log.Fatal("path traversal is missing")
+	}
+	pt.Sinks = append(
+		[]common.Sink{{
+			Name:   "gin.File",
+			URL:    "/pathTraversal",
+			Method: "GET",
+		}},
+		pt.Sinks...,
+	)
+	rmap["pathTraversal"] = pt
+
+	// unvalidated redirect; for now, just handle the gin method
+	ur, ok := rmap["unvalidatedRedirect"]
+	if !ok {
+		for k := range rmap {
+			log.Println(k)
+		}
+		log.Fatal("unvalidated redirect is missing")
+	}
+	ur.Sinks[0].Name = "gin.Redirect"
+	ur.Sinks[0].URL = strings.Replace(ur.Sinks[0].URL, "http.", "gin.", 1)
+	rmap["unvalidatedRedirect"] = ur
+
+	return rmap
 }
