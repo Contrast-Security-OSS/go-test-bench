@@ -1,4 +1,4 @@
-package main
+package servegin
 
 import (
 	"database/sql"
