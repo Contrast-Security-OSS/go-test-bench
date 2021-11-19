@@ -37,7 +37,7 @@
         "inputs"   :  ["query"], 
         "sinks"    :  [
             {
-                "thisSink": "disabled",
+                "comment": "disabled",
                 "_name"   : "mongodb.Collection.Find",
                 "url"     : "\/nosqlInjection\/query\/mongodbCollectionFind",
                 "method"  : "GET"
@@ -178,7 +178,8 @@
         "inputs"   :  ["query", "params", "body"],
         "sinks"    :  [
             {
-                "name"   : "",
+                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
+                "name"   : "_",
                 "url"    : "",
                 "method" : ""
             }
@@ -223,7 +224,8 @@
         "inputs"   :  ["query"],
         "sinks"    :  [
             {
-                "name"   : "encoding.xml",
+                "comment": "disabled, as go is not vulnerable",
+                "_name"  : "encoding.xml",
                 "url"    : "\/xxe\/query\/encodingXML",
                 "method" : "GET"
             }

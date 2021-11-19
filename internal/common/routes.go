@@ -82,7 +82,7 @@ func Register(r Route) {
 	}
 	r.Base = "/" + r.Base
 	for i, s := range r.Sinks {
-		if len(r.Name) == 0 {
+		if len(s.Name) == 0 {
 			log.Fatalf("0-len sink name at %d in %#v", i, r)
 		}
 		if strings.Contains(s.URL, "/") {
