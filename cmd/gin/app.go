@@ -77,7 +77,7 @@ func add(router *gin.Engine, rt common.Route) {
 			c.String(http.StatusOK, string(tmpl))
 		}
 		sinkPg := base.Group("/" + s.URL)
-		sinkPg.Handle(s.Method, "/:source/:mode", sinkFn)
+		sinkPg.Any("/:source/:mode", sinkFn)
 	}
 }
 
