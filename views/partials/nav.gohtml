@@ -8,11 +8,12 @@
       <li>
         <a href="{{.Base}}">
           {{.Name}}
-          {{range .Products}}
-          <span class="badge pull-right {{if eq . " Protect"}} badge-info {{else}} badge-success {{end}}">
+          {{/* at least for now, don't display product badges */}}
+          {{/* {{range .Products}}
+          <span class="badge pull-right {{if eq . "Protect"}} badge-info {{else}} badge-success {{end}}">
             {{.}}
           </span>
-          {{end}}
+          {{end}} */}}
         </a>
       </li>
       {{else}}

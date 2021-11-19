@@ -28,6 +28,9 @@ type Sink struct {
 }
 
 func (s *Sink) String() string {
+	if len(s.Name) == 0 || s.Name == "_" {
+		return ""
+	}
 	return fmt.Sprintf("%s: %s .../%s", s.Name, s.Method, s.URL)
 }
 
@@ -43,7 +46,7 @@ type Route struct {
 }
 
 func (r *Route) String() string {
-	lines := []string{fmt.Sprintf("%q %s %s", r.Name, r.Base, r.Link)}
+	lines := []string{fmt.Sprintf("%s %q %s", r.Base, r.Name, r.Link)}
 	for _, s := range r.Sinks {
 		if str := s.String(); len(str) > 0 {
 			lines = append(lines, "- "+str)
@@ -138,13 +141,35 @@ func PopulateRouteMap(routes Routes) (rmap RouteMap) {
 		}
 		rmap[r.Base] = r
 	}
-	var lines []string
-	for _, r := range rmap {
-		if len(r.Sinks) > 0 && len(r.Sinks[0].Name) > 0 {
-			lines = append(lines, r.String())
+	//clean up
+	var rts []string
+	for k := range rmap {
+		rts = append(rts, k)
+	}
+	for _, k := range rts { //don't range over rmap directly, as we need to be able to delete from it
+		r := rmap[k]
+		for i := 0; i < len(r.Products); i++ {
+			if r.Products[i] == "Protect" {
+				//remove - product not yet available
+				r.Products = append(r.Products[:i], r.Products[i+1:]...)
+				continue
+			}
+		}
+		if len(r.Products) == 0 {
+			//don't show anything that was protect-only
+			delete(rmap, k)
+		} else {
+			rmap[k] = r
 		}
 	}
+	// print route list?
 	if Verbose {
+		var lines []string
+		for _, r := range rmap {
+			if len(r.Sinks) > 0 && len(r.Sinks[0].Name) > 0 {
+				lines = append(lines, r.String())
+			}
+		}
 		log.Printf("vulnerable routes:\n%s", strings.Join(lines, "\n"))
 	}
 	return
