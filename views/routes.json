@@ -103,7 +103,8 @@
         "inputs"   :  ["query"],
         "sinks"    :  [
             {
-                "name"   : "",
+                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
+                "name"   : "_",
                 "url"    : "",
                 "method" : ""
             }
