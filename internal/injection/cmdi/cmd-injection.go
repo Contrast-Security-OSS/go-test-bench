@@ -9,6 +9,7 @@ import (
 	"runtime"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/google/shlex"
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
@@ -42,6 +43,9 @@ func execHandler(mode, in string) (template.HTML, bool) {
 		cmd = exec.Command("echo", in)
 	case "unsafe":
 		args := shellArgs(in)
+		if len(args) == 0 {
+			break
+		}
 		cmd = exec.Command(args[0], args[1:]...)
 	case "noop":
 		return template.HTML("NOOP"), false
@@ -66,6 +70,9 @@ func execHandlerCtx(mode, in string) (template.HTML, bool) {
 		cmd = exec.CommandContext(ctx, "echo", in)
 	case "unsafe":
 		args := shellArgs(in)
+		if len(args) == 0 {
+			break
+		}
 		cmd = exec.CommandContext(ctx, args[0], args[1:]...)
 	case "noop":
 		return template.HTML("NOOP"), false
@@ -83,15 +90,16 @@ func execHandlerCtx(mode, in string) (template.HTML, bool) {
 
 // assembles a command that will run unsanitized user input in a system shell
 func shellArgs(in string) []string {
-	var args []string
 	if runtime.GOOS == "windows" {
 		ps, err := exec.LookPath("powershell.exe")
 		if err == nil {
-			args = append(args, ps, in)
+			return []string{ps, in}
 		}
 	}
-	if len(args) == 0 {
-		args = append(args, "sh", "-c", in)
+	args, err := shlex.Split(in)
+	if err != nil {
+		log.Printf("arg parse error: %s", err)
+		return nil
 	}
 	return args
 }
