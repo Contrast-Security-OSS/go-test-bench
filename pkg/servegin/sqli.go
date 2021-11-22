@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+
+	//import sqlite3 so it can be found by sql package
 	_ "github.com/mattn/go-sqlite3"
 )
 

@@ -18,11 +18,13 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/xss"
 )
 
+//Pd is unchanging parameter data shared between all routes.
 var Pd = common.ConstParams{
 	Year:      2021,
 	Logo:      "https://blog.golang.org/gopher/header.jpg",
 	Framework: "stdlib",
 }
+
 var templates = make(map[string]*template.Template)
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
