@@ -5,7 +5,7 @@
   {{template "head" .}}
 </head>
 
-<body>
+<body class="{{ tolower .Framework }}"> <!-- add framework to class so we can select styles based on framework -->
   {{template "header" .}}
   <div class="container-fluid">
     <div class="row">

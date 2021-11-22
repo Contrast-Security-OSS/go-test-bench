@@ -1,20 +1,4 @@
 {
-
-    "cmdInjection" :  {
-        "base"     :  "/cmdInjection",
-        "name"     :  "Command Injection",
-        "link"     :  "https://www.owasp.org/index.php/Command_Injection",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "cookies"],
-        "sinks"    :  [
-            {
-                "name"   : "os.Exec",
-                "url"    : "\/cmdInjection\/osExec",
-                "method" : "GET"
-            }
-        ]
-    },
-
     "cmdInjectionSemanticChainedCommands" :  {
         "base"     :  "/cmdInjectionSemanticChainedCommands",
         "name"     :  "Command Injection Semantic Chained Commands",
@@ -53,9 +37,10 @@
         "inputs"   :  ["query"], 
         "sinks"    :  [
             {
-                "name"   : "mongodb.Collection.Find",
-                "url"    : "\/nosqlInjection\/query\/mongodbCollectionFind",
-                "method" : "GET"
+                "comment": "disabled",
+                "_name"   : "mongodb.Collection.Find",
+                "url"     : "\/nosqlInjection\/query\/mongodbCollectionFind",
+                "method"  : "GET"
             }
         ]
     },
@@ -118,7 +103,8 @@
         "inputs"   :  ["query"],
         "sinks"    :  [
             {
-                "name"   : "",
+                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
+                "name"   : "_",
                 "url"    : "",
                 "method" : ""
             }
@@ -193,7 +179,8 @@
         "inputs"   :  ["query", "params", "body"],
         "sinks"    :  [
             {
-                "name"   : "",
+                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
+                "name"   : "_",
                 "url"    : "",
                 "method" : ""
             }
@@ -215,21 +202,6 @@
         ]
     },
 
-    "xssStealthyRequire" :  {
-        "base"     :  "/xssStealthyRequire",
-        "name"     :  "Reflected XSS (stealthy-require)",
-        "link"     :  "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "params"],
-        "sinks"    :  [
-            {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
-            }
-        ]
-    },
-
     "xxe" :  {
         "base"     :  "/xxe",
         "name"     :  "XXE Processing",
@@ -238,7 +210,8 @@
         "inputs"   :  ["query"],
         "sinks"    :  [
             {
-                "name"   : "encoding.xml",
+                "comment": "disabled, as go is not vulnerable",
+                "_name"  : "encoding.xml",
                 "url"    : "\/xxe\/query\/encodingXML",
                 "method" : "GET"
             }

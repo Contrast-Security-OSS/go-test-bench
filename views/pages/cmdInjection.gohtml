@@ -1,0 +1,44 @@
+{{define "body"}}
+{{$routeInfo := index .Rulebar .Name}}
+{{$addr := .Addr}}
+<h1 class="page-header">Command Injection</h1>
+{{template "ruleInfo" $routeInfo}}
+
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">Query</h4>
+    {{range $routeInfo.Sinks}}
+    <h4><code>{{.Name}}</code></h4>
+    <form method="{{.Method}}" action="{{$routeInfo.Base}}/{{.URL}}/query/unsafe" target="_blank">
+      <div class="form-group">
+        <label>Path</label>
+        <input name="input" class="form-control" value="hello there!; echo hack hack hack">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {{end}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+    <h4 class="sub-header">POST cookies</h4>
+    {{range $routeInfo.Sinks}}
+    <h4><code>{{.Name}}</code></h4>
+    <p>
+    <pre>curl http://{{$addr}}{{$routeInfo.Base}}/{{.URL}}/cookies/unsafe -X POST -b "input=echo hello there! && echo hack hack hack"</pre>
+    </p>
+    <p>
+    <pre>curl http://{{$addr}}{{$routeInfo.Base}}/{{.URL}}/cookies/safe -X POST -b "input=hello there! && echo hack hack hack"</pre>
+    </p>
+    <p>
+    <pre>curl http://{{$addr}}{{$routeInfo.Base}}/{{.URL}}/cookies/noop -X POST -b "input=hello there! && echo hack hack hack"</pre>
+    </p>
+    {{end}}
+  </div>
+</div>
+
+
+{{template "safeButtons" .}}
+{{end}}
+
+{{template "commandInjection" .}}

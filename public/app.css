@@ -52,6 +52,11 @@ body {
     border-right: 1px solid #eee;
   }
 
+  /* .gin matches common.StaticData{Framework:"Gin"} */
+  .gin .sidebar{
+    background-color:#d3f3ee;
+  }
+
   .sidebar .nav-sidebar > li > a:hover,
   .sidebar .nav-sidebar > li > a:focus {
     background-color: #c4ede7
@@ -68,17 +73,43 @@ body {
   padding-right: 20px;
   padding-left: 20px;
 }
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
-  /*color: #fff;*/
-  /*background-color: #dddddd;*/
+.nav-sidebar li.unimplemented{
+  color: #999;
+  font-style: italic;
+  font-size: small;
+  position: relative;
+  display: inline-block;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+}
+.nav-sidebar li.unimplemented:hover,
+.nav-sidebar li.unimplemented:focus{
+  background-color: #eee;
+}
+/* tooltip */
+.nav-sidebar li.unimplemented .tooltiptext{
+  visibility: hidden;
+  overflow: initial;
+  background-color: #555;
+  color: #7f0;
+  text-align: center;
+  padding: 4px 7px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  left: 70%;
+}
+.nav-sidebar li.unimplemented:hover .tooltiptext{
+  visibility: visible;
 }
 
 /*
  * Main content
  */
-
 .main {
   padding: 20px;
 }
@@ -90,6 +121,18 @@ body {
 }
 .main .page-header {
   margin-top: 0;
+}
+img.logo{
+  max-width: 30%;
+  max-height:10em;
+  float: right;
+  clear: right;
+}
+div.logo-clear{
+  clear: right;
+}
+img.construction{
+  height: 10em;
 }
 
 /*
@@ -118,7 +161,10 @@ body a {
 .banner-dark {
   background: #3cc3b2;
 }
-
+/* .gin matches common.StaticData{Framework:"Gin"} */
+.gin .banner-dark{
+  background: #3176d9;
+}
 .badge-success {
   background-color: #28a745;
 }
