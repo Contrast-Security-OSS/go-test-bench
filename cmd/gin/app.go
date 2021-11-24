@@ -17,7 +17,7 @@ func main() {
 	// Setup command line flags
 	port := flag.Int("port", DefaultPort, "listen on this `port` on localhost")
 	flag.Parse()
-	addr := fmt.Sprintf("localhost:%d", *port)
+	addr := fmt.Sprintf(":%d", *port)
 
 	router, dbFile := servegin.Setup(addr)
 
