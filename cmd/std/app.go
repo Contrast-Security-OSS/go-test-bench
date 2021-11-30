@@ -18,7 +18,7 @@ func main() {
 	port := flag.Int("port", DefaultPort, "listen on this `port` on localhost")
 	flag.BoolVar(&common.Verbose, "v", true, "increase verbosity")
 	flag.Parse()
-	servestd.Pd.Addr = fmt.Sprintf("localhost:%d", *port)
+	servestd.Pd.Addr = fmt.Sprintf(":%d", *port)
 
 	servestd.Setup()
 	log.Fatal(http.ListenAndServe(servestd.Pd.Addr, nil))

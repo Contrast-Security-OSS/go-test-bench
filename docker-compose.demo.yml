@@ -3,29 +3,31 @@ services:
   svc:
     container_name: contrastservice
     hostname: contrastservice
-    build:
-      context: .
-      dockerfile: Dockerfile.svc 
+    image: ghcr.io/contrast-security-inc/contrast-service:latest
     env_file:
-      - demo.env 
+      - demo.env
+    volumes:
+      - .:/etc/contrast:ro
     networks:
       - extbridge
   std:
-    depends_on: 
+    depends_on:
       - svc
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.agent
     ports:
       - 8080:8080
     env_file:
       - demo.env
+    volumes:
+      - .:/etc/contrast:ro
     networks:
       - extbridge
   gin:
-    depends_on: 
+    depends_on:
       - svc
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.agent
       args:
@@ -34,6 +36,8 @@ services:
       - 8080:8080
     env_file:
       - demo.env
+    volumes:
+      - .:/etc/contrast:ro
     networks:
       - extbridge
   # TODO: Add back in with nosql injection support

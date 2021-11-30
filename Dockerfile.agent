@@ -39,8 +39,5 @@ COPY --from=builder /build/public ./public
 COPY --from=builder /build/app ./app
 COPY --from=builder /build/fakepasswd /etc/passwd
 
-# Copy the contrast_security.yaml
-COPY ./contrast_security.yaml .
-
 # Execute the testbench agent
 ENTRYPOINT ["./app"]
