@@ -13,13 +13,13 @@
     </h4>
     <h4 class="sub-header">Headers - JSON</h4>
     <p>
-    <pre>curl http://{{$addr}}/{{$base}}/{{index $inputs 1}}/sqlite3Exec/unsafe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
+    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/unsafe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
     </p>
     <p>
-    <pre>curl http://{{$addr}}/{{$base}}/{{index $inputs 1}}/sqlite3Exec/safe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
+    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/safe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
     </p>
     <p>
-    <pre>curl http://{{$addr}}/{{$base}}/{{index $inputs 1}}/sqlite3Exec/noop -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
+    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/noop -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
     </p>
     <h4 class="sub-header">Query</h4>
     <form method="{{.Method}}" action="{{$base}}{{.URL}}/unsafe" target="_blank">
