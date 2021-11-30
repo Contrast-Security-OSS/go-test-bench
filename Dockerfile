@@ -24,4 +24,5 @@ COPY --from=builder /build/fakepasswd /etc/passwd
 
 EXPOSE 8080
 
-ENTRYPOINT ["/go-test-bench"]
+# default listen address of localhost:8080 does not work
+ENTRYPOINT ["/go-test-bench", "-addr=:8080"]
