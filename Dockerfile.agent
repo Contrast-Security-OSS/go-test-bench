@@ -40,4 +40,4 @@ COPY --from=builder /build/app ./app
 COPY --from=builder /build/fakepasswd /etc/passwd
 
 # Execute the testbench agent
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["./app", "-addr=:8080"]
