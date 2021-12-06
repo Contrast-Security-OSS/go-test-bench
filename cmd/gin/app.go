@@ -9,12 +9,12 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
 )
 
-// DefaultPort is the port that the API runs on if not overridden with '-addr' flag
-const DefaultPort = "localhost:8080"
+// DefaultAddr is where we listen if not overridden with '-addr' flag
+const DefaultAddr = "localhost:8080"
 
 func main() {
 	// set up command line flag
-	addr := flag.String("addr", DefaultPort, "listen on this `host:port`")
+	addr := flag.String("addr", DefaultAddr, "listen on this `host:port`")
 	flag.Parse()
 
 	router, dbFile := servegin.Setup(*addr)
