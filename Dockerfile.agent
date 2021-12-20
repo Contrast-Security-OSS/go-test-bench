@@ -1,30 +1,11 @@
-FROM golang:1.17 AS builder
+FROM ghcr.io/contrast-security-inc/go-agent:latest AS builder
 ARG FRAMEWORK=std
 
 WORKDIR /build
 COPY . .
 
-# Install the necessary ubuntu dependencies
-RUN apt-get update
-RUN apt-get install -y gnupg2 ca-certificates curl software-properties-common
-
-# Add the contrast public key
-ADD https://pkg.contrastsecurity.com/api/gpg/key/public ./publickey
-RUN apt-key add ./publickey
-RUN add-apt-repository "deb https://pkg.contrastsecurity.com/debian-public/ focal contrast"
-
-# Install contrast-go
-RUN apt-get update
-RUN apt-get install -y contrast-go
-
-# Fetch dependencies.
-RUN go mod download
-
 # Build the binary
-RUN contrast-go build \
-    -ldflags='-w -s -extldflags "-static"' \
-    -o app \
-    ./cmd/${FRAMEWORK}
+RUN go build -ldflags='-w -s -extldflags "-static"' -o app ./cmd/${FRAMEWORK}
 
 # Create /etc/passwd to help showcase path traversal vulnerability.
 RUN echo "root:x:0:0:root:/root:/bin/bash" >> ./fakepasswd && \
