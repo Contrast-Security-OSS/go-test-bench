@@ -1,7 +1,6 @@
 package common
 
 import (
-	"log"
 	"net/http"
 	"strings"
 )
@@ -71,7 +70,7 @@ func GetFormValue(r *http.Request, key string) string {
 func GetCookieValue(r *http.Request, key string) string {
 	cookie, err := r.Cookie(key)
 	if err != nil {
-		log.Printf("Could not get \"%s\" cooke value, error: %s\n", key, err.Error())
+		// log.Printf("Could not get \"%s\" cooke value, error: %s\n", key, err.Error())
 		return ""
 	}
 
