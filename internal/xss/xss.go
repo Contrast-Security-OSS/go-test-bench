@@ -33,14 +33,8 @@ func queryHandler(w http.ResponseWriter, r *http.Request, safety string) (templa
 
 // bufferedQueryHandler used as a handler which uses bytes.Buffer for source input ignoring the user input
 func bufferedQueryHandler(w http.ResponseWriter, r *http.Request, safety string) (template.HTML, bool) {
-	// FIXME(GO-1031): This buffer is populated with constant strings. There is no vulnerability here.
 	var buf bytes.Buffer
-	buf.Write([]byte("<script>"))
-	buf.WriteString("alert('buffered input - ")
-	buf.WriteRune('©')
-	buf.WriteString("');")
-	buf.WriteString("</script")
-	buf.WriteByte(byte('>'))
+	buf.WriteString(common.GetUserInput(r))
 
 	var input string
 
