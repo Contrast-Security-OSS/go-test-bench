@@ -3,7 +3,6 @@ module github.com/Contrast-Security-OSS/go-test-bench
 go 1.14
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/multitemplate v0.0.0-20210428235909-8a2f6dd269a0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
