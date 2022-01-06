@@ -6,10 +6,9 @@ import (
 	"html/template"
 	"log"
 	"os/exec"
-	"runtime"
+	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
-	"github.com/google/shlex"
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
@@ -90,16 +89,5 @@ func execHandlerCtx(mode, in string) (template.HTML, bool) {
 
 // assembles a command that will run unsanitized user input in a system shell
 func shellArgs(in string) []string {
-	if runtime.GOOS == "windows" {
-		ps, err := exec.LookPath("powershell.exe")
-		if err == nil {
-			return []string{ps, in}
-		}
-	}
-	args, err := shlex.Split(in)
-	if err != nil {
-		log.Printf("arg parse error: %s", err)
-		return nil
-	}
-	return args
+	return strings.Fields(in)
 }
