@@ -11,8 +11,8 @@ import (
 // endpoints common to all app frameworks.
 func UnsafeRequests(addr string) ([]*http.Request, error) {
 	var reqs []*http.Request
-	type genFunc func(addr string) ([]*http.Request, error)
-	for _, gen := range []genFunc{
+	type generator func(addr string) ([]*http.Request, error)
+	for _, gen := range []generator{
 		unsafeCmdInjections,
 		unsafePathTraversals,
 		unsafeSQLInjections,
