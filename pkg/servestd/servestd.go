@@ -34,6 +34,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		t = templates["underConstruction.gohtml"]
 	}
+	w.Header().Set("Application-Framework", "Stdlib")
 	err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
 	if err != nil {
 		log.Print(err.Error())

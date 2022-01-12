@@ -97,6 +97,7 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 
 	router.StaticFS("/assets/", http.Dir("./public"))
 	router.GET("/", func(c *gin.Context) {
+		c.Header("Application-Framework", "Gin")
 		c.HTML(http.StatusOK, "index.gohtml", templateData(""))
 	})
 
