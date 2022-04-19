@@ -125,7 +125,11 @@ func parseTemplates() error {
 	}
 	layout := filepath.Join(templatesDir, "layout.gohtml")
 
-	fmap := template.FuncMap{"tolower": strings.ToLower}
+	fmap := template.FuncMap{
+		"tolower":    strings.ToLower,
+		"curl":       curlCmd,
+		"capitalize": strings.Title,
+	}
 
 	for _, p := range pages {
 		files := append([]string{layout, p}, partials...)
@@ -139,6 +143,23 @@ func parseTemplates() error {
 	return nil
 }
 
+// use in template to generate unsafe/safe/no-op curl commands
+// call once to generate 3 commands
+// {{ curl $addr $base .URL "headers-json" "POST" "-H \"Content-Type: application/json\" \\\n    -H \"credentials:{...}\""}}
+// -> curl http://localhost:8080/sqlInjection/sqlite3.exec/headers-json/unsafe -X POST -H ...
+func curlCmd(addr, base, url, mechanism, method, args string) template.HTML {
+	var out []string
+	modes := []struct{ name, frag string }{
+		{"unsafe", "unsafe"},
+		{"safe", "safe"},
+		{"no-op", "noop"},
+	}
+	for _, m := range modes {
+		out = append(out, fmt.Sprintf("<p>%s</p><pre>curl http://%s%s/%s/%s/%s \\\n    -X %s %s</pre>", m.name, addr, base, url, mechanism, m.frag, method, args))
+	}
+	return template.HTML(strings.Join(out, "\n"))
+}
+
 // Setup loads templates, sets up routes, etc.
 func Setup() {
 	log.Println("Loading templates...")
@@ -150,6 +171,7 @@ func Setup() {
 
 	//register all routes at this point.
 	cmdi.RegisterRoutes("stdlib")
+	sqli.RegisterRoutes("stdlib")
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
@@ -176,7 +198,6 @@ func Setup() {
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
 	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
-	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))

@@ -7,36 +7,30 @@
 {{template "ruleInfo" $routeInfo}}
 {{range $routeInfo.Sinks}}
 <div class="row">
-  <div class="col-xs-12 col-sm-6" style="padding-bottom: 30px;">
+  <div class="col-xs-12 col-sm-8" style="padding-bottom: 30px;">
     <h4 class="sub-header">
       <code>{{.Name}}</code>
     </h4>
     <h4 class="sub-header">Headers - JSON</h4>
-    <p>
-    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/unsafe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
-    </p>
-    <p>
-    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/safe -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
-    </p>
-    <p>
-    <pre>curl http://{{$addr}}{{$base}}/{{index $inputs 1}}/sqlite3Exec/noop -X POST -H "Content-Type: application/json" -H "credentials:{\"username\":\"Robert'; DROP TABLE Students;--\",\"password\":\"12345Pass\"}"</pre>
-    </p>
-    <h4 class="sub-header">Query</h4>
-    <form method="{{.Method}}" action="{{$base}}{{.URL}}/unsafe" target="_blank">
-      <div class="form-group">
-        <label>SELECT '${input}' as 'test';</label>
-        <input name="input" class="form-control" value="Robert&apos;; DROP TABLE Students;--" />
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <h4 class="sub-header">Body</h4>
-    <form method="POST" action="{{$base}}/{{index $inputs 2}}/sqlite3Exec/unsafe" target="_blank">
-      <div class="form-group">
-        <label>SELECT '${input}' as 'test';</label>
-        <input name="input" class="form-control" value="Robert&apos;; DROP TABLE Students;--" />
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    {{ curl $addr $base .URL "headers-json" "POST" "-H \"Content-Type: application/json\" \\\n    -H \"credentials:{\\\"username\\\":\\\"Robert'; DROP TABLE Students;--\\\",\\\"password\\\":\\\"12345Pass\\\"}\""}}
+    {{$sink := .}}
+    {{range $routeInfo.Inputs}}
+      {{if ne . "headers-json"}}
+        <h4 class="sub-header">{{capitalize .}}</h4>
+        <h4><code>{{$sink.Name}}</code></h4>
+        {{ $m := $sink.Method }}
+        {{ if eq . "body" }}
+          {{ $m = "POST" }}
+        {{ end }}
+        <form method="{{$m}}" action="{{$routeInfo.Base}}/{{$sink.URL}}/query/unsafe" target="_blank">
+          <div class="form-group">
+            <label>SELECT '${input}' as 'test';</label>
+            <input name="input" class="form-control" value="Robert&apos;; DROP TABLE Students;--" />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      {{end}}
+    {{end}}
   </div>
 </div>
 {{template "safeButtons" .}}

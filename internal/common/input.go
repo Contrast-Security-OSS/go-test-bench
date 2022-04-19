@@ -78,5 +78,9 @@ func GetCookieValue(r *http.Request, key string) string {
 
 //GetHeaderValue returns the input value from the given header
 func GetHeaderValue(r *http.Request, key string) string {
-	return r.Header.Get(key)
+	res := r.Header.Get(key)
+	if len(res) == 0 {
+		res = r.Header.Get("credentials")
+	}
+	return res
 }
