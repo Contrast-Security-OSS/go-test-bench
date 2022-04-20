@@ -13,6 +13,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// RegisterRoutes is called in framework init to register routes in this package.
 func RegisterRoutes( /* framework - unused */ string) {
 	common.Register(common.Route{
 		Name:     "SQL Injection",
