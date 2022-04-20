@@ -5,36 +5,34 @@
 {{$inputs := $routeInfo.Inputs}}
 <h1 class="page-header">{{$routeInfo.Name}}</h1>
 {{template "ruleInfo" $routeInfo}}
-{{range $routeInfo.Sinks}}
-<div class="row">
-  <div class="col-xs-12 col-sm-8" style="padding-bottom: 30px;">
-    <h4 class="sub-header">
-      <code>{{.Name}}</code>
-    </h4>
-    <h4 class="sub-header">Headers - JSON</h4>
-    {{ curl $addr $base .URL "headers-json" "POST" "-H \"Content-Type: application/json\" \\\n    -H \"credentials:{\\\"username\\\":\\\"Robert'; DROP TABLE Students;--\\\",\\\"password\\\":\\\"12345Pass\\\"}\""}}
-    {{$sink := .}}
-    {{range $routeInfo.Inputs}}
-      {{if ne . "headers-json"}}
-        <h4 class="sub-header">{{capitalize .}}</h4>
+{{range $routeInfo.Inputs}}
+  {{ $input := . }}
+  <div class="row">
+    <div class="col-xs-12 col-sm-8" style="padding-bottom: 30px;">
+      <h4 class="sub-header">{{inputTitle $input}}</h4>
+      {{range $routeInfo.Sinks}}
+        {{$sink := .}}
         <h4><code>{{$sink.Name}}</code></h4>
-        {{ $m := $sink.Method }}
-        {{ if eq . "body" }}
-          {{ $m = "POST" }}
-        {{ end }}
-        <form method="{{$m}}" action="{{$routeInfo.Base}}/{{$sink.URL}}/query/unsafe" target="_blank">
-          <div class="form-group">
-            <label>SELECT '${input}' as 'test';</label>
-            <input name="input" class="form-control" value="Robert&apos;; DROP TABLE Students;--" />
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        {{if needsCurl $input }}
+          {{ curl $addr $base $sink.URL $input "POST" "-H \"Content-Type: application/json\" \\\n    -H \"credentials:{\\\"username\\\":\\\"Robert'; DROP TABLE Students;--\\\",\\\"password\\\":\\\"12345Pass\\\"}\""}}
+        {{else}}
+          {{ $m := $sink.Method }}
+          {{ if eq $input "body" }}
+            {{ $m = "POST" }}
+          {{ end }}
+          <form method="{{$m}}" action="{{$routeInfo.Base}}/{{$sink.URL}}/query/unsafe" target="_blank">
+            <div class="form-group">
+              <label>SELECT '${input}' as 'test';</label>
+              <input name="input" class="form-control" value="Robert&apos;; DROP TABLE Students;--" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        {{end}}
       {{end}}
-    {{end}}
+    </div>
   </div>
-</div>
-{{template "safeButtons" .}}
-{{end}}
+  {{end}}
+  {{template "safeButtons" .}}
 {{end}}
 
 {{template "sqlInjection" .}}

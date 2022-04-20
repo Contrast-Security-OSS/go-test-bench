@@ -19,7 +19,7 @@ func RegisterRoutes( /* framework - unused */ string) {
 		Link:     "https://www.owasp.org/index.php/SQL_Injection",
 		Base:     "sqlInjection",
 		Products: []string{"Assess", "Protect"},
-		Inputs:   []string{"query", "headers-json", "body"},
+		Inputs:   []string{"body", "query", "headers-json"},
 		Sinks: []common.Sink{
 			{
 				Name:    "sqlite3.exec",

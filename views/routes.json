@@ -34,7 +34,7 @@
         "name"     :  "NoSQL Injection",
         "link"     :  "https://www.owasp.org/index.php/Testing_for_NoSQL_injection",
         "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query"], 
+        "inputs"   :  ["query"],
         "sinks"    :  [
             {
                 "comment": "disabled",
@@ -60,21 +60,6 @@
             {
                 "name"   : "ioutil.WriteFile",
                 "url"    : "\/pathTraversal",
-                "method" : "GET"
-            }
-        ]
-    },
-
-    "sqlInjection" :  {
-        "base"     :  "/sqlInjection",
-        "name"     :  "SQL Injection",
-        "link"     :  "https://www.owasp.org/index.php/SQL_Injection",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "headers-json", "body"],
-        "sinks"    :  [
-            {
-                "name"   : "sqlit3.exec",
-                "url"    : "\/query\/sqlite3Exec",
                 "method" : "GET"
             }
         ]

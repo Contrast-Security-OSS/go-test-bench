@@ -1,7 +1,6 @@
 package servegin
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
@@ -41,12 +41,10 @@ func loadTemplates() multitemplate.Renderer {
 	}
 	layout := filepath.Join(templatesDir, "layout.gohtml")
 
-	fmap := template.FuncMap{"tolower": strings.ToLower}
-
 	r := multitemplate.NewRenderer()
 	for _, p := range pages {
 		files := append([]string{layout, p}, partials...)
-		r.AddFromFilesFuncs(filepath.Base(p), fmap, files...)
+		r.AddFromFilesFuncs(filepath.Base(p), common.FuncMap(), files...)
 	}
 
 	return r
@@ -82,6 +80,7 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 
 	//register all routes at this point, before AllRoutes is used.
 	cmdi.RegisterRoutes("gin")
+	sqli.RegisterRoutes("gin")
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
@@ -114,8 +113,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	if err != nil {
 		panic(err)
 	}
-	addSQLi(router, dbSrc)
-
 	return router, dbSrc.Name()
 }
 
