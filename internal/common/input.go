@@ -8,7 +8,10 @@ import (
 //INPUT used as the standard input name across the project and forms
 const INPUT = "input"
 
-//GetUserInput returns the first value found in the request with the given key
+// GetUserInput returns the first value found in the request with the key 'input'.
+//
+// If none are found, it tries for a header with key 'credentials'.
+//
 // the order of precedence when getting the result is:
 //
 // - query parameter
@@ -18,6 +21,8 @@ const INPUT = "input"
 // - cookie value
 //
 // - header value
+//
+// - credentials header
 //
 func GetUserInput(r *http.Request) string {
 	if value := GetParamValue(r, INPUT); value != "" {
@@ -33,6 +38,10 @@ func GetUserInput(r *http.Request) string {
 	}
 
 	if value := GetHeaderValue(r, INPUT); value != "" {
+		return value
+	}
+
+	if value := GetHeaderValue(r, "credentials"); value != "" {
 		return value
 	}
 
@@ -79,8 +88,5 @@ func GetCookieValue(r *http.Request, key string) string {
 //GetHeaderValue returns the input value from the given header
 func GetHeaderValue(r *http.Request, key string) string {
 	res := r.Header.Get(key)
-	if len(res) == 0 {
-		res = r.Header.Get("credentials")
-	}
 	return res
 }
