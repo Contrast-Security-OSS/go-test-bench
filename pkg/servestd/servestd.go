@@ -25,14 +25,14 @@ var Pd = common.ConstParams{
 	Framework: "stdlib",
 }
 
-var templates = make(map[string]*template.Template)
+var Templates = make(map[string]*template.Template)
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	var t *template.Template
 	if r.URL.Path == "/" {
-		t = templates["index.gohtml"]
+		t = Templates["index.gohtml"]
 	} else {
-		t = templates["underConstruction.gohtml"]
+		t = Templates["underConstruction.gohtml"]
 	}
 	w.Header().Set("Application-Framework", "Stdlib")
 	err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
@@ -49,7 +49,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) 
 		}
 		data, useLayout := fn(w, r, parms)
 		if useLayout {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+			err := Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
 			}
@@ -80,7 +80,7 @@ func newHandler(v common.Route) http.HandlerFunc {
 			}
 		}
 		if isTmpl {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+			err := Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
 			}
@@ -90,7 +90,7 @@ func newHandler(v common.Route) http.HandlerFunc {
 	}
 }
 
-func parseTemplates() error {
+func ParseTemplates() error {
 	templatesDir, err := common.FindViewsDir()
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func parseTemplates() error {
 		if err != nil {
 			log.Fatal(err)
 		}
-		templates[filepath.Base(p)] = tmpl
+		Templates[filepath.Base(p)] = tmpl
 	}
 
 	return nil
@@ -127,10 +127,10 @@ func parseTemplates() error {
 
 // Setup loads templates, sets up routes, etc.
 func Setup() {
-	log.Println("Loading templates...")
-	err := parseTemplates()
+	log.Println("Loading Templates...")
+	err := ParseTemplates()
 	if err != nil {
-		log.Fatalln("Cannot parse templates:", err)
+		log.Fatalln("Cannot parse Templates:", err)
 	}
 	log.Println("Templates loaded.")
 
