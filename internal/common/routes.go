@@ -116,6 +116,45 @@ func FindViewsDir() (string, error) {
 	return filepath.Clean(path), nil
 }
 
+var Templates = make(map[string]*template.Template)
+
+// ParseViewTemplates is used to parse the template
+// resources and set them up for use by std and go-swagger
+func ParseViewTemplates() error {
+	templatesDir, err := FindViewsDir()
+	if err != nil {
+		return err
+	}
+	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
+	if err != nil {
+		return err
+	}
+	if len(pages) == 0 {
+		log.Fatal("nothing found in ./views/pages")
+	}
+	partials, err := filepath.Glob(filepath.Join(templatesDir, "partials", "*.gohtml"))
+	if err != nil {
+		return err
+	}
+	if len(partials) == 0 {
+		log.Fatal("nothing found in ./views/partials")
+	}
+	layout := filepath.Join(templatesDir, "layout.gohtml")
+
+	fmap := template.FuncMap{"tolower": strings.ToLower}
+
+	for _, p := range pages {
+		files := append([]string{layout, p}, partials...)
+		tmpl, err := template.New(p).Funcs(fmap).ParseFiles(files...)
+		if err != nil {
+			log.Fatal(err)
+		}
+		Templates[filepath.Base(p)] = tmpl
+	}
+
+	return nil
+}
+
 // PopulateRouteMap returns a RouteMap, for use in nav bar template.
 func PopulateRouteMap(routes Routes) (rmap RouteMap) {
 	//add legacy routes

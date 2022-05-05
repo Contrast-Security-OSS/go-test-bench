@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"path/filepath"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
@@ -25,14 +24,12 @@ var Pd = common.ConstParams{
 	Framework: "stdlib",
 }
 
-var templates = make(map[string]*template.Template)
-
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	var t *template.Template
 	if r.URL.Path == "/" {
-		t = templates["index.gohtml"]
+		t = common.Templates["index.gohtml"]
 	} else {
-		t = templates["underConstruction.gohtml"]
+		t = common.Templates["underConstruction.gohtml"]
 	}
 	w.Header().Set("Application-Framework", "Stdlib")
 	err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
@@ -49,7 +46,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) 
 		}
 		data, useLayout := fn(w, r, parms)
 		if useLayout {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+			err := common.Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
 			}
@@ -80,7 +77,7 @@ func newHandler(v common.Route) http.HandlerFunc {
 			}
 		}
 		if isTmpl {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+			err := common.Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
 			}
@@ -90,47 +87,12 @@ func newHandler(v common.Route) http.HandlerFunc {
 	}
 }
 
-func parseTemplates() error {
-	templatesDir, err := common.FindViewsDir()
-	if err != nil {
-		return err
-	}
-	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
-	if err != nil {
-		return err
-	}
-	if len(pages) == 0 {
-		log.Fatal("nothing found in ./views/pages")
-	}
-	partials, err := filepath.Glob(filepath.Join(templatesDir, "partials", "*.gohtml"))
-	if err != nil {
-		return err
-	}
-	if len(partials) == 0 {
-		log.Fatal("nothing found in ./views/partials")
-	}
-	layout := filepath.Join(templatesDir, "layout.gohtml")
-
-	fmap := template.FuncMap{"tolower": strings.ToLower}
-
-	for _, p := range pages {
-		files := append([]string{layout, p}, partials...)
-		tmpl, err := template.New(p).Funcs(fmap).ParseFiles(files...)
-		if err != nil {
-			log.Fatal(err)
-		}
-		templates[filepath.Base(p)] = tmpl
-	}
-
-	return nil
-}
-
 // Setup loads templates, sets up routes, etc.
 func Setup() {
-	log.Println("Loading templates...")
-	err := parseTemplates()
+	log.Println("Loading Templates...")
+	err := common.ParseViewTemplates()
 	if err != nil {
-		log.Fatalln("Cannot parse templates:", err)
+		log.Fatalln("Cannot parse Templates:", err)
 	}
 	log.Println("Templates loaded.")
 
