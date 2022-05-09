@@ -82,7 +82,7 @@ func init() {
         }
       }
     },
-    "/cmdInjection/{command}/cookies/{safety}/": {
+    "/cmdInjection/exec.Command/cookies/{safety}/": {
       "post": {
         "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
         "produces": [
@@ -91,22 +91,10 @@ func init() {
         "tags": [
           "cmd-injection"
         ],
-        "operationId": "postCookiesExploit",
+        "operationId": "postCookiesCommand",
         "parameters": [
           {
-            "$ref": "#/parameters/commandParam"
-          },
-          {
             "$ref": "#/parameters/safetyParam"
-          },
-          {
-            "description": "the user provided input for the query vulnerability",
-            "name": "input",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -123,20 +111,82 @@ func init() {
         }
       }
     },
-    "/cmdInjection/{command}/query/{safety}": {
+    "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query\n",
+        "description": "Demonstrates the command injection through user query using Command handler\n",
         "produces": [
           "text/plain"
         ],
         "tags": [
           "cmd-injection"
         ],
-        "operationId": "getQueryExploit",
+        "operationId": "getQueryCommand",
         "parameters": [
           {
-            "$ref": "#/parameters/commandParam"
+            "$ref": "#/parameters/safetyParam"
           },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/cmdInjection/exec.CommandContext/cookies/{safety}/": {
+      "post": {
+        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "cmd-injection"
+        ],
+        "operationId": "postCookiesCommandContext",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/cmdInjection/exec.CommandContext/query/{safety}": {
+      "get": {
+        "description": "Demonstrates the command injection through user query using CommandContext\n",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "cmd-injection"
+        ],
+        "operationId": "getQueryCommandContext",
+        "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
           },
@@ -171,7 +221,7 @@ func init() {
           "path-traversal"
         ],
         "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversaslFront",
+        "operationId": "pathTraversalFront",
         "responses": {
           "200": {
             "description": "served front end for path traversal page of Swagger API",
@@ -406,7 +456,7 @@ func init() {
         }
       }
     },
-    "/cmdInjection/{command}/cookies/{safety}/": {
+    "/cmdInjection/exec.Command/cookies/{safety}/": {
       "post": {
         "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
         "produces": [
@@ -415,19 +465,8 @@ func init() {
         "tags": [
           "cmd-injection"
         ],
-        "operationId": "postCookiesExploit",
+        "operationId": "postCookiesCommand",
         "parameters": [
-          {
-            "enum": [
-              "exec.Command",
-              "exec.CommandContext"
-            ],
-            "type": "string",
-            "description": "specify if exec.Command or exec.CommandContext should be invoked",
-            "name": "command",
-            "in": "path",
-            "required": true
-          },
           {
             "enum": [
               "safe",
@@ -439,15 +478,6 @@ func init() {
             "name": "safety",
             "in": "path",
             "required": true
-          },
-          {
-            "description": "the user provided input for the query vulnerability",
-            "name": "input",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -464,28 +494,100 @@ func init() {
         }
       }
     },
-    "/cmdInjection/{command}/query/{safety}": {
+    "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query\n",
+        "description": "Demonstrates the command injection through user query using Command handler\n",
         "produces": [
           "text/plain"
         ],
         "tags": [
           "cmd-injection"
         ],
-        "operationId": "getQueryExploit",
+        "operationId": "getQueryCommand",
         "parameters": [
           {
             "enum": [
-              "exec.Command",
-              "exec.CommandContext"
+              "safe",
+              "unsafe",
+              "noop"
             ],
             "type": "string",
-            "description": "specify if exec.Command or exec.CommandContext should be invoked",
-            "name": "command",
+            "description": "safety qualifier",
+            "name": "safety",
             "in": "path",
             "required": true
           },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/cmdInjection/exec.CommandContext/cookies/{safety}/": {
+      "post": {
+        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "cmd-injection"
+        ],
+        "operationId": "postCookiesCommandContext",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/cmdInjection/exec.CommandContext/query/{safety}": {
+      "get": {
+        "description": "Demonstrates the command injection through user query using CommandContext\n",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "cmd-injection"
+        ],
+        "operationId": "getQueryCommandContext",
+        "parameters": [
           {
             "enum": [
               "safe",
@@ -529,7 +631,7 @@ func init() {
           "path-traversal"
         ],
         "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversaslFront",
+        "operationId": "pathTraversalFront",
         "responses": {
           "200": {
             "description": "served front end for path traversal page of Swagger API",

@@ -45,18 +45,45 @@ paths:
         default:
           description: error occured
 
-  /cmdInjection/{command}/query/{safety}:
+  /cmdInjection/exec.Command/query/{safety}:
     get:
       tags:
         - cmd-injection
       description: |
-        Demonstrates the command injection through user query
-      operationId: getQueryExploit
+        Demonstrates the command injection through user query using Command handler
+      operationId: getQueryCommand
       produces:
         - text/plain
 
       parameters:
-        - $ref: '#/parameters/commandParam'
+        - $ref: '#/parameters/safetyParam'
+
+        -   name: input
+            in: query
+            description: the user provided input for the query vulnerability
+            required: true
+            type: string
+
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+
+  /cmdInjection/exec.CommandContext/query/{safety}:
+    get:
+      tags:
+        - cmd-injection
+      description: |
+        Demonstrates the command injection through user query using CommandContext
+      operationId: getQueryCommandContext
+      produces:
+        - text/plain
+
+      parameters:
         - $ref: '#/parameters/safetyParam'
 
         -   name: input
@@ -75,26 +102,40 @@ paths:
           description: Error occured
 
 # openAPI 2.0 does not seem provide good support for parameters through cookie
-  /cmdInjection/{command}/cookies/{safety}/:
+  /cmdInjection/exec.CommandContext/cookies/{safety}/:
     post:
       tags:
         - cmd-injection
       description: |
         Demonstrates the command injection vulnerability with input through Cookie
-      operationId: postCookiesExploit
+      operationId: postCookiesCommandContext
       produces:
         - text/plain
 
       parameters:
-        - $ref: '#/parameters/commandParam'
         - $ref: '#/parameters/safetyParam'
 
-        -   name: input
-            in: body
-            description: the user provided input for the query vulnerability
-            required: true
-            schema:
-              type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+
+  /cmdInjection/exec.Command/cookies/{safety}/:
+    post:
+      tags:
+        - cmd-injection
+      description: |
+        Demonstrates the command injection vulnerability with input through Cookie
+      operationId: postCookiesCommand
+      produces:
+        - text/plain
+
+      parameters:
+        - $ref: '#/parameters/safetyParam'
 
       responses:
         200:
@@ -126,7 +167,7 @@ paths:
       tags:
         - path-traversal
       summary: front page of the Path Traversal Vulnerability
-      operationId: pathTraversaslFront
+      operationId: pathTraversalFront
       produces:
         - text/html
       responses:

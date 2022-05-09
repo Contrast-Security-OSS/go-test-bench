@@ -12,10 +12,9 @@ import (
 	"strings"
 )
 
-// GetQueryExploitURL generates an URL for the get query exploit operation
-type GetQueryExploitURL struct {
-	Command string
-	Safety  string
+// GetQueryCommandContextURL generates an URL for the get query command context operation
+type GetQueryCommandContextURL struct {
+	Safety string
 
 	Input string
 
@@ -27,7 +26,7 @@ type GetQueryExploitURL struct {
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetQueryExploitURL) WithBasePath(bp string) *GetQueryExploitURL {
+func (o *GetQueryCommandContextURL) WithBasePath(bp string) *GetQueryCommandContextURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -35,28 +34,21 @@ func (o *GetQueryExploitURL) WithBasePath(bp string) *GetQueryExploitURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetQueryExploitURL) SetBasePath(bp string) {
+func (o *GetQueryCommandContextURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *GetQueryExploitURL) Build() (*url.URL, error) {
+func (o *GetQueryCommandContextURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/cmdInjection/{command}/query/{safety}"
-
-	command := o.Command
-	if command != "" {
-		_path = strings.Replace(_path, "{command}", command, -1)
-	} else {
-		return nil, errors.New("command is required on GetQueryExploitURL")
-	}
+	var _path = "/cmdInjection/exec.CommandContext/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {
 		_path = strings.Replace(_path, "{safety}", safety, -1)
 	} else {
-		return nil, errors.New("safety is required on GetQueryExploitURL")
+		return nil, errors.New("safety is required on GetQueryCommandContextURL")
 	}
 
 	_basePath := o._basePath
@@ -75,7 +67,7 @@ func (o *GetQueryExploitURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *GetQueryExploitURL) Must(u *url.URL, err error) *url.URL {
+func (o *GetQueryCommandContextURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -86,17 +78,17 @@ func (o *GetQueryExploitURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *GetQueryExploitURL) String() string {
+func (o *GetQueryCommandContextURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *GetQueryExploitURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *GetQueryCommandContextURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on GetQueryExploitURL")
+		return nil, errors.New("scheme is required for a full url on GetQueryCommandContextURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on GetQueryExploitURL")
+		return nil, errors.New("host is required for a full url on GetQueryCommandContextURL")
 	}
 
 	base, err := o.Build()
@@ -110,6 +102,6 @@ func (o *GetQueryExploitURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *GetQueryExploitURL) StringFull(scheme, host string) string {
+func (o *GetQueryCommandContextURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

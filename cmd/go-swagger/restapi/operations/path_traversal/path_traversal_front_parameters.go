@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// NewPathTraversaslFrontParams creates a new PathTraversaslFrontParams object
+// NewPathTraversalFrontParams creates a new PathTraversalFrontParams object
 //
 // There are no default values defined in the spec.
-func NewPathTraversaslFrontParams() PathTraversaslFrontParams {
+func NewPathTraversalFrontParams() PathTraversalFrontParams {
 
-	return PathTraversaslFrontParams{}
+	return PathTraversalFrontParams{}
 }
 
-// PathTraversaslFrontParams contains all the bound params for the path traversasl front operation
+// PathTraversalFrontParams contains all the bound params for the path traversal front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters pathTraversaslFront
-type PathTraversaslFrontParams struct {
+// swagger:parameters pathTraversalFront
+type PathTraversalFrontParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -33,8 +33,8 @@ type PathTraversaslFrontParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewPathTraversaslFrontParams() beforehand.
-func (o *PathTraversaslFrontParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewPathTraversalFrontParams() beforehand.
+func (o *PathTraversalFrontParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r

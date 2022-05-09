@@ -15,28 +15,23 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewGetQueryExploitParams creates a new GetQueryExploitParams object
+// NewGetQueryCommandParams creates a new GetQueryCommandParams object
 //
 // There are no default values defined in the spec.
-func NewGetQueryExploitParams() GetQueryExploitParams {
+func NewGetQueryCommandParams() GetQueryCommandParams {
 
-	return GetQueryExploitParams{}
+	return GetQueryCommandParams{}
 }
 
-// GetQueryExploitParams contains all the bound params for the get query exploit operation
+// GetQueryCommandParams contains all the bound params for the get query command operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getQueryExploit
-type GetQueryExploitParams struct {
+// swagger:parameters getQueryCommand
+type GetQueryCommandParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*specify if exec.Command or exec.CommandContext should be invoked
-	  Required: true
-	  In: path
-	*/
-	Command string
 	/*the user provided input for the query vulnerability
 	  Required: true
 	  In: query
@@ -52,18 +47,13 @@ type GetQueryExploitParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetQueryExploitParams() beforehand.
-func (o *GetQueryExploitParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetQueryCommandParams() beforehand.
+func (o *GetQueryCommandParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
 
 	qs := runtime.Values(r.URL.Query())
-
-	rCommand, rhkCommand, _ := route.Params.GetOK("command")
-	if err := o.bindCommand(rCommand, rhkCommand, route.Formats); err != nil {
-		res = append(res, err)
-	}
 
 	qInput, qhkInput, _ := qs.GetOK("input")
 	if err := o.bindInput(qInput, qhkInput, route.Formats); err != nil {
@@ -80,36 +70,8 @@ func (o *GetQueryExploitParams) BindRequest(r *http.Request, route *middleware.M
 	return nil
 }
 
-// bindCommand binds and validates parameter Command from path.
-func (o *GetQueryExploitParams) bindCommand(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: true
-	// Parameter is provided by construction from the route
-	o.Command = raw
-
-	if err := o.validateCommand(formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// validateCommand carries on validations for parameter Command
-func (o *GetQueryExploitParams) validateCommand(formats strfmt.Registry) error {
-
-	if err := validate.EnumCase("command", "path", o.Command, []interface{}{"exec.Command", "exec.CommandContext"}, true); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // bindInput binds and validates parameter Input from query.
-func (o *GetQueryExploitParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetQueryCommandParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("input", "query", rawData)
 	}
@@ -130,7 +92,7 @@ func (o *GetQueryExploitParams) bindInput(rawData []string, hasKey bool, formats
 }
 
 // bindSafety binds and validates parameter Safety from path.
-func (o *GetQueryExploitParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetQueryCommandParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -148,7 +110,7 @@ func (o *GetQueryExploitParams) bindSafety(rawData []string, hasKey bool, format
 }
 
 // validateSafety carries on validations for parameter Safety
-func (o *GetQueryExploitParams) validateSafety(formats strfmt.Registry) error {
+func (o *GetQueryCommandParams) validateSafety(formats strfmt.Registry) error {
 
 	if err := validate.EnumCase("safety", "path", o.Safety, []interface{}{"safe", "unsafe", "noop"}, true); err != nil {
 		return err

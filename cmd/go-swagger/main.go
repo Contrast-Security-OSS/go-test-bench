@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"net/http"
+	"github.com/go-openapi/runtime"
 	"os"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi"
@@ -33,50 +35,75 @@ func main() {
 
 	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(serveswagger.CommandInjectionHandler)
 
-	api.CmdInjectionGetQueryExploitHandler = cmd_injection.GetQueryExploitHandlerFunc(func(params cmd_injection.GetQueryExploitParams) middleware.Responder {
-		var payload string
+	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			var data string
 
-		if params.Command == "exec.Command" {
-			// TODO: this needs to start using common.GetUserInput
-			txt, render := cmdi.ExecHandler(params.Safety, params.Input)
-			if !render {
-				payload = string(txt)
+			txt, isTemplate := cmdi.ExecHandlerCtx(params.Safety, params.Input)
+			if !isTemplate {
+				data = string(txt)
 			} else {
-				payload = "exec.Command operation failure"
+				data = "not intended to render"
 			}
-			return cmd_injection.NewGetQueryExploitOK().WithPayload(payload)
-		} else if params.Command == "exec.CommandContext" {
-			txt, render := cmdi.ExecHandlerCtx(params.Safety, params.Input)
-			if !render {
-				payload = string(txt)
-			} else {
-				payload = "exec.CommandContext operation failure"
+
+			if err := p.Produce(w, data); err != nil {
 			}
-		}
-		return cmd_injection.NewGetQueryExploitOK().WithPayload(payload)
+		})
 	})
 
-	api.CmdInjectionPostCookiesExploitHandler = cmd_injection.PostCookiesExploitHandlerFunc(func(params cmd_injection.PostCookiesExploitParams) middleware.Responder {
+	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			var data string
 
-		var payload string
+			txt, isTemplate := cmdi.ExecHandlerCtx(params.Safety, params.Input)
+			if !isTemplate {
+				data = string(txt)
+			} else {
+				data = "not intended to render"
+			}
 
-		if params.Command == "exec.Command" {
-			txt, render := cmdi.ExecHandler(params.Safety, params.Input)
-			if !render {
-				payload = string(txt)
-			} else {
-				payload = "exec.Command operation failure"
+			if err := p.Produce(w, data); err != nil {
 			}
-			return cmd_injection.NewGetQueryExploitOK().WithPayload(payload)
-		} else if params.Command == "exec.CommandContext" {
-			txt, render := cmdi.ExecHandlerCtx(params.Safety, params.Input)
+		})
+	})
+
+	api.CmdInjectionPostCookiesCommandHandler = cmd_injection.PostCookiesCommandHandlerFunc(func(params cmd_injection.PostCookiesCommandParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			var data string
+
+			cookie := http.Cookie{Name: "cookie", Value:"value"}
+			http.SetCookie(w, &cookie)
+
+			txt, render := cmdi.ExecHandlerCtx(params.Safety, "unusable")
 			if !render {
-				payload = string(txt)
+				data = string(txt)
 			} else {
-				payload = "exec.CommandContext operation failure"
+				data = "not intended to render"
 			}
-		}
-		return cmd_injection.NewPostCookiesExploitOK().WithPayload(payload)
+
+			if err := p.Produce(w, data); err != nil {
+			}
+		})
+
+	})
+	api.CmdInjectionPostCookiesCommandContextHandler = cmd_injection.PostCookiesCommandContextHandlerFunc(func(params cmd_injection.PostCookiesCommandContextParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			var data string
+
+			cookie := http.Cookie{Name: "cookie", Value:"value"}
+			http.SetCookie(w, &cookie)
+
+			txt, render := cmdi.ExecHandlerCtx(params.Safety, "unusable")
+			if !render {
+				data = string(txt)
+			} else {
+				data = "not intended to render"
+			}
+
+			if err := p.Produce(w, data); err != nil {
+			}
+		})
+
 	})
 
 	server := restapi.NewServer(api)

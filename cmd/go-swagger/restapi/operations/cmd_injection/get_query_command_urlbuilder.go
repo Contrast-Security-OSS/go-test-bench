@@ -12,10 +12,11 @@ import (
 	"strings"
 )
 
-// PostCookiesExploitURL generates an URL for the post cookies exploit operation
-type PostCookiesExploitURL struct {
-	Command string
-	Safety  string
+// GetQueryCommandURL generates an URL for the get query command operation
+type GetQueryCommandURL struct {
+	Safety string
+
+	Input string
 
 	_basePath string
 	// avoid unkeyed usage
@@ -25,7 +26,7 @@ type PostCookiesExploitURL struct {
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PostCookiesExploitURL) WithBasePath(bp string) *PostCookiesExploitURL {
+func (o *GetQueryCommandURL) WithBasePath(bp string) *GetQueryCommandURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -33,38 +34,40 @@ func (o *PostCookiesExploitURL) WithBasePath(bp string) *PostCookiesExploitURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PostCookiesExploitURL) SetBasePath(bp string) {
+func (o *GetQueryCommandURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *PostCookiesExploitURL) Build() (*url.URL, error) {
+func (o *GetQueryCommandURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/cmdInjection/{command}/cookies/{safety}/"
-
-	command := o.Command
-	if command != "" {
-		_path = strings.Replace(_path, "{command}", command, -1)
-	} else {
-		return nil, errors.New("command is required on PostCookiesExploitURL")
-	}
+	var _path = "/cmdInjection/exec.Command/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {
 		_path = strings.Replace(_path, "{safety}", safety, -1)
 	} else {
-		return nil, errors.New("safety is required on PostCookiesExploitURL")
+		return nil, errors.New("safety is required on GetQueryCommandURL")
 	}
 
 	_basePath := o._basePath
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 
+	qs := make(url.Values)
+
+	inputQ := o.Input
+	if inputQ != "" {
+		qs.Set("input", inputQ)
+	}
+
+	_result.RawQuery = qs.Encode()
+
 	return &_result, nil
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *PostCookiesExploitURL) Must(u *url.URL, err error) *url.URL {
+func (o *GetQueryCommandURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -75,17 +78,17 @@ func (o *PostCookiesExploitURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *PostCookiesExploitURL) String() string {
+func (o *GetQueryCommandURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *PostCookiesExploitURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *GetQueryCommandURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on PostCookiesExploitURL")
+		return nil, errors.New("scheme is required for a full url on GetQueryCommandURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on PostCookiesExploitURL")
+		return nil, errors.New("host is required for a full url on GetQueryCommandURL")
 	}
 
 	base, err := o.Build()
@@ -99,6 +102,6 @@ func (o *PostCookiesExploitURL) BuildFull(scheme, host string) (*url.URL, error)
 }
 
 // StringFull returns the string representation of a complete url
-func (o *PostCookiesExploitURL) StringFull(scheme, host string) string {
+func (o *GetQueryCommandURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

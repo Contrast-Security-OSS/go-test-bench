@@ -82,19 +82,29 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		})
 	}
-	if api.CmdInjectionGetQueryExploitHandler == nil {
-		api.CmdInjectionGetQueryExploitHandler = cmd_injection.GetQueryExploitHandlerFunc(func(params cmd_injection.GetQueryExploitParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryExploit has not yet been implemented")
+	if api.CmdInjectionGetQueryCommandHandler == nil {
+		api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
 		})
 	}
-	if api.PathTraversalPathTraversaslFrontHandler == nil {
-		api.PathTraversalPathTraversaslFrontHandler = path_traversal.PathTraversaslFrontHandlerFunc(func(params path_traversal.PathTraversaslFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation path_traversal.PathTraversaslFront has not yet been implemented")
+	if api.CmdInjectionGetQueryCommandContextHandler == nil {
+		api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.GetQueryCommandContext has not yet been implemented")
 		})
 	}
-	if api.CmdInjectionPostCookiesExploitHandler == nil {
-		api.CmdInjectionPostCookiesExploitHandler = cmd_injection.PostCookiesExploitHandlerFunc(func(params cmd_injection.PostCookiesExploitParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.PostCookiesExploit has not yet been implemented")
+	if api.PathTraversalPathTraversalFrontHandler == nil {
+		api.PathTraversalPathTraversalFrontHandler = path_traversal.PathTraversalFrontHandlerFunc(func(params path_traversal.PathTraversalFrontParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
+		})
+	}
+	if api.CmdInjectionPostCookiesCommandHandler == nil {
+		api.CmdInjectionPostCookiesCommandHandler = cmd_injection.PostCookiesCommandHandlerFunc(func(params cmd_injection.PostCookiesCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommand has not yet been implemented")
+		})
+	}
+	if api.CmdInjectionPostCookiesCommandContextHandler == nil {
+		api.CmdInjectionPostCookiesCommandContextHandler = cmd_injection.PostCookiesCommandContextHandlerFunc(func(params cmd_injection.PostCookiesCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommandContext has not yet been implemented")
 		})
 	}
 	if api.SwaggerServerRootHandler == nil {

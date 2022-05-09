@@ -58,14 +58,20 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		CmdInjectionCmdInjectionFrontHandler: cmd_injection.CmdInjectionFrontHandlerFunc(func(params cmd_injection.CmdInjectionFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		}),
-		CmdInjectionGetQueryExploitHandler: cmd_injection.GetQueryExploitHandlerFunc(func(params cmd_injection.GetQueryExploitParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryExploit has not yet been implemented")
+		CmdInjectionGetQueryCommandHandler: cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
 		}),
-		PathTraversalPathTraversaslFrontHandler: path_traversal.PathTraversaslFrontHandlerFunc(func(params path_traversal.PathTraversaslFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation path_traversal.PathTraversaslFront has not yet been implemented")
+		CmdInjectionGetQueryCommandContextHandler: cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.GetQueryCommandContext has not yet been implemented")
 		}),
-		CmdInjectionPostCookiesExploitHandler: cmd_injection.PostCookiesExploitHandlerFunc(func(params cmd_injection.PostCookiesExploitParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.PostCookiesExploit has not yet been implemented")
+		PathTraversalPathTraversalFrontHandler: path_traversal.PathTraversalFrontHandlerFunc(func(params path_traversal.PathTraversalFrontParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
+		}),
+		CmdInjectionPostCookiesCommandHandler: cmd_injection.PostCookiesCommandHandlerFunc(func(params cmd_injection.PostCookiesCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommand has not yet been implemented")
+		}),
+		CmdInjectionPostCookiesCommandContextHandler: cmd_injection.PostCookiesCommandContextHandlerFunc(func(params cmd_injection.PostCookiesCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommandContext has not yet been implemented")
 		}),
 		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
 			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
@@ -126,12 +132,16 @@ type SwaggerBenchAPI struct {
 
 	// CmdInjectionCmdInjectionFrontHandler sets the operation handler for the cmd injection front operation
 	CmdInjectionCmdInjectionFrontHandler cmd_injection.CmdInjectionFrontHandler
-	// CmdInjectionGetQueryExploitHandler sets the operation handler for the get query exploit operation
-	CmdInjectionGetQueryExploitHandler cmd_injection.GetQueryExploitHandler
-	// PathTraversalPathTraversaslFrontHandler sets the operation handler for the path traversasl front operation
-	PathTraversalPathTraversaslFrontHandler path_traversal.PathTraversaslFrontHandler
-	// CmdInjectionPostCookiesExploitHandler sets the operation handler for the post cookies exploit operation
-	CmdInjectionPostCookiesExploitHandler cmd_injection.PostCookiesExploitHandler
+	// CmdInjectionGetQueryCommandHandler sets the operation handler for the get query command operation
+	CmdInjectionGetQueryCommandHandler cmd_injection.GetQueryCommandHandler
+	// CmdInjectionGetQueryCommandContextHandler sets the operation handler for the get query command context operation
+	CmdInjectionGetQueryCommandContextHandler cmd_injection.GetQueryCommandContextHandler
+	// PathTraversalPathTraversalFrontHandler sets the operation handler for the path traversal front operation
+	PathTraversalPathTraversalFrontHandler path_traversal.PathTraversalFrontHandler
+	// CmdInjectionPostCookiesCommandHandler sets the operation handler for the post cookies command operation
+	CmdInjectionPostCookiesCommandHandler cmd_injection.PostCookiesCommandHandler
+	// CmdInjectionPostCookiesCommandContextHandler sets the operation handler for the post cookies command context operation
+	CmdInjectionPostCookiesCommandContextHandler cmd_injection.PostCookiesCommandContextHandler
 	// SwaggerServerRootHandler sets the operation handler for the root operation
 	SwaggerServerRootHandler swagger_server.RootHandler
 	// SQLInjectionSQLInjectionFrontHandler sets the operation handler for the sql injection front operation
@@ -228,14 +238,20 @@ func (o *SwaggerBenchAPI) Validate() error {
 	if o.CmdInjectionCmdInjectionFrontHandler == nil {
 		unregistered = append(unregistered, "cmd_injection.CmdInjectionFrontHandler")
 	}
-	if o.CmdInjectionGetQueryExploitHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.GetQueryExploitHandler")
+	if o.CmdInjectionGetQueryCommandHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.GetQueryCommandHandler")
 	}
-	if o.PathTraversalPathTraversaslFrontHandler == nil {
-		unregistered = append(unregistered, "path_traversal.PathTraversaslFrontHandler")
+	if o.CmdInjectionGetQueryCommandContextHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.GetQueryCommandContextHandler")
 	}
-	if o.CmdInjectionPostCookiesExploitHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.PostCookiesExploitHandler")
+	if o.PathTraversalPathTraversalFrontHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalFrontHandler")
+	}
+	if o.CmdInjectionPostCookiesCommandHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.PostCookiesCommandHandler")
+	}
+	if o.CmdInjectionPostCookiesCommandContextHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.PostCookiesCommandContextHandler")
 	}
 	if o.SwaggerServerRootHandler == nil {
 		unregistered = append(unregistered, "swagger_server.RootHandler")
@@ -351,15 +367,23 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/cmdInjection/{command}/query/{safety}"] = cmd_injection.NewGetQueryExploit(o.context, o.CmdInjectionGetQueryExploitHandler)
+	o.handlers["GET"]["/cmdInjection/exec.Command/query/{safety}"] = cmd_injection.NewGetQueryCommand(o.context, o.CmdInjectionGetQueryCommandHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/pathTraversal"] = path_traversal.NewPathTraversaslFront(o.context, o.PathTraversalPathTraversaslFrontHandler)
+	o.handlers["GET"]["/cmdInjection/exec.CommandContext/query/{safety}"] = cmd_injection.NewGetQueryCommandContext(o.context, o.CmdInjectionGetQueryCommandContextHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal"] = path_traversal.NewPathTraversalFront(o.context, o.PathTraversalPathTraversalFrontHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/cmdInjection/{command}/cookies/{safety}"] = cmd_injection.NewPostCookiesExploit(o.context, o.CmdInjectionPostCookiesExploitHandler)
+	o.handlers["POST"]["/cmdInjection/exec.Command/cookies/{safety}"] = cmd_injection.NewPostCookiesCommand(o.context, o.CmdInjectionPostCookiesCommandHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/cmdInjection/exec.CommandContext/cookies/{safety}"] = cmd_injection.NewPostCookiesCommandContext(o.context, o.CmdInjectionPostCookiesCommandContextHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
