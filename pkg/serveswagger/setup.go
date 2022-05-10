@@ -9,6 +9,7 @@ var SwaggerParams = common.ConstParams{
 	Year:      2022,
 	Logo:      "https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png",
 	Framework: "Go-Swagger",
+	Addr: 		"localhost:8080",
 }
 
 func Setup() error {

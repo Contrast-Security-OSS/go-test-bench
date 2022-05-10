@@ -39,7 +39,7 @@ func main() {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 			var data string
 
-			txt, isTemplate := cmdi.ExecHandlerCtx(params.Safety, params.Input)
+			txt, isTemplate := cmdi.ExecHandler(params.Safety, params.Input)
 			if !isTemplate {
 				data = string(txt)
 			} else {
@@ -131,6 +131,7 @@ func main() {
 	}
 
 	server.ConfigureAPI()
+	server.Port = 8080
 
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
