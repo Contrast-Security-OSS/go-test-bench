@@ -45,26 +45,6 @@
         ]
     },
 
-    "pathTraversal" :  {
-        "base"     :  "/pathTraversal",
-        "name"     :  "Path Traversal",
-        "link"     :  "https://owasp.org/www-community/attacks/Path_Traversal",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "headers", "body"],
-        "sinks"    :  [
-            {
-                "name"   : "ioutil.ReadFile",
-                "url"    : "\/pathTraversal",
-                "method" : "GET"
-            },
-            {
-                "name"   : "ioutil.WriteFile",
-                "url"    : "\/pathTraversal",
-                "method" : "GET"
-            }
-        ]
-    },
-
     "ssjs" :  {
         "base"     :  "/ssjs",
         "name"     :  "SSJS Injection",

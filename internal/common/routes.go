@@ -16,16 +16,35 @@ import (
 var Verbose bool
 
 // HandlerFn is a framework-agnostic function to handle a vulnerable endpoint.
-type HandlerFn func(mode, in string) (template.HTML, bool)
+// `opaque` can be set to some framework-specific struct - for example, gin.Context.
+type HandlerFn func(safety Safety, in string, opaque interface{}) (data template.HTML)
 
-// Sink is a struct that identifies the name
-// of the sink, the associated URL and the
-// HTTP method
+// VulnerableFnWrapper
+type VulnerableFnWrapper func(opaque interface{}, payload string) (data template.HTML, err error)
+
+// A SanitizerFn sanitizes the input string
+type SanitizerFn func(string) string
+
+// Sink is a struct that identifies the name of the sink, the associated URL and
+// the HTTP method
 type Sink struct {
-	Name    string
-	URL     string
-	Method  string
-	Handler HandlerFn // the vulnerable function which recieves unsanitized input
+	Name   string
+	URL    string
+	Method string
+
+	// if nil, a generic handler is used and VulnerableFnWrapper and Sanitizer must
+	// both be set
+	Handler HandlerFn
+
+	// a function that renders input safe; only used by the generic handler and only
+	// when 'safe' mode is requested.
+	//
+	// for example: url.QueryEscape
+	Sanitize SanitizerFn
+
+	// the vulnerable function which may recieve unsanitized input. Handler must be
+	// nil when this is set.
+	VulnerableFnWrapper VulnerableFnWrapper
 }
 
 func (s *Sink) String() string {
@@ -42,8 +61,9 @@ type Route struct {
 	Base     string   // short name, suitable for use in filename or URL - i.e. cmdInjection
 	TmplFile string   // name of template used for non-result page; default is Base + '.gohtml'
 	Products []string // relevant Contrast products
-	Inputs   []string // input methods supported by this app
+	Inputs   []string // input methods supported by this app: query, cookies, body, headers, headers-json, ...
 	Sinks    []Sink   // one per vulnerable function
+	Payload  string   // must be set for the default template.
 }
 
 func (r *Route) String() string {
@@ -82,10 +102,23 @@ func Register(r Route) {
 		log.Fatalf("%s: slashes not allowed in Base", r.Name)
 	}
 	if len(r.TmplFile) == 0 {
-		r.TmplFile = r.Base + ".gohtml"
+		templatesDir, err := FindViewsDir()
+		if err != nil {
+			log.Fatal("cannot find views dir:", err)
+		}
+		p := filepath.Join(templatesDir, "pages", r.Base+".gohtml")
+		if _, err := os.Stat(p); err != nil {
+			//does not exist
+			r.TmplFile = "rule.gohtml"
+		} else {
+			r.TmplFile = r.Base + ".gohtml"
+		}
 	}
 	r.Base = "/" + r.Base
 	for i, s := range r.Sinks {
+		if (s.Handler == nil) == (s.VulnerableFnWrapper == nil) {
+			log.Fatalf("sink #%d in %#v: exactly one of {Handler, VulnerableFnWrapper} must be set", i, r)
+		}
 		if len(s.Name) == 0 {
 			log.Fatalf("0-len sink name at %d in %#v", i, r)
 		}
@@ -174,4 +207,47 @@ func PopulateRouteMap(routes Routes) (rmap RouteMap) {
 		log.Printf("vulnerable routes:\n%s", strings.Join(lines, "\n"))
 	}
 	return
+}
+
+type Safety string
+
+const (
+	Unsafe Safety = "unsafe"
+	Safe   Safety = "safe"
+	NOOP   Safety = "noop"
+)
+
+//unlike HandlerFn, isTmpl is omitted as it seems that'll never be used
+func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (data template.HTML) {
+	if s.Sanitize == nil {
+		return template.HTML(fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s))
+	}
+	if s.VulnerableFnWrapper == nil {
+		return template.HTML(fmt.Sprintf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s))
+	}
+	switch safety {
+	case Unsafe:
+		// nothing to do here
+	case Safe:
+		payload = s.Sanitize(payload)
+	default:
+		return "NOOP"
+	}
+	var err error
+	data, err = s.VulnerableFnWrapper(opaque, payload)
+	switch safety {
+	case Unsafe:
+		if err != nil {
+			data = template.HTML(fmt.Sprintf("%q: unsafe action failed: payload=%q err=%s", s.Name, payload, err))
+		} else if len(data) == 0 {
+			data = template.HTML(fmt.Sprintf("%q: unsafe action reported no error. payload=%q", s.Name, payload))
+		}
+	case Safe:
+		if err != nil {
+			return template.HTML(fmt.Sprintf("%q: safe action returned data=%s err=%s with payload %s", s.Name, data, err, payload))
+		} else if len(data) == 0 {
+			return template.HTML(fmt.Sprintf("%q: safe action returned no data or error. payload=%s", s.Name, payload))
+		}
+	}
+	return data
 }

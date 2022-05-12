@@ -77,16 +77,22 @@ func newHandler(v common.Route) http.HandlerFunc {
 	loop:
 		for _, s := range v.Sinks {
 			if len(elems) > 1 && elems[1] == s.URL {
-				mode := elems[len(elems)-1]
+				mode := common.Safety(elems[len(elems)-1])
 				switch mode {
-				case "unsafe", "safe", "noop":
+				case common.NOOP, common.Safe, common.Unsafe:
 					// valid modes
 					found = true
 				default:
 					// invalid
 					break loop
 				}
-				data, isTmpl = s.Handler(mode, common.GetUserInput(r))
+				isTmpl = false
+				in := common.GetUserInput(r)
+				if s.Handler != nil {
+					data = s.Handler(mode, in, nil)
+				} else {
+					data = common.GenericHandler(s, mode, in, nil)
+				}
 				break loop //label isn't required, but helps readability
 			}
 		}
@@ -149,6 +155,7 @@ func Setup() {
 	//register all routes at this point.
 	cmdi.RegisterRoutes("stdlib")
 	sqli.RegisterRoutes("stdlib")
+	pathtraversal.RegisterRoutes(nil)
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
@@ -174,7 +181,6 @@ func Setup() {
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
-	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))

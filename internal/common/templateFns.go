@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"strings"
 )
 
@@ -24,22 +25,53 @@ func FuncMap() template.FuncMap {
 // call once to generate 3 commands
 // {{ curl $addr $base .URL "headers-json" "POST" "-H \"Content-Type: application/json\" \\\n    -H \"credentials:{...}\""}}
 // -> curl http://localhost:8080/sqlInjection/sqlite3.exec/headers-json/unsafe -X POST -H ...
-func writeCurlCmds(addr, base, url, input, method, args string) template.HTML {
+func writeCurlCmds(addr, base, url, input, payload string, extraargs ...string) template.HTML {
 	var out []string
 	modes := []struct{ name, frag string }{
 		{"unsafe", "unsafe"},
 		{"safe", "safe"},
 		{"no-op", "noop"},
 	}
+
+	if len(payload) > 0 {
+		switch {
+		case input == "headers":
+			extraargs = append(extraargs, `-H`, `"input: `+payload+`"`)
+		case input == "headers-json":
+			extraargs = append(extraargs,
+				"-X", "POST",
+				`-H`, `"Content-Type: application/json"`,
+				"\\\n   ", //line break for better display
+				`-H`, `"credentials:{\"username\":\"`+payload+`\",\"password\":\"12345Pass\"}"`)
+		case input == "cookies":
+			extraargs = append(extraargs,
+				"-X", "POST",
+				"-b", `"input=`+payload+`"`,
+			)
+		default:
+			log.Fatalf("writeCurlCmds: unknown input type %q", input)
+		}
+	}
+	args := strings.Join(extraargs, " ")
 	for _, m := range modes {
-		out = append(out, fmt.Sprintf("<p>%s</p><pre>curl http://%s%s/%s/%s/%s \\\n    -X %s %s</pre>", m.name, addr, base, url, input, m.frag, method, args))
+		fullUrl := fmt.Sprintf("http://%s%s/%s/%s/%s", addr, base, url, input, m.frag)
+		out = append(out, fmt.Sprintf("<p>%s</p><pre class=%q>curl %s \\\n    %s</pre>", m.name, m.frag, fullUrl, args))
 	}
 	return template.HTML(strings.Join(out, "\n"))
 }
 
 // do we use curl for this input type?
+//
+// defined input types ( * --> needs curl ):
+//
+//       body
+//     * cookies
+//     * headers
+//     * headers-json
+//       params
+//       query
+//
 func needsCurl(input string) bool {
-	input = strings.ToLower(input)
 	switch {
 	case strings.Contains(input, "header"):
 		return true

@@ -1,0 +1,46 @@
+{{/* template shared between rules */}}
+{{define "body"}}
+{{$routeInfo := index .Rulebar .Name}}
+{{$base := $routeInfo.Base}}
+{{$addr := .Addr}}
+{{$inputs := $routeInfo.Inputs}}
+<h1 class="page-header">{{$routeInfo.Name}}</h1>
+{{template "ruleInfo" $routeInfo}}
+
+{{/* each sink on a tab */}}
+<div class="tabs">
+{{$first := true}} {{/* add the checked attr to the first tab, otherwise initial coloring will be off */}}
+{{range $routeInfo.Sinks}}
+  {{$sink := .}}
+   <div class="tab">
+       <input type="radio" id="{{$sink.URL}}" name="tab-group-1" {{if $first}}checked{{end}}>
+       {{$first = false}}
+       <label class="tlabel" for="{{$sink.URL}}"><code>{{$sink.Name}}</code></label>
+       <div class="tabcontent">
+         {{range $routeInfo.Inputs}}
+           {{ $input := . }}
+           <h4 class="sub-header">{{inputTitle $input}}</h4>
+            {{if needsCurl $input }}
+              {{ curl $addr $base $sink.URL $input $routeInfo.Payload }}
+            {{else}}
+              {{ $m := $sink.Method }}
+              {{ if eq $input "body" }}
+                  {{ $m = "POST" }}
+              {{ end }}
+              <form method="{{ $m }}" action="{{ $routeInfo.Base }}/{{ $sink.URL }}/{{ $input }}/unsafe" target="_blank">
+                <div class="form-group">
+                <label>Path</label>
+                <input name="input" class="form-control" value="{{ $routeInfo.Payload }}" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            {{end}}
+         {{end}}
+       </div>
+   </div>
+{{end}}
+</div>
+{{template "safeButtons" .}}
+{{end}}
+
+{{template "sqlInjection" .}}
