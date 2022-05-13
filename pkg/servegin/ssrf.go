@@ -32,7 +32,7 @@ func ssrfHandlerFunc(c *gin.Context) {
 
 	res, err := http.Get(url)
 	if err != nil {
-		c.Error(err)
+		logErr(c, err)
 		return
 	}
 

@@ -67,46 +67,41 @@ func newHandler(v common.Route) http.HandlerFunc {
 			ConstParams: Pd,
 			Name:        v.Base,
 		}
-		var data = template.HTML(v.TmplFile)
-		isTmpl := true
 		elems := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-		// To figure out whether we're serving a sink or the main page, check the
-		// element with index 1 against each Sink.URL; if no match, serve main page.
-		// Seems like there should be a less ugly way...
-		found := false
-	loop:
+		if len(elems) < 2 {
+			// main page
+			err := templates[v.TmplFile].ExecuteTemplate(w, "layout.gohtml", &parms)
+			if err != nil {
+				log.Print(err.Error())
+				fmt.Fprintf(w, "template error: %s", err)
+			}
+			return
+		}
 		for _, s := range v.Sinks {
-			if len(elems) > 1 && elems[1] == s.URL {
+			if elems[1] == s.URL {
 				mode := common.Safety(elems[len(elems)-1])
 				switch mode {
 				case common.NOOP, common.Safe, common.Unsafe:
 					// valid modes
-					found = true
 				default:
 					// invalid
-					break loop
+					w.WriteHeader(http.StatusNotFound)
+					return
 				}
-				isTmpl = false
 				in := common.GetUserInput(r)
+				var data string
 				if s.Handler != nil {
 					data = s.Handler(mode, in, nil)
 				} else {
 					data = common.GenericHandler(s, mode, in, nil)
 				}
-				break loop //label isn't required, but helps readability
+				w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
+				fmt.Fprint(w, data)
+				return
 			}
 		}
-		if !found {
-			w.WriteHeader(http.StatusNotFound)
-		}
-		if isTmpl {
-			err := templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
-			if err != nil {
-				log.Print(err.Error())
-			}
-		} else {
-			fmt.Fprint(w, data)
-		}
+		// does not match any sink or the main page
+		w.WriteHeader(http.StatusNotFound)
 	}
 }
 
@@ -152,7 +147,7 @@ func Setup() {
 	}
 	log.Println("Templates loaded.")
 
-	//register all routes at this point.
+	// register all routes at this point.
 	cmdi.RegisterRoutes("stdlib")
 	sqli.RegisterRoutes("stdlib")
 	pathtraversal.RegisterRoutes(nil)

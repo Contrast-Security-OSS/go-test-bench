@@ -3,7 +3,6 @@ package pathtraversal
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"log"
 	"net/url"
 	"os"
@@ -16,25 +15,21 @@ func RegisterRoutes(frameworkSinks []common.Sink) {
 	sinks := []common.Sink{
 		{
 			Name:                "os.ReadFile",
-			Method:              "GET",
 			Sanitize:            url.QueryEscape,
 			VulnerableFnWrapper: osReadFile,
 		},
 		{
 			Name:                "os.Open",
-			Method:              "GET",
 			Sanitize:            url.QueryEscape,
 			VulnerableFnWrapper: osOpen,
 		},
 		{
 			Name:                "os.WriteFile",
-			Method:              "GET",
 			Sanitize:            url.QueryEscape,
 			VulnerableFnWrapper: osWriteFile,
 		},
 		{
 			Name:                "os.Create",
-			Method:              "GET",
 			Sanitize:            url.QueryEscape,
 			VulnerableFnWrapper: osCreate,
 		},
@@ -54,7 +49,7 @@ func RegisterRoutes(frameworkSinks []common.Sink) {
 }
 
 // read the given file using os.ReadFile
-func osReadFile(_ interface{}, payload string) (data template.HTML, err error) {
+func osReadFile(_ interface{}, payload string) (data string, err error) {
 	var content []byte
 	content, err = os.ReadFile(payload)
 	if err != nil {
@@ -62,13 +57,13 @@ func osReadFile(_ interface{}, payload string) (data template.HTML, err error) {
 		return "", err
 	}
 	if len(content) == 0 {
-		return template.HTML(fmt.Sprintf("successfully read from %s; 0 bytes returned", payload)), nil
+		return fmt.Sprintf("successfully read from %s; 0 bytes returned", payload), nil
 	}
-	return template.HTML(content), nil
+	return string(content), nil
 }
 
 // read the given file using os.Open and bytes.Buffer
-func osOpen(_ interface{}, payload string) (data template.HTML, err error) {
+func osOpen(_ interface{}, payload string) (data string, err error) {
 	fr, err := os.Open(payload)
 	if err != nil {
 		return "", fmt.Errorf("os.Open: error %w", err)
@@ -80,16 +75,16 @@ func osOpen(_ interface{}, payload string) (data template.HTML, err error) {
 	if err != nil {
 		return "", fmt.Errorf("bytes.(Buffer).ReadFrom: error %w", err)
 	}
-	return template.HTML(buf.String()), nil
+	return buf.String(), nil
 }
 
 // write to the given file using os.WriteFile
-func osWriteFile(_ interface{}, payload string) (data template.HTML, err error) {
+func osWriteFile(_ interface{}, payload string) (data string, err error) {
 	return "", os.WriteFile(payload, []byte("writing to file via os.WriteFile"), 0644)
 }
 
 // write to the given file using os.Create
-func osCreate(_ interface{}, payload string) (data template.HTML, err error) {
+func osCreate(_ interface{}, payload string) (data string, err error) {
 	var buf bytes.Buffer
 	fmt.Fprint(&buf, "writing to file via os.Create")
 

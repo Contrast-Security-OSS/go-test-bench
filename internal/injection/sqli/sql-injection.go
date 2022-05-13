@@ -3,7 +3,6 @@ package sqli
 import (
 	"database/sql"
 	"fmt"
-	"html/template"
 	"log"
 	"os"
 
@@ -24,7 +23,6 @@ func RegisterRoutes( /* framework - unused */ string) {
 		Sinks: []common.Sink{
 			{
 				Name:    "sqlite3.exec",
-				Method:  "GET",
 				Handler: sqliteInj{}.execHandler,
 			},
 		},
@@ -37,13 +35,13 @@ type sqliteInj struct {
 	db   *sql.DB
 }
 
-func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) template.HTML {
+func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) string {
 	log.Println("sqlite exec handler")
 	var err error
 	var res sql.Result
 
 	if err = si.initDB(); err != nil {
-		return template.HTML(err.Error())
+		return err.Error()
 	}
 	defer si.cleanupDB()
 
@@ -57,15 +55,15 @@ func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) te
 		query := "SELECT '?' as '?'"
 		res, err = si.db.Exec(query, in, "test")
 	default: // mode is no-op or invalid
-		return template.HTML("NOOP")
+		return "NOOP"
 	}
 
 	if err != nil {
-		return template.HTML(err.Error())
+		return err.Error()
 	}
 	r := fmt.Sprintf("Result: %#v\n", res)
 	log.Println("Result: ", r)
-	return template.HTML(r)
+	return r
 }
 
 func (si *sqliteInj) initDB() error {

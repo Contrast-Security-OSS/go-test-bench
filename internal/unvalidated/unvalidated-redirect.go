@@ -22,6 +22,8 @@ func httpRedirectHandler(w http.ResponseWriter, r *http.Request, pd common.Param
 		http.Redirect(w, r, formValue, http.StatusFound)
 	case "noop":
 		http.Redirect(w, r, "http://www.example.com", http.StatusFound)
+	default:
+		w.WriteHeader(http.StatusNotFound)
 	}
 
 	return "", false
@@ -35,12 +37,8 @@ func unvalidatedTemplate(w http.ResponseWriter, r *http.Request, pd common.Param
 func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
 
-	switch splitURL[2] {
-
-	case "http.Redirect":
+	if strings.Contains(r.URL.Path, "http.Redirect") {
 		return httpRedirectHandler(w, r, pd, splitURL)
-
-	default:
-		return unvalidatedTemplate(w, r, pd)
 	}
+	return unvalidatedTemplate(w, r, pd)
 }

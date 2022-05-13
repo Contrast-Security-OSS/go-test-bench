@@ -1,8 +1,6 @@
 package servegin
 
 import (
-	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"net/url"
@@ -61,18 +59,30 @@ func add(router *gin.Engine, rt common.Route) {
 		c.HTML(http.StatusOK, rt.TmplFile, templateData(rt.Base))
 	})
 	for _, s := range rt.Sinks {
-		sinkFn := func(c *gin.Context) {
-			mode := common.Safety(c.Param("mode"))
-			source := c.Param("source")
-			payload := extractInput(c, source)
-			var data string
-			if s.Handler != nil {
-				data = string(s.Handler(mode, payload, c))
-			} else {
-				data = string(common.GenericHandler(s, mode, payload, c))
+		sinkFn := func(s common.Sink) func(c *gin.Context) {
+			return func(c *gin.Context) {
+				c.Header("Cache-Control", "no-store") //makes development a whole lot easier
+				mode := common.Safety(c.Param("mode"))
+				source := c.Param("source")
+				payload := extractInput(c, source)
+				for _, e := range c.Errors {
+					log.Printf("%s: error %s", c.Request.URL.Path, e)
+				}
+
+				var data string
+				if s.Handler != nil {
+					data = string(s.Handler(mode, payload, c))
+				} else {
+					data = string(common.GenericHandler(s, mode, payload, c))
+				}
+				if len(data) > 0 {
+					// don't unconditionally write this, as it can result in
+					// - a warning (when status changes), or
+					// - a panic (when content-length is already set and headers are written)
+					c.String(http.StatusOK, data)
+				}
 			}
-			c.String(http.StatusOK, data)
-		}
+		}(s)
 		sinkPg := base.Group("/" + s.URL)
 		//route data isn't a perfect match for the method(s) we actually use, so just accept anything
 		sinkPg.Any("/:source/:mode", sinkFn)
@@ -81,15 +91,14 @@ func add(router *gin.Engine, rt common.Route) {
 
 var ginPathTraversal = common.Sink{
 	Name:     "gin.File",
-	Method:   "GET",
 	Sanitize: url.QueryEscape,
-	VulnerableFnWrapper: func(opaque interface{}, payload string) (data template.HTML, err error) {
+	VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, err error) {
 		c, ok := opaque.(*gin.Context)
 		if !ok {
-			return "", fmt.Errorf("'opaque': want *gin.Context, got %T", opaque)
+			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
 		}
 		c.File(payload)
-		return "", nil
+		return "", common.NoDecoration
 	},
 }
 

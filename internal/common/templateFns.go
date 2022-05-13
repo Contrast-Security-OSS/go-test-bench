@@ -62,7 +62,7 @@ func writeCurlCmds(addr, base, url, input, payload string, extraargs ...string) 
 
 // do we use curl for this input type?
 //
-// defined input types ( * --> needs curl ):
+// current input types ( * --> needs curl ):
 //
 //       body
 //     * cookies

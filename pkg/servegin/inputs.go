@@ -4,9 +4,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
+
+func logErr(c *gin.Context, err error, str ...string) {
+	if err == nil {
+		return
+	}
+	log.Printf("getting input from %s: %s", c.Request.URL.Path, err)
+	if len(str) > 0 {
+		log.Println("vals:", str)
+	}
+	_ = c.Error(err)
+}
 
 func extractInput(c *gin.Context, source string) string {
 	switch source {
@@ -24,9 +36,7 @@ func extractInput(c *gin.Context, source string) string {
 		return buffer(input)
 	case "cookies":
 		input, err := c.Cookie("input")
-		if err != nil {
-			c.Error(err)
-		}
+		logErr(c, err)
 		return input
 	case "headers":
 		return c.GetHeader("input")
@@ -38,13 +48,11 @@ func extractInput(c *gin.Context, source string) string {
 			Password string `json:"password"`
 		}
 		err := json.Unmarshal([]byte(input), &creds)
-		if err != nil {
-			c.Error(err)
-		}
+		logErr(c, err, input)
 		return creds.Username
 
 	default:
-		c.Error(fmt.Errorf("invalid source: %s", source))
+		logErr(c, fmt.Errorf("invalid source: %s", source))
 		return ""
 	}
 }

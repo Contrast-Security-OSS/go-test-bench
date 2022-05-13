@@ -1,6 +1,7 @@
 package servegin
 
 import (
+	"log"
 	"net/http"
 	"net/url"
 
@@ -31,5 +32,8 @@ func xssHandlerFunc(c *gin.Context) {
 	}
 
 	c.Writer.WriteHeader(http.StatusOK)
-	c.Writer.WriteString(payload)
+	_, err := c.Writer.WriteString(payload)
+	if err != nil {
+		log.Printf("writing xss payload %s for %s: error %s", payload, c.Request.URL.Path, err)
+	}
 }

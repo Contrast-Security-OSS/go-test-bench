@@ -118,7 +118,8 @@
                 "url"    : "\/unvalidatedRedirect\/http.Redirect\/",
                 "method" : "GET"
             }
-        ]
+        ],
+        "payload": "http://www.example.com"
     },
 
     "xpathInjection" :  {

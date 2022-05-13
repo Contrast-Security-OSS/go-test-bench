@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"html/template"
 	"log"
 	"os/exec"
 	"strings"
@@ -23,12 +22,10 @@ func RegisterRoutes( /* framework - unused */ string) {
 		Sinks: []common.Sink{
 			{
 				Name:    "exec.Command",
-				Method:  "GET",
 				Handler: execHandler,
 			},
 			{
 				Name:    "exec.CommandContext",
-				Method:  "GET",
 				Handler: execHandlerCtx,
 			},
 		},
@@ -37,7 +34,7 @@ func RegisterRoutes( /* framework - unused */ string) {
 }
 
 // perform the vulnerability, using exec.Command
-func execHandler(mode common.Safety, in string, _ interface{}) template.HTML {
+func execHandler(mode common.Safety, in string, _ interface{}) string {
 	var cmd *exec.Cmd
 	switch mode {
 	case common.Safe:
@@ -45,11 +42,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) template.HTML {
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			break
+			return "one or more args required"
 		}
 		cmd = exec.Command(args[0], args[1:]...)
 	case common.NOOP:
-		return template.HTML("NOOP")
+		return "NOOP"
 	default:
 		log.Fatalf("Error running execHandler. Unknown option  %q passed", mode)
 	}
@@ -63,11 +60,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) template.HTML {
 		}
 		log.Print(msg)
 	}
-	return template.HTML(out.String())
+	return out.String()
 }
 
 // perform the vulnerability, using exec.CommandContext
-func execHandlerCtx(mode common.Safety, in string, _ interface{}) template.HTML {
+func execHandlerCtx(mode common.Safety, in string, _ interface{}) string {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch mode {
@@ -76,11 +73,11 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) template.HTML 
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			break
+			return "one or more args required"
 		}
 		cmd = exec.CommandContext(ctx, args[0], args[1:]...)
 	case common.NOOP:
-		return template.HTML("NOOP")
+		return "NOOP"
 	default:
 		log.Fatalf("Error running execHandlerCtx. Unknown option  %q passed", mode)
 	}
@@ -94,7 +91,7 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) template.HTML 
 		}
 		log.Print(msg)
 	}
-	return template.HTML(out.String())
+	return out.String()
 }
 
 // assembles a command that will run unsanitized user input in a system shell

@@ -4,55 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"html/template"
 	"log"
+	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 )
 
 // Verbose increases the verbosity of logging.
 var Verbose bool
-
-// HandlerFn is a framework-agnostic function to handle a vulnerable endpoint.
-// `opaque` can be set to some framework-specific struct - for example, gin.Context.
-type HandlerFn func(safety Safety, in string, opaque interface{}) (data template.HTML)
-
-// VulnerableFnWrapper
-type VulnerableFnWrapper func(opaque interface{}, payload string) (data template.HTML, err error)
-
-// A SanitizerFn sanitizes the input string
-type SanitizerFn func(string) string
-
-// Sink is a struct that identifies the name of the sink, the associated URL and
-// the HTTP method
-type Sink struct {
-	Name   string
-	URL    string
-	Method string
-
-	// if nil, a generic handler is used and VulnerableFnWrapper and Sanitizer must
-	// both be set
-	Handler HandlerFn
-
-	// a function that renders input safe; only used by the generic handler and only
-	// when 'safe' mode is requested.
-	//
-	// for example: url.QueryEscape
-	Sanitize SanitizerFn
-
-	// the vulnerable function which may recieve unsanitized input. Handler must be
-	// nil when this is set.
-	VulnerableFnWrapper VulnerableFnWrapper
-}
-
-func (s *Sink) String() string {
-	if len(s.Name) == 0 || s.Name == "_" {
-		return ""
-	}
-	return fmt.Sprintf("%s: %s %s", s.Name, s.Method, path.Join("...", s.URL))
-}
 
 // Route is the template information for a specific route
 type Route struct {
@@ -64,6 +24,8 @@ type Route struct {
 	Inputs   []string // input methods supported by this app: query, cookies, body, headers, headers-json, ...
 	Sinks    []Sink   // one per vulnerable function
 	Payload  string   // must be set for the default template.
+
+	genericTmpl bool
 }
 
 func (r *Route) String() string {
@@ -74,6 +36,42 @@ func (r *Route) String() string {
 		}
 	}
 	return strings.Join(lines, "    \n")
+}
+
+// UnsafeRequests generates an unsafe request for each input and sink defined for this endpoint.
+func (r *Route) UnsafeRequests(addr string) ([]*http.Request, error) {
+	reqs := make([]*http.Request, 0, len(r.Inputs)*len(r.Sinks))
+	for _, s := range r.Sinks {
+		if len(s.Name) == 0 || s.Name == "_" {
+			continue
+		}
+		for _, i := range r.Inputs {
+			method := methodFromInput(i)
+			var u string
+			if r.genericTmpl {
+				// different parm order, to more easily work with gin
+				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, s.Name, i)
+			} else {
+				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, i, s.Name)
+			}
+			req, err := http.NewRequest(method, u, nil)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create request: %w", err)
+			}
+			s.AddPayloadToRequest(req, i, "", r.Payload)
+			reqs = append(reqs, req)
+		}
+	}
+	return reqs, nil
+}
+
+func methodFromInput(in string) string {
+	for _, i := range []string{"cookie", "body"} {
+		if strings.Contains(in, i) {
+			return http.MethodPost
+		}
+	}
+	return http.MethodGet
 }
 
 // RouteMap is a map from base path to Route
@@ -108,7 +106,8 @@ func Register(r Route) {
 		}
 		p := filepath.Join(templatesDir, "pages", r.Base+".gohtml")
 		if _, err := os.Stat(p); err != nil {
-			//does not exist
+			//does not exist - use generic
+			r.genericTmpl = true
 			r.TmplFile = "rule.gohtml"
 		} else {
 			r.TmplFile = r.Base + ".gohtml"
@@ -129,7 +128,6 @@ func Register(r Route) {
 			r.Sinks[i].URL = s.Name
 		}
 	}
-
 	AllRoutes = append(AllRoutes, r)
 }
 
@@ -150,8 +148,15 @@ func FindViewsDir() (string, error) {
 	return filepath.Clean(path), nil
 }
 
+var rmap RouteMap
+
+func GetRouteMap() RouteMap {
+	return rmap
+}
+
 // PopulateRouteMap returns a RouteMap, for use in nav bar template.
-func PopulateRouteMap(routes Routes) (rmap RouteMap) {
+func PopulateRouteMap(routes Routes) RouteMap {
+	rmap = make(RouteMap)
 	//add legacy routes
 	log.Println("Loading routes.json from ./views/routes.json")
 	path, err := FindViewsDir()
@@ -206,7 +211,7 @@ func PopulateRouteMap(routes Routes) (rmap RouteMap) {
 		}
 		log.Printf("vulnerable routes:\n%s", strings.Join(lines, "\n"))
 	}
-	return
+	return rmap
 }
 
 type Safety string
@@ -216,38 +221,3 @@ const (
 	Safe   Safety = "safe"
 	NOOP   Safety = "noop"
 )
-
-//unlike HandlerFn, isTmpl is omitted as it seems that'll never be used
-func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (data template.HTML) {
-	if s.Sanitize == nil {
-		return template.HTML(fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s))
-	}
-	if s.VulnerableFnWrapper == nil {
-		return template.HTML(fmt.Sprintf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s))
-	}
-	switch safety {
-	case Unsafe:
-		// nothing to do here
-	case Safe:
-		payload = s.Sanitize(payload)
-	default:
-		return "NOOP"
-	}
-	var err error
-	data, err = s.VulnerableFnWrapper(opaque, payload)
-	switch safety {
-	case Unsafe:
-		if err != nil {
-			data = template.HTML(fmt.Sprintf("%q: unsafe action failed: payload=%q err=%s", s.Name, payload, err))
-		} else if len(data) == 0 {
-			data = template.HTML(fmt.Sprintf("%q: unsafe action reported no error. payload=%q", s.Name, payload))
-		}
-	case Safe:
-		if err != nil {
-			return template.HTML(fmt.Sprintf("%q: safe action returned data=%s err=%s with payload %s", s.Name, data, err, payload))
-		} else if len(data) == 0 {
-			return template.HTML(fmt.Sprintf("%q: safe action returned no data or error. payload=%s", s.Name, payload))
-		}
-	}
-	return data
-}

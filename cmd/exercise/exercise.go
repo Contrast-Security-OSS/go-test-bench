@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin/gintest"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd/stdtest"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common/commontest"
 )
 
 func exercise(addr string) error {
@@ -25,10 +25,8 @@ func exercise(addr string) error {
 	var reqs []*http.Request
 	f := res.Header.Get("Application-Framework")
 	switch f {
-	case "Stdlib":
-		reqs, err = stdtest.UnsafeStdlibRequests(addr)
-	case "Gin":
-		reqs, err = gintest.UnsafeGinRequests(addr)
+	case "Stdlib", "Gin":
+		reqs, err = commontest.UnsafeRequests(addr)
 	case "":
 		return fmt.Errorf("failed to determine application framework: no Application-Framework header")
 	default:
@@ -40,13 +38,17 @@ func exercise(addr string) error {
 
 	// Exercise app
 	for _, r := range reqs {
+		if strings.Contains(r.URL.Path, "unvalidatedRedirect") {
+			// temporary fixup - unvalidated redirect does not specify the input type in url
+			r.URL.Path = strings.ReplaceAll(r.URL.Path, "query/", "")
+		}
 		log.Printf("sending request: %s", r.URL.String())
 		res, err := client.Do(r)
 		if err != nil {
 			return err
 		}
 		if res.StatusCode != 200 {
-			return fmt.Errorf("unsuccessful response: %d", res.StatusCode)
+			return fmt.Errorf("unsuccessful response: %d for %s", res.StatusCode, r.URL)
 		}
 		log.Printf("route exercised: %s", r.URL.String())
 	}
