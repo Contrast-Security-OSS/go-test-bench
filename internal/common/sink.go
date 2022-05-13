@@ -53,7 +53,7 @@ func (s *Sink) AddPayloadToRequest(req *http.Request, inputType, key, payload st
 		key = "input"
 	}
 	if payload == "" {
-		payload = "fake-user-input"
+		log.Fatalf("missing payload for %s", req.URL.Path)
 	}
 	switch inputType {
 	case "query", "buffered-query":
