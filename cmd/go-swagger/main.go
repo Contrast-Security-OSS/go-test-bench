@@ -33,77 +33,37 @@ func main() {
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(serveswagger.SwaggerRootHandler)
 
+	// this is not nice; This oughta get cleaned
 	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(serveswagger.CommandInjectionHandler)
+
+
 
 	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
-			var data string
+			var payload string
 
 			txt, isTemplate := cmdi.ExecHandler(params.Safety, params.Input)
 			if !isTemplate {
-				data = string(txt)
-			} else {
-				data = "not intended to render"
+				payload = string(txt)
 			}
 
-			if err := p.Produce(w, data); err != nil {
+			if err := p.Produce(w, payload); err != nil {
 			}
 		})
 	})
 
 	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
-			var data string
+			var payload string
 
 			txt, isTemplate := cmdi.ExecHandlerCtx(params.Safety, params.Input)
 			if !isTemplate {
 				data = string(txt)
-			} else {
-				data = "not intended to render"
 			}
 
-			if err := p.Produce(w, data); err != nil {
+			if err := p.Produce(w, payload); err != nil {
 			}
 		})
-	})
-
-	api.CmdInjectionPostCookiesCommandHandler = cmd_injection.PostCookiesCommandHandlerFunc(func(params cmd_injection.PostCookiesCommandParams) middleware.Responder {
-		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
-			var data string
-
-			cookie := http.Cookie{Name: "cookie", Value:"value"}
-			http.SetCookie(w, &cookie)
-
-			txt, render := cmdi.ExecHandlerCtx(params.Safety, "unusable")
-			if !render {
-				data = string(txt)
-			} else {
-				data = "not intended to render"
-			}
-
-			if err := p.Produce(w, data); err != nil {
-			}
-		})
-
-	})
-	api.CmdInjectionPostCookiesCommandContextHandler = cmd_injection.PostCookiesCommandContextHandlerFunc(func(params cmd_injection.PostCookiesCommandContextParams) middleware.Responder {
-		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
-			var data string
-
-			cookie := http.Cookie{Name: "cookie", Value:"value"}
-			http.SetCookie(w, &cookie)
-
-			txt, render := cmdi.ExecHandlerCtx(params.Safety, "unusable")
-			if !render {
-				data = string(txt)
-			} else {
-				data = "not intended to render"
-			}
-
-			if err := p.Produce(w, data); err != nil {
-			}
-		})
-
 	})
 
 	server := restapi.NewServer(api)

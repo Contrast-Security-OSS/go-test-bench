@@ -101,51 +101,6 @@ paths:
         default:
           description: Error occured
 
-# openAPI 2.0 does not seem provide good support for parameters through cookie
-  /cmdInjection/exec.CommandContext/cookies/{safety}/:
-    post:
-      tags:
-        - cmd-injection
-      description: |
-        Demonstrates the command injection vulnerability with input through Cookie
-      operationId: postCookiesCommandContext
-      produces:
-        - text/plain
-
-      parameters:
-        - $ref: '#/parameters/safetyParam'
-
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-
-  /cmdInjection/exec.Command/cookies/{safety}/:
-    post:
-      tags:
-        - cmd-injection
-      description: |
-        Demonstrates the command injection vulnerability with input through Cookie
-      operationId: postCookiesCommand
-      produces:
-        - text/plain
-
-      parameters:
-        - $ref: '#/parameters/safetyParam'
-
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-
   /xss:
     get:
       tags:

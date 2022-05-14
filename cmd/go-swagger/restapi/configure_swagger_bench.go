@@ -97,16 +97,6 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
 		})
 	}
-	if api.CmdInjectionPostCookiesCommandHandler == nil {
-		api.CmdInjectionPostCookiesCommandHandler = cmd_injection.PostCookiesCommandHandlerFunc(func(params cmd_injection.PostCookiesCommandParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommand has not yet been implemented")
-		})
-	}
-	if api.CmdInjectionPostCookiesCommandContextHandler == nil {
-		api.CmdInjectionPostCookiesCommandContextHandler = cmd_injection.PostCookiesCommandContextHandlerFunc(func(params cmd_injection.PostCookiesCommandContextParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.PostCookiesCommandContext has not yet been implemented")
-		})
-	}
 	if api.SwaggerServerRootHandler == nil {
 		api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
 			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")

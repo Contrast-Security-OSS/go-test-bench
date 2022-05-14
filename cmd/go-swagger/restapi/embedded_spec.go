@@ -82,35 +82,6 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.Command/cookies/{safety}/": {
-      "post": {
-        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
-        "produces": [
-          "text/plain"
-        ],
-        "tags": [
-          "cmd-injection"
-        ],
-        "operationId": "postCookiesCommand",
-        "parameters": [
-          {
-            "$ref": "#/parameters/safetyParam"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
         "description": "Demonstrates the command injection through user query using Command handler\n",
@@ -131,35 +102,6 @@ func init() {
             "name": "input",
             "in": "query",
             "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
-    "/cmdInjection/exec.CommandContext/cookies/{safety}/": {
-      "post": {
-        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
-        "produces": [
-          "text/plain"
-        ],
-        "tags": [
-          "cmd-injection"
-        ],
-        "operationId": "postCookiesCommandContext",
-        "parameters": [
-          {
-            "$ref": "#/parameters/safetyParam"
           }
         ],
         "responses": {
@@ -456,44 +398,6 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.Command/cookies/{safety}/": {
-      "post": {
-        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
-        "produces": [
-          "text/plain"
-        ],
-        "tags": [
-          "cmd-injection"
-        ],
-        "operationId": "postCookiesCommand",
-        "parameters": [
-          {
-            "enum": [
-              "safe",
-              "unsafe",
-              "noop"
-            ],
-            "type": "string",
-            "description": "safety qualifier",
-            "name": "safety",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
         "description": "Demonstrates the command injection through user query using Command handler\n",
@@ -522,44 +426,6 @@ func init() {
             "description": "the user provided input for the query vulnerability",
             "name": "input",
             "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
-    "/cmdInjection/exec.CommandContext/cookies/{safety}/": {
-      "post": {
-        "description": "Demonstrates the command injection vulnerability with input through Cookie\n",
-        "produces": [
-          "text/plain"
-        ],
-        "tags": [
-          "cmd-injection"
-        ],
-        "operationId": "postCookiesCommandContext",
-        "parameters": [
-          {
-            "enum": [
-              "safe",
-              "unsafe",
-              "noop"
-            ],
-            "type": "string",
-            "description": "safety qualifier",
-            "name": "safety",
-            "in": "path",
             "required": true
           }
         ],

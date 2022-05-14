@@ -11,6 +11,7 @@ import (
 func CommandInjectionHandler(params cmd_injection.CmdInjectionFrontParams) middleware.Responder {
 	return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 
+		// interesting. what shall we do here?
 		if err := p.Produce(w, "/cmdInjection"); err != nil {
 		}
 	})

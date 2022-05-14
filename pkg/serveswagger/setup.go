@@ -5,6 +5,8 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 )
 
+const DefaultAddr = "localhost:8080"
+
 var SwaggerParams = common.ConstParams{
 	Year:      2022,
 	Logo:      "https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png",
