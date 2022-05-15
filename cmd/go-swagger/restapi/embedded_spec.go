@@ -84,7 +84,7 @@ func init() {
     },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query using Command handler\n",
+        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
         "produces": [
           "text/plain"
         ],
@@ -120,7 +120,7 @@ func init() {
     },
     "/cmdInjection/exec.CommandContext/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query using CommandContext\n",
+        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
         "produces": [
           "text/plain"
         ],
@@ -400,7 +400,7 @@ func init() {
     },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query using Command handler\n",
+        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
         "produces": [
           "text/plain"
         ],
@@ -445,7 +445,7 @@ func init() {
     },
     "/cmdInjection/exec.CommandContext/query/{safety}": {
       "get": {
-        "description": "Demonstrates the command injection through user query using CommandContext\n",
+        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
         "produces": [
           "text/plain"
         ],

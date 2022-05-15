@@ -4,8 +4,6 @@ package restapi
 
 import (
 	"crypto/tls"
-	"log"
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -20,8 +18,6 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 )
 
 //go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
@@ -46,35 +42,8 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
-	api.HTMLProducer = runtime.ProducerFunc(func(w io.Writer, data interface{}) error {
-		var (
-			t                  = common.Templates["underConstruction.gohtml"]
-			params interface{} = serveswagger.SwaggerParams
-		)
-		if str, ok := data.(string); ok {
-			for _, r := range common.AllRoutes {
-				log.Println("loading template file:", r.TmplFile)
-				log.Println("route Base:", r.Base)
-				if str != r.Base {
-					continue
-				}
-				tmpl, ok := common.Templates[r.TmplFile]
-				if !ok {
-					break
-				}
-				t = tmpl
-				params = common.Parameters{
-					ConstParams: serveswagger.SwaggerParams,
-					Name:        r.Base,
-				}
-			}
-		}
-
-		t.ExecuteTemplate(w, "layout.gohtml", params)
-		return nil
-	})
-
 	api.JSONProducer = runtime.JSONProducer()
+
 	api.TxtProducer = runtime.TextProducer()
 
 	if api.CmdInjectionCmdInjectionFrontHandler == nil {

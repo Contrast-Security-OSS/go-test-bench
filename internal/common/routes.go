@@ -118,8 +118,8 @@ func FindViewsDir() (string, error) {
 
 var Templates = make(map[string]*template.Template)
 
-// ParseViewTemplates is used to parse the template
-// resources and set them up for use by std and go-swagger
+// ParseViewTemplates is used to set up the template
+// resources for use by std and go-swagger
 func ParseViewTemplates() error {
 	templatesDir, err := FindViewsDir()
 	if err != nil {

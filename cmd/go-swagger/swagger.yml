@@ -45,12 +45,13 @@ paths:
         default:
           description: error occured
 
+
   /cmdInjection/exec.Command/query/{safety}:
     get:
       tags:
         - cmd-injection
       description: |
-        Demonstrates the command injection through user query using Command handler
+        Used to demonstrate how user input data can be passed to exec.Command
       operationId: getQueryCommand
       produces:
         - text/plain
@@ -78,7 +79,7 @@ paths:
       tags:
         - cmd-injection
       description: |
-        Demonstrates the command injection through user query using CommandContext
+        Used to demonstrate how user input data can be passed to exec.CommandContext
       operationId: getQueryCommandContext
       produces:
         - text/plain

@@ -31,7 +31,7 @@ func NewGetQueryCommandContext(ctx *middleware.Context, handler GetQueryCommandC
 
 /* GetQueryCommandContext swagger:route GET /cmdInjection/exec.CommandContext/query/{safety} cmd-injection getQueryCommandContext
 
-Demonstrates the command injection through user query using CommandContext
+Used to demonstrate how user input data can be passed to exec.CommandContext
 
 
 */
