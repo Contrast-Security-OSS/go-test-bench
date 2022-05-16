@@ -23,13 +23,9 @@
             {{if needsCurl $input }}
               {{ curl $addr $base $sink.URL $input $routeInfo.Payload }}
             {{else}}
-              {{ $m := $sink.Method }}
-              {{ if eq $input "body" }}
-                  {{ $m = "POST" }}
-              {{ end }}
-              <form method="{{ $m }}" action="{{ $routeInfo.Base }}/{{ $sink.URL }}/{{ $input }}/unsafe" target="_blank">
+              <form method="{{methodFromInput $input}}" action="{{ $routeInfo.Base }}/{{ $sink.URL }}/{{ $input }}/unsafe" target="_blank">
                 <div class="form-group">
-                <label>Path</label>
+                <label>Payload</label>
                 <input name="input" class="form-control" value="{{ $routeInfo.Payload }}" />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

@@ -65,15 +65,6 @@ func (r *Route) UnsafeRequests(addr string) ([]*http.Request, error) {
 	return reqs, nil
 }
 
-func methodFromInput(in string) string {
-	for _, i := range []string{"cookie", "body"} {
-		if strings.Contains(in, i) {
-			return http.MethodPost
-		}
-	}
-	return http.MethodGet
-}
-
 // RouteMap is a map from base path to Route
 type RouteMap map[string]Route
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -18,6 +19,8 @@ func FuncMap() template.FuncMap {
 		"curl": writeCurlCmds,
 		// determine if input type is for curl
 		"needsCurl": needsCurl,
+		// determine http method from input type
+		"methodFromInput": methodFromInput,
 	}
 }
 
@@ -92,4 +95,14 @@ func inputTitle(input string) string {
 	title = strings.ReplaceAll(title, "json", "JSON")
 	title = strings.Title(title)
 	return title
+}
+
+// determine http method from input type
+func methodFromInput(in string) string {
+	for _, i := range []string{"cookie", "body"} {
+		if strings.Contains(in, i) {
+			return http.MethodPost
+		}
+	}
+	return http.MethodGet
 }
