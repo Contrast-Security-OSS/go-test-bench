@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -31,7 +32,7 @@ func (s *Sink) String() string {
 	if len(s.Name) == 0 || s.Name == "_" {
 		return ""
 	}
-	return fmt.Sprintf("%s: %s .../%s", s.Name, s.Method, s.URL)
+	return fmt.Sprintf("%s: %s %s", s.Name, s.Method, path.Join("...", s.URL))
 }
 
 // Route is the template information for a specific route

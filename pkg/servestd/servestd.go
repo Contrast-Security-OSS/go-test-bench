@@ -19,7 +19,7 @@ import (
 
 //Pd is unchanging parameter data shared between all routes.
 var Pd = common.ConstParams{
-	Year:      2021,
+	Year:      2022,
 	Logo:      "https://blog.golang.org/gopher/header.jpg",
 	Framework: "stdlib",
 }
@@ -29,7 +29,8 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		t = common.Templates["index.gohtml"]
 	} else {
-		t = common.Templates["underConstruction.gohtml"]
+		t = templates["underConstruction.gohtml"]
+		w.WriteHeader(http.StatusNotFound)
 	}
 	w.Header().Set("Application-Framework", "Stdlib")
 	err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
@@ -65,16 +66,29 @@ func newHandler(v common.Route) http.HandlerFunc {
 		}
 		var data = template.HTML(v.TmplFile)
 		isTmpl := true
-		elems := strings.Split(r.URL.Path, "/")
+		elems := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
 		// To figure out whether we're serving a sink or the main page, check the
-		// element with index 2 against each Sink.URL; if no match, serve main page.
+		// element with index 1 against each Sink.URL; if no match, serve main page.
 		// Seems like there should be a less ugly way...
+		found := false
+	loop:
 		for _, s := range v.Sinks {
-			if len(elems) > 2 && elems[2] == s.URL {
+			if len(elems) > 1 && elems[1] == s.URL {
 				mode := elems[len(elems)-1]
+				switch mode {
+				case "unsafe", "safe", "noop":
+					// valid modes
+					found = true
+				default:
+					// invalid
+					break loop
+				}
 				data, isTmpl = s.Handler(mode, common.GetUserInput(r))
-				break
+				break loop //label isn't required, but helps readability
 			}
+		}
+		if !found {
+			w.WriteHeader(http.StatusNotFound)
 		}
 		if isTmpl {
 			err := common.Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
@@ -98,6 +112,7 @@ func Setup() {
 
 	//register all routes at this point.
 	cmdi.RegisterRoutes("stdlib")
+	sqli.RegisterRoutes("stdlib")
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
@@ -124,7 +139,6 @@ func Setup() {
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
 	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
-	http.HandleFunc("/sqlInjection/", makeHandler(sqli.Handler, "sqlInjection"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))

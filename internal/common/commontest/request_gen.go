@@ -104,7 +104,7 @@ func unsafeXSS(addr string) ([]*http.Request, error) {
 
 func unsafeSQLInjections(addr string) ([]*http.Request, error) {
 	types := []string{"headers-json", "query", "body"}
-	fns := []string{"sqlite3Exec"}
+	fns := []string{"sqlite3.exec"}
 
 	reqs := make([]*http.Request, 0, len(types)*len(fns))
 	for _, fn := range fns {
@@ -113,7 +113,7 @@ func unsafeSQLInjections(addr string) ([]*http.Request, error) {
 			if t == "headers-json" || t == "body" {
 				method = http.MethodPost
 			}
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/sqlInjection/%s/%s/unsafe", addr, t, fn), nil)
+			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/sqlInjection/%s/%s/unsafe", addr, fn, t), nil)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create request: %w", err)
 			}
