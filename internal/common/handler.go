@@ -9,10 +9,10 @@ import (
 // `opaque` can be set to some framework-specific struct - for example, gin.Context.
 type HandlerFn func(safety Safety, in string, opaque interface{}) string
 
-// VulnerableFnWrapper
+// VulnerableFnWrapper is a function wrapping something vulnerable. Used to adapt things for use with GenericHandler.
 type VulnerableFnWrapper func(opaque interface{}, payload string) (data string, err error)
 
-//unlike HandlerFn, isTmpl is omitted as it seems that'll never be used
+//GenericHandler is a generic replacement for HandlerFn. It requires VulnerableFnWrapper and Sanitize to be set.
 func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (data string) {
 	if s.Sanitize == nil {
 		return fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s)
@@ -30,7 +30,7 @@ func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (
 	}
 	var err error
 	data, err = s.VulnerableFnWrapper(opaque, payload)
-	if err == NoDecoration {
+	if err == ErrNoDecoration {
 		//the vulnerable function writes sufficient information - no need to decorate.
 		return data
 	}
@@ -51,5 +51,5 @@ func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (
 	return data
 }
 
-// special error indicating no additional data should be written out
-var NoDecoration = errors.New("no decoration needed")
+// ErrNoDecoration is a special error indicating no additional data should be written out.
+var ErrNoDecoration = errors.New("no decoration needed")

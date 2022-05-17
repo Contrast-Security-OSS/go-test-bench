@@ -57,8 +57,8 @@ func writeCurlCmds(addr, base, url, input, payload string, extraargs ...string) 
 	}
 	args := strings.Join(extraargs, " ")
 	for _, m := range modes {
-		fullUrl := fmt.Sprintf("http://%s%s/%s/%s/%s", addr, base, url, input, m.frag)
-		out = append(out, fmt.Sprintf("<p>%s</p><pre class=%q>curl %s \\\n    %s</pre>", m.name, m.frag, fullUrl, args))
+		fullURL := fmt.Sprintf("http://%s%s/%s/%s/%s", addr, base, url, input, m.frag)
+		out = append(out, fmt.Sprintf("<p>%s</p><pre class=%q>curl %s \\\n    %s</pre>", m.name, m.frag, fullURL, args))
 	}
 	return template.HTML(strings.Join(out, "\n"))
 }

@@ -98,7 +98,7 @@ var ginPathTraversal = common.Sink{
 			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
 		}
 		c.File(payload)
-		return "", common.NoDecoration
+		return "", common.ErrNoDecoration
 	},
 }
 

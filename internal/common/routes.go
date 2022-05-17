@@ -38,7 +38,8 @@ func (r *Route) String() string {
 	return strings.Join(lines, "    \n")
 }
 
-// UnsafeRequests generates an unsafe request for each input and sink defined for this endpoint.
+// UnsafeRequests generates an unsafe request for each input and sink defined
+// for this endpoint.
 func (r *Route) UnsafeRequests(addr string) ([]*http.Request, error) {
 	reqs := make([]*http.Request, 0, len(r.Inputs)*len(r.Sinks))
 	for _, s := range r.Sinks {
@@ -122,7 +123,8 @@ func Register(r Route) {
 	AllRoutes = append(AllRoutes, r)
 }
 
-// FindViewsDir looks for views dir in working dir or two dirs up, where it's likely to be found in tests
+// FindViewsDir looks for views dir in working dir or two dirs up, where it's
+// likely to be found in tests.
 func FindViewsDir() (string, error) {
 	path := "views"
 	fi, err := os.Stat(path)
@@ -141,6 +143,7 @@ func FindViewsDir() (string, error) {
 
 var rmap RouteMap
 
+// GetRouteMap returns the already-populated RouteMap.
 func GetRouteMap() RouteMap {
 	return rmap
 }
@@ -205,10 +208,15 @@ func PopulateRouteMap(routes Routes) RouteMap {
 	return rmap
 }
 
+// Safety indicates whether input to the vulnerable function will be sanitized
+// or not, or if the vulnerable func will be bypassed entirely.
 type Safety string
 
 const (
+	// Unsafe: no sanitization performed.
 	Unsafe Safety = "unsafe"
-	Safe   Safety = "safe"
-	NOOP   Safety = "noop"
+	// Safe: input is sanitized.
+	Safe Safety = "safe"
+	// NOOP: vulnerable function is not called.
+	NOOP Safety = "noop"
 )
