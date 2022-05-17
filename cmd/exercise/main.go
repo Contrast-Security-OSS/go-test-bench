@@ -12,7 +12,8 @@ func main() {
 	log.Println("Starting...")
 	addr := flag.String("addr", defaultAddr, "`host:port` to access the listening server")
 	flag.Parse()
-	if err := exercise(*addr); err != nil {
+	adapt := &logWrapper{l: log.Default()}
+	if err := exercise(adapt, *addr); err != nil {
 		log.Fatal(err)
 	}
 }

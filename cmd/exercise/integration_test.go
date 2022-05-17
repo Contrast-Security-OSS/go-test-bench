@@ -45,7 +45,7 @@ func TestExerciseIntegration(t *testing.T) {
 			t.Cleanup(srv.Close)
 			addr := strings.TrimPrefix(srv.URL, "http://")
 
-			err := exercise(addr)
+			err := exercise(t, addr)
 			if err != nil {
 				t.Fatal(err)
 			}
