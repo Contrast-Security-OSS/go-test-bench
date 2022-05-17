@@ -10,6 +10,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
+// CmdInjectionFront serves the front page of the command injection page
 func CmdInjectionFront(params cmd_injection.CmdInjectionFrontParams) middleware.Responder {
 	return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 		cmdInjectionRoot := "/cmdInjection"

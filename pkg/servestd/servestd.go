@@ -29,7 +29,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		t = common.Templates["index.gohtml"]
 	} else {
-		t = templates["underConstruction.gohtml"]
+		t = common.Templates["underConstruction.gohtml"]
 		w.WriteHeader(http.StatusNotFound)
 	}
 	w.Header().Set("Application-Framework", "Stdlib")

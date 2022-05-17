@@ -1,6 +1,7 @@
 package servestd
 
 import (
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +10,7 @@ import (
 )
 
 func TestParseTemplates(t *testing.T) {
-	err := parseTemplates()
+	err := common.ParseViewTemplates()
 	if err != nil {
 		t.Error(err)
 	}
