@@ -213,10 +213,10 @@ func PopulateRouteMap(routes Routes) RouteMap {
 type Safety string
 
 const (
-	// Unsafe: no sanitization performed.
+	// Unsafe indicates no sanitization will be performed.
 	Unsafe Safety = "unsafe"
-	// Safe: input is sanitized.
+	// Safe indicates input will be sanitized.
 	Safe Safety = "safe"
-	// NOOP: vulnerable function is not called.
+	// NOOP indicates the vulnerable function will not be called.
 	NOOP Safety = "noop"
 )
