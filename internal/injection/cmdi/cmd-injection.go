@@ -34,7 +34,7 @@ func RegisterRoutes( /* framework - unused */ string) {
 	})
 }
 
-// perform the vulnerability, using exec.Command
+// ExecHandler performs the vulnerability, using exec.Command
 func ExecHandler(mode, in string) (template.HTML, bool) {
 	var cmd *exec.Cmd
 	switch mode {
@@ -60,7 +60,7 @@ func ExecHandler(mode, in string) (template.HTML, bool) {
 	return template.HTML(out.String()), false
 }
 
-// perform the vulnerability, using exec.CommandContext
+// ExecHandlerCtx performs the vulnerability, using exec.CommandContext
 func ExecHandlerCtx(mode, in string) (template.HTML, bool) {
 	var cmd *exec.Cmd
 	ctx := context.Background()

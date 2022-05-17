@@ -17,8 +17,10 @@ import (
 
 )
 
+// DefaultAddr holds default localhost info
 const DefaultAddr = "localhost:8080"
 
+// SwaggerParams holds default ConstParams for the go-swagger executable
 var SwaggerParams = common.ConstParams{
 	Year:      2022,
 	Logo:      "https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png",
@@ -26,6 +28,7 @@ var SwaggerParams = common.ConstParams{
 	Addr: 		DefaultAddr,
 }
 
+// Setup sets up the configuration for the go-swagger server
 func Setup() (*restapi.Server, error) {
 	// load up the swagger spec.
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
@@ -33,7 +36,7 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
-	// initialize api
+	// set up the handlers for the api
 	api := operations.NewSwaggerBenchAPI(swaggerSpec)
 
 	api.HTMLProducer = runtime.ProducerFunc(HTMLProducer)

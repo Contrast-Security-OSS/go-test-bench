@@ -6,6 +6,8 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
+// HTMLProducer is required by swagger in order for the generated server be able to produce the mime type "text/html".
+// The runtime.Producer argument of each handler for the server relies on it to render the pages for the UI.
 func HTMLProducer(w io.Writer, data interface{}) error {
 	var (
 		t                  = common.Templates["underConstruction.gohtml"]

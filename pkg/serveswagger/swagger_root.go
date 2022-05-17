@@ -10,6 +10,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
+// SwaggerRootHandler handles the main page of the go-swagger server
 func SwaggerRootHandler(params swagger_server.RootParams) middleware.Responder {
 	return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 		t := common.Templates["index.gohtml"]

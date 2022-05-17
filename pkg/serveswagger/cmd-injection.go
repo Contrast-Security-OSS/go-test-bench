@@ -21,6 +21,7 @@ func CmdInjectionFront(params cmd_injection.CmdInjectionFrontParams) middleware.
 
 }
 
+// GetQueryCommand passes the input from user query and then calls into cmdi.ExecHandler to perform a command injection
 func GetQueryCommand(params cmd_injection.GetQueryCommandParams) middleware.Responder {
 	return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 		var payload string
@@ -36,6 +37,7 @@ func GetQueryCommand(params cmd_injection.GetQueryCommandParams) middleware.Resp
 	})
 }
 
+// GetQueryCommandContext passes the input from user query and then calls into cmdi.ExecHandleCtx to perform a command injection
 func GetQueryCommandContext(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
 	return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 		var payload string

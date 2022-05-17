@@ -117,6 +117,9 @@ func FindViewsDir() (string, error) {
 	return filepath.Clean(path), nil
 }
 
+// Templates is the map we use to lookup the parsed templates
+// based on filenames. It is intended for use for use
+// by all frameworks supported by the bench.
 var Templates = make(map[string]*template.Template)
 
 // ParseViewTemplates is used to set up the template
