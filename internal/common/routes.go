@@ -129,6 +129,7 @@ func ParseViewTemplates() error {
 	if err != nil {
 		return err
 	}
+
 	pages, err := filepath.Glob(filepath.Join(templatesDir, "pages", "*.gohtml"))
 	if err != nil {
 		return err
@@ -145,7 +146,7 @@ func ParseViewTemplates() error {
 	}
 	layout := filepath.Join(templatesDir, "layout.gohtml")
 
-	fmap := template.FuncMap{"tolower": strings.ToLower}
+	fmap := FuncMap()
 
 	for _, p := range pages {
 		files := append([]string{layout, p}, partials...)
