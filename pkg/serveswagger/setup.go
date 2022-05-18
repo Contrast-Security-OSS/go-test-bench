@@ -1,20 +1,18 @@
 package serveswagger
 
 import (
-	"log"
-
-	"github.com/go-openapi/runtime"
-	"os"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi"
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/go-openapi/runtime"
+	"log"
+	"os"
 
-	"github.com/go-openapi/loads"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
-
 )
 
 // DefaultAddr holds default localhost info
