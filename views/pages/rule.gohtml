@@ -10,15 +10,13 @@
 {{/* each sink on a tab */}}
 <div class="tabs">
 {{$first := true}} {{/* add the checked attr to the first tab, otherwise initial coloring will be off */}}
-{{range $routeInfo.Sinks}}
-  {{$sink := .}}
+{{range $sink := $routeInfo.Sinks}}
    <div class="tab">
        <input type="radio" id="{{$sink.URL}}" name="tab-group-1" {{if $first}}checked{{end}}>
        {{$first = false}}
        <label class="tlabel" for="{{$sink.URL}}"><code>{{$sink.Name}}</code></label>
        <div class="tabcontent">
-         {{range $routeInfo.Inputs}}
-           {{ $input := . }}
+         {{range $input := $routeInfo.Inputs}}
            <h4 class="sub-header">{{inputTitle $input}}</h4>
             {{if needsCurl $input }}
               {{ curl $addr $base $sink.URL $input $routeInfo.Payload }}

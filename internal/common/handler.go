@@ -1,55 +1,56 @@
 package common
 
 import (
-	"errors"
 	"fmt"
+	"net/http"
 )
 
 // HandlerFn is a framework-agnostic function to handle a vulnerable endpoint.
 // `opaque` can be set to some framework-specific struct - for example, gin.Context.
-type HandlerFn func(safety Safety, in string, opaque interface{}) string
+//
+// Prefer statuses 200 (success), 400 (generic, expected error), and 500 (generic, unexpected error).
+type HandlerFn func(safety Safety, in string, opaque interface{}) (data string, status int)
 
-// VulnerableFnWrapper is a function wrapping something vulnerable. Used to adapt things for use with GenericHandler.
-type VulnerableFnWrapper func(opaque interface{}, payload string) (data string, err error)
+// VulnerableFnWrapper is a function wrapping something vulnerable. Used
+// to adapt things for use with GenericHandler. 'raw' indicates data
+// should be sent verbatim, not decorated.
+type VulnerableFnWrapper func(opaque interface{}, payload string) (data string, raw bool, err error)
 
-//GenericHandler is a generic replacement for HandlerFn. It requires VulnerableFnWrapper and Sanitize to be set.
-func GenericHandler(s Sink, safety Safety, payload string, opaque interface{}) (data string) {
-	if s.Sanitize == nil {
-		return fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s)
-	}
-	if s.VulnerableFnWrapper == nil {
-		return fmt.Sprintf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s)
-	}
-	switch safety {
-	case Unsafe:
-		// nothing to do here
-	case Safe:
-		payload = s.Sanitize(payload)
-	default:
-		return "NOOP"
-	}
-	var err error
-	data, err = s.VulnerableFnWrapper(opaque, payload)
-	if err == ErrNoDecoration {
-		//the vulnerable function writes sufficient information - no need to decorate.
-		return data
-	}
-	switch safety {
-	case Unsafe:
-		if err != nil {
-			data = fmt.Sprintf("%q: unsafe action failed: payload=%q err=%s", s.Name, payload, err)
-		} else if len(data) == 0 {
-			data = fmt.Sprintf("%q: unsafe action reported no error. payload=%q", s.Name, payload)
+// GenericHandler returns a generic replacement for HandlerFn. It requires VulnerableFnWrapper and Sanitize to be set.
+func GenericHandler(s Sink) func(safety Safety, payload string, opaque interface{}) (data string, status int) {
+	return func(safety Safety, payload string, opaque interface{}) (data string, status int) {
+		if s.Sanitize == nil {
+			return fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s), http.StatusInternalServerError
 		}
-	case Safe:
-		if err != nil {
-			return fmt.Sprintf("%q: safe action returned data=%s err=%s with payload %s", s.Name, data, err, payload)
-		} else if len(data) == 0 {
-			return fmt.Sprintf("%q: safe action returned no data or error. payload=%s", s.Name, payload)
+		if s.VulnerableFnWrapper == nil {
+			return fmt.Sprintf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s), http.StatusInternalServerError
 		}
+		switch safety {
+		case Unsafe:
+			// nothing to do here
+		case Safe:
+			payload = s.Sanitize(payload)
+		case NOOP:
+			return "NOOP", http.StatusOK
+		default:
+			msg := "expect one of 'unsafe', 'safe', 'noop' - instead got " + string(safety)
+			return msg, http.StatusBadRequest
+		}
+		res, raw, err := s.VulnerableFnWrapper(opaque, payload)
+		if raw {
+			return res, http.StatusOK
+		}
+
+		status = http.StatusOK
+		e := "(no error)"
+		if err != nil {
+			e = err.Error()
+			status = http.StatusBadRequest
+		}
+		if len(res) == 0 {
+			res = "(no data returned)"
+		}
+		data = fmt.Sprintf("%q: %s action with payload=%q resulted in err=%s\nand data=\\\n%s", s.Name, safety, payload, e, res)
+		return data, status
 	}
-	return data
 }
-
-// ErrNoDecoration is a special error indicating no additional data should be written out.
-var ErrNoDecoration = errors.New("no decoration needed")

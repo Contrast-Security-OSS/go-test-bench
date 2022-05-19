@@ -69,17 +69,15 @@ func add(router *gin.Engine, rt common.Route) {
 					log.Printf("%s: error %s", c.Request.URL.Path, e)
 				}
 
-				var data string
-				if s.Handler != nil {
-					data = string(s.Handler(mode, payload, c))
-				} else {
-					data = string(common.GenericHandler(s, mode, payload, c))
+				if s.Handler == nil {
+					s.Handler = common.GenericHandler(s)
 				}
+				data, status := s.Handler(mode, payload, c)
 				if len(data) > 0 {
 					// don't unconditionally write this, as it can result in
 					// - a warning (when status changes), or
 					// - a panic (when content-length is already set and headers are written)
-					c.String(http.StatusOK, data)
+					c.String(status, data)
 				}
 			}
 		}(s)
@@ -92,13 +90,13 @@ func add(router *gin.Engine, rt common.Route) {
 var ginPathTraversal = common.Sink{
 	Name:     "gin.File",
 	Sanitize: url.QueryEscape,
-	VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, err error) {
+	VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, raw bool, err error) {
 		c, ok := opaque.(*gin.Context)
 		if !ok {
 			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
 		}
 		c.File(payload)
-		return "", common.ErrNoDecoration
+		return "", true, nil
 	},
 }
 
@@ -107,8 +105,8 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	base["Addr"] = addr
 
 	//register all routes at this point, before AllRoutes is used.
-	cmdi.RegisterRoutes("gin")
-	sqli.RegisterRoutes("gin")
+	cmdi.RegisterRoutes(nil)
+	sqli.RegisterRoutes(nil)
 	pathtraversal.RegisterRoutes([]common.Sink{ginPathTraversal})
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)

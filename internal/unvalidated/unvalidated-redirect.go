@@ -36,9 +36,10 @@ func unvalidatedTemplate(w http.ResponseWriter, r *http.Request, pd common.Param
 // Handler is the API handler for unvalidated redirect
 func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
 	splitURL := strings.Split(r.URL.Path, "/")
-
-	if strings.Contains(r.URL.Path, "http.Redirect") {
+	switch splitURL[2] {
+	case "http.Redirect":
 		return httpRedirectHandler(w, r, pd, splitURL)
+	default:
+		return unvalidatedTemplate(w, r, pd)
 	}
-	return unvalidatedTemplate(w, r, pd)
 }

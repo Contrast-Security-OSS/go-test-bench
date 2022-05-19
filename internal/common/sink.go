@@ -14,8 +14,8 @@ import (
 // A SanitizerFn sanitizes the input string
 type SanitizerFn func(string) string
 
-// Sink is a struct that identifies the name of the sink, the associated URL and
-// the HTTP method
+// Sink is a struct that identifies the name of the sink, the associated URL,
+// and what handler/sanitizer to use.
 type Sink struct {
 	Name string
 	URL  string
@@ -30,9 +30,13 @@ type Sink struct {
 	// for example: url.QueryEscape
 	Sanitize SanitizerFn
 
-	// the vulnerable function which may recieve unsanitized input. Handler must be
+	// the vulnerable function which may receive unsanitized input. Handler must be
 	// nil when this is set.
 	VulnerableFnWrapper VulnerableFnWrapper
+
+	// http status that we expect to be returned for unsafe queries (used in testing)
+	// defaults to http.StatusOK if unset
+	ExpectedUnsafeStatus int
 }
 
 func (s *Sink) String() string {
@@ -46,8 +50,7 @@ func (s *Sink) String() string {
 // The data type can be configured with inputType. If inputType is not
 // supported, the program exits.
 // You can also specify the key and value of the data to be added to
-// the request. The key "input" and value "fake-user-input"
-// are used by default.
+// the request. If key is empty, "input" is used.
 func (s *Sink) AddPayloadToRequest(req *http.Request, inputType, key, payload string) {
 	if len(key) == 0 {
 		key = "input"

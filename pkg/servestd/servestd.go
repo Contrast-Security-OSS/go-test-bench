@@ -88,13 +88,13 @@ func newHandler(v common.Route) http.HandlerFunc {
 					w.WriteHeader(http.StatusNotFound)
 					return
 				}
-				in := common.GetUserInput(r)
-				var data string
-				if s.Handler != nil {
-					data = s.Handler(mode, in, nil)
-				} else {
-					data = common.GenericHandler(s, mode, in, nil)
+				if s.Handler == nil {
+					s.Handler = common.GenericHandler(s)
 				}
+
+				in := common.GetUserInput(r)
+				data, status := s.Handler(mode, in, nil)
+				w.WriteHeader(status)
 				w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
 				fmt.Fprint(w, data)
 				return
@@ -148,8 +148,8 @@ func Setup() {
 	log.Println("Templates loaded.")
 
 	// register all routes at this point.
-	cmdi.RegisterRoutes("stdlib")
-	sqli.RegisterRoutes("stdlib")
+	cmdi.RegisterRoutes(nil)
+	sqli.RegisterRoutes(nil)
 	pathtraversal.RegisterRoutes(nil)
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)

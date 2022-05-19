@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,34 +35,6 @@ func (r *Route) String() string {
 		}
 	}
 	return strings.Join(lines, "    \n")
-}
-
-// UnsafeRequests generates an unsafe request for each input and sink defined
-// for this endpoint.
-func (r *Route) UnsafeRequests(addr string) ([]*http.Request, error) {
-	reqs := make([]*http.Request, 0, len(r.Inputs)*len(r.Sinks))
-	for _, s := range r.Sinks {
-		if len(s.Name) == 0 || s.Name == "_" {
-			continue
-		}
-		for _, i := range r.Inputs {
-			method := methodFromInput(i)
-			var u string
-			if r.genericTmpl {
-				// different parm order, to more easily work with gin
-				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, s.Name, i)
-			} else {
-				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, i, s.Name)
-			}
-			req, err := http.NewRequest(method, u, nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			s.AddPayloadToRequest(req, i, "", r.Payload)
-			reqs = append(reqs, req)
-		}
-	}
-	return reqs, nil
 }
 
 // RouteMap is a map from base path to Route
@@ -139,6 +110,11 @@ func FindViewsDir() (string, error) {
 		return "", errors.New("not a dir")
 	}
 	return filepath.Clean(path), nil
+}
+
+func Reset() {
+	AllRoutes = nil
+	rmap = nil
 }
 
 var rmap RouteMap

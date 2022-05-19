@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os/exec"
 	"strings"
 
@@ -12,29 +13,31 @@ import (
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
-func RegisterRoutes( /* framework - unused */ string) {
+func RegisterRoutes(frameworkSinks []common.Sink) {
+	sinks := []common.Sink{
+		{
+			Name:    "exec.Command",
+			Handler: execHandler,
+		},
+		{
+			Name:    "exec.CommandContext",
+			Handler: execHandlerCtx,
+		},
+	}
+	sinks = append(sinks, frameworkSinks...)
 	common.Register(common.Route{
 		Name:     "Command Injection",
 		Link:     "https://www.owasp.org/index.php/Command_Injection",
 		Base:     "cmdInjection",
 		Products: []string{"Assess", "Protect"},
 		Inputs:   []string{"query", "cookies"},
-		Sinks: []common.Sink{
-			{
-				Name:    "exec.Command",
-				Handler: execHandler,
-			},
-			{
-				Name:    "exec.CommandContext",
-				Handler: execHandlerCtx,
-			},
-		},
-		Payload: "hello there! && echo hack hack hack",
+		Sinks:    sinks,
+		Payload:  "hello there! && echo hack hack hack",
 	})
 }
 
 // perform the vulnerability, using exec.Command
-func execHandler(mode common.Safety, in string, _ interface{}) string {
+func execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
 	var cmd *exec.Cmd
 	switch mode {
 	case common.Safe:
@@ -42,11 +45,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) string {
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			return "one or more args required"
+			return "one or more args required", http.StatusBadRequest
 		}
 		cmd = exec.Command(args[0], args[1:]...)
 	case common.NOOP:
-		return "NOOP"
+		return "NOOP", http.StatusOK
 	default:
 		log.Fatalf("Error running execHandler. Unknown option  %q passed", mode)
 	}
@@ -60,11 +63,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) string {
 		}
 		log.Print(msg)
 	}
-	return out.String()
+	return out.String(), http.StatusOK
 }
 
 // perform the vulnerability, using exec.CommandContext
-func execHandlerCtx(mode common.Safety, in string, _ interface{}) string {
+func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, int) {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch mode {
@@ -73,11 +76,11 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) string {
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			return "one or more args required"
+			return "one or more args required", http.StatusBadRequest
 		}
 		cmd = exec.CommandContext(ctx, args[0], args[1:]...)
 	case common.NOOP:
-		return "NOOP"
+		return "NOOP", http.StatusOK
 	default:
 		log.Fatalf("Error running execHandlerCtx. Unknown option  %q passed", mode)
 	}
@@ -86,12 +89,10 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) string {
 	err := cmd.Run()
 	if err != nil {
 		msg := fmt.Sprintf("Could not run command in %s: err = %s", mode, err)
-		if _, err = out.WriteString(msg); err != nil {
-			log.Print("failed to add error to returned data:", err)
-		}
+		out.WriteString(msg)
 		log.Print(msg)
 	}
-	return out.String()
+	return out.String(), http.StatusOK
 }
 
 // assembles a command that will run unsanitized user input in a system shell

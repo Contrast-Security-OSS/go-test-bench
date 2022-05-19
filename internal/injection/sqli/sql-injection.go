@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
@@ -13,20 +14,23 @@ import (
 )
 
 // RegisterRoutes is called in framework init to register routes in this package.
-func RegisterRoutes( /* framework - unused */ string) {
+func RegisterRoutes(frameworkSinks []common.Sink) {
+	sinks := []common.Sink{
+		{
+			Name:                 "sqlite3.exec",
+			Handler:              sqliteInj{}.execHandler,
+			ExpectedUnsafeStatus: http.StatusBadRequest,
+		},
+	}
+	sinks = append(sinks, frameworkSinks...)
 	common.Register(common.Route{
 		Name:     "SQL Injection",
 		Link:     "https://www.owasp.org/index.php/SQL_Injection",
 		Base:     "sqlInjection",
 		Products: []string{"Assess", "Protect"},
 		Inputs:   []string{"body", "query", "headers-json"},
-		Sinks: []common.Sink{
-			{
-				Name:    "sqlite3.exec",
-				Handler: sqliteInj{}.execHandler,
-			},
-		},
-		Payload: "Robert'; DROP TABLE Students;--",
+		Sinks:    sinks,
+		Payload:  "Robert'; DROP TABLE Students;--",
 	})
 }
 
@@ -35,13 +39,13 @@ type sqliteInj struct {
 	db   *sql.DB
 }
 
-func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) string {
+func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
 	log.Println("sqlite exec handler")
 	var err error
 	var res sql.Result
 
 	if err = si.initDB(); err != nil {
-		return err.Error()
+		return err.Error(), http.StatusBadRequest
 	}
 	defer si.cleanupDB()
 
@@ -55,15 +59,14 @@ func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) st
 		query := "SELECT '?' as '?'"
 		res, err = si.db.Exec(query, in, "test")
 	default: // mode is no-op or invalid
-		return "NOOP"
+		return "NOOP", http.StatusOK
 	}
 
 	if err != nil {
-		return err.Error()
+		return err.Error(), http.StatusBadRequest
 	}
 	r := fmt.Sprintf("Result: %#v\n", res)
-	log.Println("Result: ", r)
-	return r
+	return r, http.StatusOK
 }
 
 func (si *sqliteInj) initDB() error {
