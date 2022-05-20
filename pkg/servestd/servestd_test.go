@@ -13,7 +13,7 @@ import (
 )
 
 func TestParseTemplates(t *testing.T) {
-	err := parseTemplates()
+	err := common.ParseViewTemplates()
 	if err != nil {
 		t.Error(err)
 	}

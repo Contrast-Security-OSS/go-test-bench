@@ -1,0 +1,231 @@
+consumes:
+  - application/io.goswagger.go-test-bench.v1+json
+info:
+  description: An API built with go-swagger to generate intentionally vulnerable endpoints
+  title: swagger-bench
+  version: 1.0.0
+produces:
+  - application/io.goswagger.go-test-bench.v1+json
+schemes:
+  - http
+swagger: "2.0"
+
+paths:
+
+  /:
+    get:
+      tags:
+        - swagger-server
+      operationId: root
+      produces:
+        - text/html
+      responses:
+        200:
+          description: serves to display the root of the swagger API for the test bench
+          schema:
+            type: string
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+
+  /cmdInjection:
+    get:
+      tags:
+        - cmd-injection
+      summary: front page of the Command Injection vulnerability
+      operationId: cmdInjectionFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for command injection page of Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+
+  /cmdInjection/exec.Command/query/{safety}:
+    get:
+      tags:
+        - cmd-injection
+      description: |
+        Used to demonstrate how user input data can be passed to exec.Command
+      operationId: getQueryCommand
+      produces:
+        - text/plain
+
+      parameters:
+        - $ref: '#/parameters/safetyParam'
+
+        -   name: input
+            in: query
+            description: the user provided input for the query vulnerability
+            required: true
+            type: string
+
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+
+  /cmdInjection/exec.CommandContext/query/{safety}:
+    get:
+      tags:
+        - cmd-injection
+      description: |
+        Used to demonstrate how user input data can be passed to exec.CommandContext
+      operationId: getQueryCommandContext
+      produces:
+        - text/plain
+
+      parameters:
+        - $ref: '#/parameters/safetyParam'
+
+        -   name: input
+            in: query
+            description: the user provided input for the query vulnerability
+            required: true
+            type: string
+
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+
+  /xss:
+    get:
+      tags:
+        - xss
+      summary: supposed to serve the frontend for the query or cookie vulns
+      operationId: xssFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for xss page of Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+  /pathTraversal:
+    get:
+      tags:
+        - path-traversal
+      summary: front page of the Path Traversal Vulnerability
+      operationId: pathTraversalFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for path traversal page of Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+  /unvalidatedRedirect:
+    get:
+      tags:
+        - unvalidated-redirect
+      summary: front page of the Unvalidated Redirect vulnerability
+      operationId: unvalidatedRedirectFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for unvalidated redirect of the Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+  /ssrf:
+    get:
+      tags:
+        - ssrf
+      summary: front page of the SSRF vulnerability
+      operationId: ssrfFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for SSRF Vulnerability of the Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+  /sqlInjection:
+    get:
+      tags:
+        - sql-injection
+      summary: front page of the SQL Injection vulnerability
+      operationId: sqlInjectionFront
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for SQL Injection Vulnerability of the Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+
+definitions:
+  item:
+    type: object
+    required:
+      - description
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      description:
+        type: string
+        minLength: 1
+      completed:
+        type: boolean
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+
+parameters:
+  commandParam:
+    in: path
+    name: command
+    description: specify if exec.Command or exec.CommandContext should be invoked
+    required: true
+    type: string
+    enum:
+      - exec.Command
+      - exec.CommandContext
+
+  safetyParam:
+    name: safety
+    in: path
+    description: safety qualifier
+    required: true
+    type: string
+    enum:
+      - safe
+      - unsafe
+      - noop
