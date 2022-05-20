@@ -23,4 +23,5 @@ vendor/
 contrast*.yaml
 contrast*.yml
 contrast*log
+.idea
 .DS_Store

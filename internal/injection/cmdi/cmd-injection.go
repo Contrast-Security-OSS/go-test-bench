@@ -23,19 +23,19 @@ func RegisterRoutes( /* framework - unused */ string) {
 			{
 				Name:    "exec.Command",
 				Method:  "GET",
-				Handler: execHandler,
+				Handler: ExecHandler,
 			},
 			{
 				Name:    "exec.CommandContext",
 				Method:  "GET",
-				Handler: execHandlerCtx,
+				Handler: ExecHandlerCtx,
 			},
 		},
 	})
 }
 
-// perform the vulnerability, using exec.Command
-func execHandler(mode, in string) (template.HTML, bool) {
+// ExecHandler performs the vulnerability, using exec.Command
+func ExecHandler(mode, in string) (template.HTML, bool) {
 	var cmd *exec.Cmd
 	switch mode {
 	case "safe":
@@ -60,8 +60,8 @@ func execHandler(mode, in string) (template.HTML, bool) {
 	return template.HTML(out.String()), false
 }
 
-// perform the vulnerability, using exec.CommandContext
-func execHandlerCtx(mode, in string) (template.HTML, bool) {
+// ExecHandlerCtx performs the vulnerability, using exec.CommandContext
+func ExecHandlerCtx(mode, in string) (template.HTML, bool) {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch mode {
