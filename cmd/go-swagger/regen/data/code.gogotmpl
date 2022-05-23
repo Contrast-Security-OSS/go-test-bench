@@ -1,0 +1,31 @@
+// {{ .GenNotice }}
+// Generated at {{ .Timestamp }}. To re-generate, run the following in the repo root:
+// {{ .GenCmd }}
+
+package serveswagger
+
+import(
+    "github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
+  {{- range $routeInfo := .Routes}}
+    "github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/{{ routePkg $routeInfo }}"
+  {{- end }}
+    "github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+    "github.com/go-openapi/runtime/middleware"
+  )
+
+func Init(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd common.ConstParams){
+{{- range $routeInfo := .Routes }}
+    {{- $id := routeIdentifier $routeInfo }}
+    {{- $pkg := routePkg $routeInfo }}
+    api.{{ $id }}{{ $id }}FrontHandler = {{ $pkg }}.{{ $id }}FrontHandlerFunc(
+      func(p {{ $pkg }}.{{ $id }}FrontParams) middleware.Responder {
+        return RouteHandler(rmap, "{{ $routeInfo.Base }}", pd, p.HTTPRequest)
+      },
+    )
+  {{- range $input := $routeInfo.Inputs -}}
+  {{- range $sink := $routeInfo.Sinks }}
+    {{ assignStmt $routeInfo $sink $input -}}
+  {{- end -}}
+  {{- end -}}
+{{- end }}
+}

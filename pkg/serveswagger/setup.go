@@ -10,7 +10,6 @@ import (
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/go-openapi/runtime"
@@ -40,8 +39,8 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
-	cmdi.RegisterRoutes()
-
+	cmdi.RegisterRoutes(nil)
+	// TODO other routes
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
 	// set up the handlers for the api
@@ -50,22 +49,21 @@ func Setup() (*restapi.Server, error) {
 	api.HTMLProducer = runtime.ProducerFunc(HTMLProducer)
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(SwaggerRootHandler)
+	pd := common.ConstParams{
+		Year:    time.Now().Year(),
+		Rulebar: rmap,
+		// TODO Addr: ,
+		// TODO Logo: ,
+		Framework: "go-swagger",
+	}
 
-	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(
-		func(p cmd_injection.CmdInjectionFrontParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
-	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(
-		func(p cmd_injection.GetQueryCommandParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
-	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(
-		func(p cmd_injection.GetQueryCommandContextParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
+	Init(api, rmap, pd)
+
+	// api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(CmdInjectionFront)
+
+	// api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(GetQueryCommand)
+
+	// api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(GetQueryCommandContext)
 
 	server := restapi.NewServer(api)
 
@@ -104,11 +102,11 @@ func Setup() (*restapi.Server, error) {
 }
 
 // RouteHandler returns a middleware.Responder that serves our html and the vulnerable functions.
-func RouteHandler(rt common.Route, pd common.ConstParams, req *http.Request) middleware.Responder {
+func RouteHandler(rt common.Route, pd *common.ConstParams, req *http.Request) middleware.Responder {
 	return &responder{
 		rt: rt,
 		params: common.Parameters{
-			ConstParams: pd,
+			ConstParams: *pd,
 			Name:        rt.Base,
 		},
 		req: req,

@@ -47,6 +47,11 @@ type RouteMap map[string]Route
 // Routes is a slice of Route
 type Routes []Route
 
+// sortable for swagger code gen
+func (rs Routes) Len() int           { return len(rs) }
+func (rs Routes) Swap(i, j int)      { rs[i], rs[j] = rs[j], rs[i] }
+func (rs Routes) Less(i, j int) bool { return rs[i].Name < rs[j].Name }
+
 func (rs Routes) String() string {
 	var list []string
 	for _, r := range rs {

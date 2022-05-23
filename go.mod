@@ -1,6 +1,6 @@
 module github.com/Contrast-Security-OSS/go-test-bench
 
-go 1.14
+go 1.16
 
 require (
 	github.com/gin-contrib/multitemplate v0.0.0-20210428235909-8a2f6dd269a0
