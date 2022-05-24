@@ -41,12 +41,6 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
-	cmdi.RegisterRoutes(nil)
-	sqli.RegisterRoutes(nil)
-	pathtraversal.RegisterRoutes(nil)
-
-	rmap := common.PopulateRouteMap(common.AllRoutes)
-
 	// set up the handlers for the api
 	api := operations.NewSwaggerBenchAPI(swaggerSpec)
 
@@ -54,8 +48,17 @@ func Setup() (*restapi.Server, error) {
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(SwaggerRootHandler)
 
+	// set up currently supported routes and resources
+	if err := common.ParseViewTemplates(); err != nil {
+		return nil, err
+	}
+	cmdi.RegisterRoutes(nil)
+	sqli.RegisterRoutes(nil)
+	pathtraversal.RegisterRoutes(nil)
+
+	rmap := common.PopulateRouteMap(common.AllRoutes)
 	// lives in generated code. initializes all route handlers other than root.
-	generatedInit(api, rmap, SwaggerParams)
+	generatedInit(api, rmap, &SwaggerParams)
 
 	server := restapi.NewServer(api)
 
@@ -82,11 +85,6 @@ func Setup() (*restapi.Server, error) {
 
 	server.ConfigureAPI()
 	server.Port = 8080
-
-	// set up currently supported routes and resources
-	if err := common.ParseViewTemplates(); err != nil {
-		return nil, err
-	}
 
 	SwaggerParams.Rulebar = rmap
 
