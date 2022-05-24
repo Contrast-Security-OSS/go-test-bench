@@ -1,14 +1,20 @@
 package serveswagger
 
 import (
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/go-openapi/runtime"
-	"log"
-	"os"
+	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/go-openapi/loads"
@@ -20,7 +26,7 @@ const DefaultAddr = "localhost:8080"
 
 // SwaggerParams holds default ConstParams for the go-swagger executable
 var SwaggerParams = common.ConstParams{
-	Year:      2022,
+	Year:      time.Now().Year(),
 	Logo:      "https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png",
 	Framework: "Go-Swagger",
 	Addr:      DefaultAddr,
@@ -34,6 +40,10 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
+	cmdi.RegisterRoutes(nil)
+
+	rmap := common.PopulateRouteMap(common.AllRoutes)
+
 	// set up the handlers for the api
 	api := operations.NewSwaggerBenchAPI(swaggerSpec)
 
@@ -41,11 +51,21 @@ func Setup() (*restapi.Server, error) {
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(SwaggerRootHandler)
 
-	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(CmdInjectionFront)
-
-	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(GetQueryCommand)
-
-	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(GetQueryCommandContext)
+	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(
+		func(p cmd_injection.CmdInjectionFrontParams) middleware.Responder {
+			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
+		},
+	)
+	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(
+		func(p cmd_injection.GetQueryCommandParams) middleware.Responder {
+			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
+		},
+	)
+	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(
+		func(p cmd_injection.GetQueryCommandContextParams) middleware.Responder {
+			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
+		},
+	)
 
 	server := restapi.NewServer(api)
 
@@ -78,8 +98,62 @@ func Setup() (*restapi.Server, error) {
 		return nil, err
 	}
 
-	cmdi.RegisterRoutes(nil)
-	SwaggerParams.Rulebar = common.PopulateRouteMap(common.AllRoutes)
+	SwaggerParams.Rulebar = rmap
 
 	return server, nil
+}
+
+func RouteHandler(rt common.Route, pd common.ConstParams, req *http.Request) middleware.Responder {
+	return &responder{
+		rt: rt,
+		params: common.Parameters{
+			ConstParams: pd,
+			Name:        rt.Base,
+		},
+		req: req,
+	}
+}
+
+type responder struct {
+	rt     common.Route
+	params common.Parameters
+	req    *http.Request
+}
+
+func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
+	log.Println(r.rt.Name, r.req.URL.Path)
+	elems := strings.Split(strings.Trim(r.req.URL.Path, "/"), "/")
+	if len(elems) < 2 {
+		// main page
+		err := common.Templates[r.rt.TmplFile].ExecuteTemplate(w, "layout.gohtml", &r.params)
+		if err != nil {
+			log.Print(err.Error())
+			fmt.Fprintf(w, "template error: %s", err)
+		}
+		return
+	}
+	for _, s := range r.rt.Sinks {
+		if elems[1] == s.URL {
+			mode := common.Safety(elems[len(elems)-1])
+			switch mode {
+			case common.NOOP, common.Safe, common.Unsafe:
+				// valid modes
+			default:
+				// invalid
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+			if s.Handler == nil {
+				s.Handler = common.GenericHandler(s)
+			}
+			in := common.GetUserInput(r.req)
+			data, status := s.Handler(mode, in, p)
+			w.WriteHeader(status)
+			w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
+			fmt.Fprint(w, data)
+			return
+		}
+	}
+	// does not match any sink or the main page
+	w.WriteHeader(http.StatusNotFound)
 }
