@@ -103,14 +103,24 @@ func Register(r Route) {
 	AllRoutes = append(AllRoutes, r)
 }
 
-// FindViewsDir looks for views dir in working dir or two dirs up, where it's
-// likely to be found in tests.
-func FindViewsDir() (string, error) {
-	path := "views"
-	fi, err := os.Stat(path)
-	if err != nil || !fi.IsDir() {
-		path = "../../" + path
+// FindViewsDir looks for the views dir, which contains our html templates.
+// It looks in the current dir and its parents.
+func FindViewsDir() (string, error) { return LocateDir("views", 5) }
+
+// LocateDir finds a dir with the given name and returns its path.
+// The given name may contain a slash, i.e. 'cmd/go-swagger'.
+func LocateDir(dir string, maxTries int) (string, error) {
+	tries := 0
+	path := dir
+	var err error
+	var fi os.FileInfo
+	for tries < maxTries {
 		fi, err = os.Stat(path)
+		if err == nil && fi.IsDir() {
+			return filepath.Clean(path), nil
+		}
+		path = "../" + path
+		tries++
 	}
 	if err != nil {
 		return "", err
@@ -118,7 +128,7 @@ func FindViewsDir() (string, error) {
 	if !fi.IsDir() {
 		return "", errors.New("not a dir")
 	}
-	return filepath.Clean(path), nil
+	return "", fmt.Errorf("cannot find %s after %d tries", dir, tries)
 }
 
 // Templates is the map we use to lookup the parsed templates
