@@ -55,7 +55,7 @@ paths:
       tags:
         - {{ routePkg $routeInfo }}
       description: demonstrates {{ $routeInfo.Name }} via {{ $input }}, with vulnerable function {{ $sink.Name }}
-      operationId: {{ routeIdentifier $routeInfo }}Get{{ capital $input }}{{ sinkName $sink }}
+      operationId: {{ routeIdentifier $routeInfo }}{{ sinkFn $input $sink }}
       produces:
         - text/plain
       parameters:

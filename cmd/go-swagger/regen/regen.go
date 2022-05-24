@@ -4,8 +4,6 @@ package main
 import (
 	"bytes"
 	_ "embed"
-	"errors"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -40,6 +38,17 @@ func main() {
 	for _, r := range rmap {
 		if len(r.Sinks) == 0 || len(r.Sinks[0].Name) == 0 {
 			// skip
+			continue
+		}
+		for i := 0; i < len(r.Inputs); {
+			// TODO support things other than query and buffered-query
+			if !strings.Contains(r.Inputs[i], "query") {
+				r.Inputs = append(r.Inputs[:i], r.Inputs[i+1:]...)
+				continue
+			}
+			i++
+		}
+		if len(r.Inputs) == 0 {
 			continue
 		}
 		if len(r.Sinks) > 0 && len(r.Sinks[0].Name) > 0 {
@@ -142,8 +151,18 @@ func generateCode(td tmplData, tfuncs template.FuncMap, w io.Writer) error {
 	return tmpl.Execute(w, td)
 }
 
-//sink name, as used by swagger in url
+// sink name, as used by swagger in url
+// e.g. exec.Command
 func sinkName(s *common.Sink) string {
+	if len(s.URL) == 0 {
+		return "Sink"
+	}
+	return s.URL
+}
+
+// sink name, for use in identifier
+// e.g. Command (anything preceeding the dot is stripped)
+func sinkIdent(s *common.Sink) string {
 	fname := s.URL
 	if len(fname) == 0 {
 		return "Sink"
@@ -156,8 +175,9 @@ func sinkName(s *common.Sink) string {
 }
 
 // name of wrapper around vulnerable function
+// e.g. GetQueryCommand
 func sinkFn(in string, s *common.Sink) string {
-	return "Get" + exportIdentifier(in) + sinkName(s)
+	return "Get" + exportIdentifier(in) + sinkIdent(s)
 }
 
 // generates package name swagger uses for route
@@ -194,31 +214,10 @@ func exportIdentifier(id string) string {
 	return strings.Title(id)
 }
 
-func findSwagCmd() (string, error) { return locateDir("cmd/go-swagger", 5) }
-func findSwagPkg() (string, error) { return locateDir("pkg/serveswagger", 5) }
-func locateDir(dir string, maxTries int) (string, error) {
-	tries := 0
-	path := dir
-	var err error
-	var fi os.FileInfo
-	for tries < maxTries {
-		fi, err = os.Stat(path)
-		if err == nil && fi.IsDir() {
-			return filepath.Clean(path), nil
-		}
-		path = "../" + path
-		tries++
-	}
-	if err != nil {
-		return "", err
-	}
-	if !fi.IsDir() {
-		return "", errors.New("not a dir")
-	}
-	return "", fmt.Errorf("cannot find %s after %d tries", dir, tries)
-}
+func findSwagCmd() (string, error) { return common.LocateDir("cmd/go-swagger", 5) }
+func findSwagPkg() (string, error) { return common.LocateDir("pkg/serveswagger", 5) }
 
-// remove any special symbol and capitalize the following letter
+// for each occurrence of each character in 'special', remove that char and capitalize the following letter
 func capitalizeAfter(s string, special string) string {
 	in := []byte(s)
 	for {

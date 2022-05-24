@@ -13,7 +13,7 @@ import(
     "github.com/go-openapi/runtime/middleware"
   )
 
-func generatedInit(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd common.ConstParams){
+func generatedInit(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd *common.ConstParams){
 {{- range $routeInfo := .Routes }}
     {{- $id := routeIdentifier $routeInfo }}
     {{- $pkg := routePkg $routeInfo }}
