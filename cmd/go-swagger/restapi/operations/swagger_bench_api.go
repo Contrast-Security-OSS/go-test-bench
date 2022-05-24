@@ -21,6 +21,8 @@ import (
 	"github.com/go-openapi/swag"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/path_traversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/sql_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
@@ -67,6 +69,69 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		}),
 		CmdInjectionCmdInjectionGetQueryCommandContextHandler: cmd_injection.CmdInjectionGetQueryCommandContextHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandContextParams) middleware.Responder {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommandContext has not yet been implemented")
+		}),
+		PathTraversalPathTraversalFrontHandler: path_traversal.PathTraversalFrontHandlerFunc(func(params path_traversal.PathTraversalFrontParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBodyCreateHandler: path_traversal.PathTraversalGetBodyCreateHandlerFunc(func(params path_traversal.PathTraversalGetBodyCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBodyCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBodyOpenHandler: path_traversal.PathTraversalGetBodyOpenHandlerFunc(func(params path_traversal.PathTraversalGetBodyOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBodyOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBodyReadFileHandler: path_traversal.PathTraversalGetBodyReadFileHandlerFunc(func(params path_traversal.PathTraversalGetBodyReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBodyReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBodyWriteFileHandler: path_traversal.PathTraversalGetBodyWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetBodyWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBodyWriteFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryCreateHandler: path_traversal.PathTraversalGetBufferedQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryOpenHandler: path_traversal.PathTraversalGetBufferedQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryReadFileHandler: path_traversal.PathTraversalGetBufferedQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryWriteFileHandler: path_traversal.PathTraversalGetBufferedQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryWriteFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetHeadersCreateHandler: path_traversal.PathTraversalGetHeadersCreateHandlerFunc(func(params path_traversal.PathTraversalGetHeadersCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetHeadersCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetHeadersOpenHandler: path_traversal.PathTraversalGetHeadersOpenHandlerFunc(func(params path_traversal.PathTraversalGetHeadersOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetHeadersOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetHeadersReadFileHandler: path_traversal.PathTraversalGetHeadersReadFileHandlerFunc(func(params path_traversal.PathTraversalGetHeadersReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetHeadersReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetHeadersWriteFileHandler: path_traversal.PathTraversalGetHeadersWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetHeadersWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetHeadersWriteFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryCreateHandler: path_traversal.PathTraversalGetQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryOpenHandler: path_traversal.PathTraversalGetQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryReadFileHandler: path_traversal.PathTraversalGetQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryWriteFileHandler: path_traversal.PathTraversalGetQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryWriteFile has not yet been implemented")
+		}),
+		SQLInjectionSQLInjectionFrontHandler: sql_injection.SQLInjectionFrontHandlerFunc(func(params sql_injection.SQLInjectionFrontParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionFront has not yet been implemented")
+		}),
+		SQLInjectionSQLInjectionGetBodyExecHandler: sql_injection.SQLInjectionGetBodyExecHandlerFunc(func(params sql_injection.SQLInjectionGetBodyExecParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionGetBodyExec has not yet been implemented")
+		}),
+		SQLInjectionSQLInjectionGetHeadersJSONExecHandler: sql_injection.SQLInjectionGetHeadersJSONExecHandlerFunc(func(params sql_injection.SQLInjectionGetHeadersJSONExecParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionGetHeadersJSONExec has not yet been implemented")
+		}),
+		SQLInjectionSQLInjectionGetQueryExecHandler: sql_injection.SQLInjectionGetQueryExecHandlerFunc(func(params sql_injection.SQLInjectionGetQueryExecParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionGetQueryExec has not yet been implemented")
 		}),
 		SsrfSsrfFrontHandler: ssrf.SsrfFrontHandlerFunc(func(params ssrf.SsrfFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
@@ -159,6 +224,48 @@ type SwaggerBenchAPI struct {
 	CmdInjectionCmdInjectionGetQueryCommandHandler cmd_injection.CmdInjectionGetQueryCommandHandler
 	// CmdInjectionCmdInjectionGetQueryCommandContextHandler sets the operation handler for the cmd injection get query command context operation
 	CmdInjectionCmdInjectionGetQueryCommandContextHandler cmd_injection.CmdInjectionGetQueryCommandContextHandler
+	// PathTraversalPathTraversalFrontHandler sets the operation handler for the path traversal front operation
+	PathTraversalPathTraversalFrontHandler path_traversal.PathTraversalFrontHandler
+	// PathTraversalPathTraversalGetBodyCreateHandler sets the operation handler for the path traversal get body create operation
+	PathTraversalPathTraversalGetBodyCreateHandler path_traversal.PathTraversalGetBodyCreateHandler
+	// PathTraversalPathTraversalGetBodyOpenHandler sets the operation handler for the path traversal get body open operation
+	PathTraversalPathTraversalGetBodyOpenHandler path_traversal.PathTraversalGetBodyOpenHandler
+	// PathTraversalPathTraversalGetBodyReadFileHandler sets the operation handler for the path traversal get body read file operation
+	PathTraversalPathTraversalGetBodyReadFileHandler path_traversal.PathTraversalGetBodyReadFileHandler
+	// PathTraversalPathTraversalGetBodyWriteFileHandler sets the operation handler for the path traversal get body write file operation
+	PathTraversalPathTraversalGetBodyWriteFileHandler path_traversal.PathTraversalGetBodyWriteFileHandler
+	// PathTraversalPathTraversalGetBufferedQueryCreateHandler sets the operation handler for the path traversal get buffered query create operation
+	PathTraversalPathTraversalGetBufferedQueryCreateHandler path_traversal.PathTraversalGetBufferedQueryCreateHandler
+	// PathTraversalPathTraversalGetBufferedQueryOpenHandler sets the operation handler for the path traversal get buffered query open operation
+	PathTraversalPathTraversalGetBufferedQueryOpenHandler path_traversal.PathTraversalGetBufferedQueryOpenHandler
+	// PathTraversalPathTraversalGetBufferedQueryReadFileHandler sets the operation handler for the path traversal get buffered query read file operation
+	PathTraversalPathTraversalGetBufferedQueryReadFileHandler path_traversal.PathTraversalGetBufferedQueryReadFileHandler
+	// PathTraversalPathTraversalGetBufferedQueryWriteFileHandler sets the operation handler for the path traversal get buffered query write file operation
+	PathTraversalPathTraversalGetBufferedQueryWriteFileHandler path_traversal.PathTraversalGetBufferedQueryWriteFileHandler
+	// PathTraversalPathTraversalGetHeadersCreateHandler sets the operation handler for the path traversal get headers create operation
+	PathTraversalPathTraversalGetHeadersCreateHandler path_traversal.PathTraversalGetHeadersCreateHandler
+	// PathTraversalPathTraversalGetHeadersOpenHandler sets the operation handler for the path traversal get headers open operation
+	PathTraversalPathTraversalGetHeadersOpenHandler path_traversal.PathTraversalGetHeadersOpenHandler
+	// PathTraversalPathTraversalGetHeadersReadFileHandler sets the operation handler for the path traversal get headers read file operation
+	PathTraversalPathTraversalGetHeadersReadFileHandler path_traversal.PathTraversalGetHeadersReadFileHandler
+	// PathTraversalPathTraversalGetHeadersWriteFileHandler sets the operation handler for the path traversal get headers write file operation
+	PathTraversalPathTraversalGetHeadersWriteFileHandler path_traversal.PathTraversalGetHeadersWriteFileHandler
+	// PathTraversalPathTraversalGetQueryCreateHandler sets the operation handler for the path traversal get query create operation
+	PathTraversalPathTraversalGetQueryCreateHandler path_traversal.PathTraversalGetQueryCreateHandler
+	// PathTraversalPathTraversalGetQueryOpenHandler sets the operation handler for the path traversal get query open operation
+	PathTraversalPathTraversalGetQueryOpenHandler path_traversal.PathTraversalGetQueryOpenHandler
+	// PathTraversalPathTraversalGetQueryReadFileHandler sets the operation handler for the path traversal get query read file operation
+	PathTraversalPathTraversalGetQueryReadFileHandler path_traversal.PathTraversalGetQueryReadFileHandler
+	// PathTraversalPathTraversalGetQueryWriteFileHandler sets the operation handler for the path traversal get query write file operation
+	PathTraversalPathTraversalGetQueryWriteFileHandler path_traversal.PathTraversalGetQueryWriteFileHandler
+	// SQLInjectionSQLInjectionFrontHandler sets the operation handler for the SQL injection front operation
+	SQLInjectionSQLInjectionFrontHandler sql_injection.SQLInjectionFrontHandler
+	// SQLInjectionSQLInjectionGetBodyExecHandler sets the operation handler for the SQL injection get body exec operation
+	SQLInjectionSQLInjectionGetBodyExecHandler sql_injection.SQLInjectionGetBodyExecHandler
+	// SQLInjectionSQLInjectionGetHeadersJSONExecHandler sets the operation handler for the SQL injection get headers Json exec operation
+	SQLInjectionSQLInjectionGetHeadersJSONExecHandler sql_injection.SQLInjectionGetHeadersJSONExecHandler
+	// SQLInjectionSQLInjectionGetQueryExecHandler sets the operation handler for the SQL injection get query exec operation
+	SQLInjectionSQLInjectionGetQueryExecHandler sql_injection.SQLInjectionGetQueryExecHandler
 	// SsrfSsrfFrontHandler sets the operation handler for the ssrf front operation
 	SsrfSsrfFrontHandler ssrf.SsrfFrontHandler
 	// SsrfSsrfGetPathSinkHandler sets the operation handler for the ssrf get path sink operation
@@ -282,6 +389,69 @@ func (o *SwaggerBenchAPI) Validate() error {
 	}
 	if o.CmdInjectionCmdInjectionGetQueryCommandContextHandler == nil {
 		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetQueryCommandContextHandler")
+	}
+	if o.PathTraversalPathTraversalFrontHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalFrontHandler")
+	}
+	if o.PathTraversalPathTraversalGetBodyCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBodyCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetBodyOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBodyOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetBodyReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBodyReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetBodyWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBodyWriteFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryWriteFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetHeadersCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetHeadersCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetHeadersOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetHeadersOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetHeadersReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetHeadersReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetHeadersWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetHeadersWriteFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryWriteFileHandler")
+	}
+	if o.SQLInjectionSQLInjectionFrontHandler == nil {
+		unregistered = append(unregistered, "sql_injection.SQLInjectionFrontHandler")
+	}
+	if o.SQLInjectionSQLInjectionGetBodyExecHandler == nil {
+		unregistered = append(unregistered, "sql_injection.SQLInjectionGetBodyExecHandler")
+	}
+	if o.SQLInjectionSQLInjectionGetHeadersJSONExecHandler == nil {
+		unregistered = append(unregistered, "sql_injection.SQLInjectionGetHeadersJSONExecHandler")
+	}
+	if o.SQLInjectionSQLInjectionGetQueryExecHandler == nil {
+		unregistered = append(unregistered, "sql_injection.SQLInjectionGetQueryExecHandler")
 	}
 	if o.SsrfSsrfFrontHandler == nil {
 		unregistered = append(unregistered, "ssrf.SsrfFrontHandler")
@@ -434,6 +604,90 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/cmdInjection/CommandContext/query/{safety}"] = cmd_injection.NewCmdInjectionGetQueryCommandContext(o.context, o.CmdInjectionCmdInjectionGetQueryCommandContextHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal"] = path_traversal.NewPathTraversalFront(o.context, o.PathTraversalPathTraversalFrontHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Create/body/{safety}"] = path_traversal.NewPathTraversalGetBodyCreate(o.context, o.PathTraversalPathTraversalGetBodyCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Open/body/{safety}"] = path_traversal.NewPathTraversalGetBodyOpen(o.context, o.PathTraversalPathTraversalGetBodyOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/ReadFile/body/{safety}"] = path_traversal.NewPathTraversalGetBodyReadFile(o.context, o.PathTraversalPathTraversalGetBodyReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/WriteFile/body/{safety}"] = path_traversal.NewPathTraversalGetBodyWriteFile(o.context, o.PathTraversalPathTraversalGetBodyWriteFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Create/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryCreate(o.context, o.PathTraversalPathTraversalGetBufferedQueryCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Open/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryOpen(o.context, o.PathTraversalPathTraversalGetBufferedQueryOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/ReadFile/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryReadFile(o.context, o.PathTraversalPathTraversalGetBufferedQueryReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/WriteFile/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryWriteFile(o.context, o.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Create/headers/{safety}"] = path_traversal.NewPathTraversalGetHeadersCreate(o.context, o.PathTraversalPathTraversalGetHeadersCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Open/headers/{safety}"] = path_traversal.NewPathTraversalGetHeadersOpen(o.context, o.PathTraversalPathTraversalGetHeadersOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/ReadFile/headers/{safety}"] = path_traversal.NewPathTraversalGetHeadersReadFile(o.context, o.PathTraversalPathTraversalGetHeadersReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/WriteFile/headers/{safety}"] = path_traversal.NewPathTraversalGetHeadersWriteFile(o.context, o.PathTraversalPathTraversalGetHeadersWriteFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Create/query/{safety}"] = path_traversal.NewPathTraversalGetQueryCreate(o.context, o.PathTraversalPathTraversalGetQueryCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/Open/query/{safety}"] = path_traversal.NewPathTraversalGetQueryOpen(o.context, o.PathTraversalPathTraversalGetQueryOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/ReadFile/query/{safety}"] = path_traversal.NewPathTraversalGetQueryReadFile(o.context, o.PathTraversalPathTraversalGetQueryReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/WriteFile/query/{safety}"] = path_traversal.NewPathTraversalGetQueryWriteFile(o.context, o.PathTraversalPathTraversalGetQueryWriteFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/sqlInjection"] = sql_injection.NewSQLInjectionFront(o.context, o.SQLInjectionSQLInjectionFrontHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/sqlInjection/Exec/body/{safety}"] = sql_injection.NewSQLInjectionGetBodyExec(o.context, o.SQLInjectionSQLInjectionGetBodyExecHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/sqlInjection/Exec/headers-json/{safety}"] = sql_injection.NewSQLInjectionGetHeadersJSONExec(o.context, o.SQLInjectionSQLInjectionGetHeadersJSONExecHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/sqlInjection/Exec/query/{safety}"] = sql_injection.NewSQLInjectionGetQueryExec(o.context, o.SQLInjectionSQLInjectionGetQueryExecHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

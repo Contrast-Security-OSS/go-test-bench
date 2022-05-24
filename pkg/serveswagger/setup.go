@@ -12,10 +12,12 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )
@@ -40,7 +42,9 @@ func Setup() (*restapi.Server, error) {
 	}
 
 	cmdi.RegisterRoutes(nil)
-	// TODO other routes
+	sqli.RegisterRoutes(nil)
+	pathtraversal.RegisterRoutes(nil)
+
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
 	// set up the handlers for the api

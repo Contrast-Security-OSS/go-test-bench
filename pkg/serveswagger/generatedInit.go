@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT EDIT
-// Generated at 2022-05-24T15:26:21Z. To re-generate, run the following in the repo root:
+// Generated at 2022-05-24T15:44:12Z. To re-generate, run the following in the repo root:
 // go run ./cmd/go-swagger/regen/regen.go
 
 package serveswagger
@@ -7,6 +7,8 @@ package serveswagger
 import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/path_traversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/sql_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
@@ -41,6 +43,94 @@ func generatedInit(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd com
 	api.CmdInjectionCmdInjectionGetCookiesCommandContextHandler = cmd_injection.CmdInjectionGetCookiesCommandContextHandlerFunc(
 		func(p cmd_injection.CmdInjectionGetCookiesCommandContextParams) middleware.Responder {
 			return RouteHandler(rmap["/cmdInjection"], pd, p.HTTPRequest)
+		},
+	)
+
+	// PathTraversal
+
+	api.PathTraversalPathTraversalFrontHandler = path_traversal.PathTraversalFrontHandlerFunc(
+		func(p path_traversal.PathTraversalFrontParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetQueryReadFileHandler = path_traversal.PathTraversalGetQueryReadFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetQueryReadFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetQueryOpenHandler = path_traversal.PathTraversalGetQueryOpenHandlerFunc(
+		func(p path_traversal.PathTraversalGetQueryOpenParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetQueryWriteFileHandler = path_traversal.PathTraversalGetQueryWriteFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetQueryWriteFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetQueryCreateHandler = path_traversal.PathTraversalGetQueryCreateHandlerFunc(
+		func(p path_traversal.PathTraversalGetQueryCreateParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBufferedQueryReadFileHandler = path_traversal.PathTraversalGetBufferedQueryReadFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetBufferedQueryReadFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBufferedQueryOpenHandler = path_traversal.PathTraversalGetBufferedQueryOpenHandlerFunc(
+		func(p path_traversal.PathTraversalGetBufferedQueryOpenParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler = path_traversal.PathTraversalGetBufferedQueryWriteFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetBufferedQueryWriteFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBufferedQueryCreateHandler = path_traversal.PathTraversalGetBufferedQueryCreateHandlerFunc(
+		func(p path_traversal.PathTraversalGetBufferedQueryCreateParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetHeadersReadFileHandler = path_traversal.PathTraversalGetHeadersReadFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetHeadersReadFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetHeadersOpenHandler = path_traversal.PathTraversalGetHeadersOpenHandlerFunc(
+		func(p path_traversal.PathTraversalGetHeadersOpenParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetHeadersWriteFileHandler = path_traversal.PathTraversalGetHeadersWriteFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetHeadersWriteFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetHeadersCreateHandler = path_traversal.PathTraversalGetHeadersCreateHandlerFunc(
+		func(p path_traversal.PathTraversalGetHeadersCreateParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBodyReadFileHandler = path_traversal.PathTraversalGetBodyReadFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetBodyReadFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBodyOpenHandler = path_traversal.PathTraversalGetBodyOpenHandlerFunc(
+		func(p path_traversal.PathTraversalGetBodyOpenParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBodyWriteFileHandler = path_traversal.PathTraversalGetBodyWriteFileHandlerFunc(
+		func(p path_traversal.PathTraversalGetBodyWriteFileParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
+		},
+	)
+	api.PathTraversalPathTraversalGetBodyCreateHandler = path_traversal.PathTraversalGetBodyCreateHandlerFunc(
+		func(p path_traversal.PathTraversalGetBodyCreateParams) middleware.Responder {
+			return RouteHandler(rmap["/pathTraversal"], pd, p.HTTPRequest)
 		},
 	)
 
@@ -79,6 +169,29 @@ func generatedInit(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd com
 	api.XSSXSSGetResponseSinkHandler = xss.XSSGetResponseSinkHandlerFunc(
 		func(p xss.XSSGetResponseSinkParams) middleware.Responder {
 			return RouteHandler(rmap["/xss"], pd, p.HTTPRequest)
+		},
+	)
+
+	// SQLInjection
+
+	api.SQLInjectionSQLInjectionFrontHandler = sql_injection.SQLInjectionFrontHandlerFunc(
+		func(p sql_injection.SQLInjectionFrontParams) middleware.Responder {
+			return RouteHandler(rmap["/sqlInjection"], pd, p.HTTPRequest)
+		},
+	)
+	api.SQLInjectionSQLInjectionGetBodyExecHandler = sql_injection.SQLInjectionGetBodyExecHandlerFunc(
+		func(p sql_injection.SQLInjectionGetBodyExecParams) middleware.Responder {
+			return RouteHandler(rmap["/sqlInjection"], pd, p.HTTPRequest)
+		},
+	)
+	api.SQLInjectionSQLInjectionGetQueryExecHandler = sql_injection.SQLInjectionGetQueryExecHandlerFunc(
+		func(p sql_injection.SQLInjectionGetQueryExecParams) middleware.Responder {
+			return RouteHandler(rmap["/sqlInjection"], pd, p.HTTPRequest)
+		},
+	)
+	api.SQLInjectionSQLInjectionGetHeadersJSONExecHandler = sql_injection.SQLInjectionGetHeadersJSONExecHandlerFunc(
+		func(p sql_injection.SQLInjectionGetHeadersJSONExecParams) middleware.Responder {
+			return RouteHandler(rmap["/sqlInjection"], pd, p.HTTPRequest)
 		},
 	)
 
