@@ -6,11 +6,14 @@ import (
 	"strings"
 )
 
+// SinkTest is data used by cmd/exercise and in testing.
 type SinkTest struct {
 	R      *http.Request
 	Status int
 	Name   string
 }
+
+// RouteTestRequests is data used by cmd/exercise and in testing.
 type RouteTestRequests struct {
 	Name  string
 	Sinks []SinkTest

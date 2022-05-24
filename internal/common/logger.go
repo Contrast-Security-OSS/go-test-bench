@@ -17,8 +17,14 @@ type LogWrapper struct {
 	l *log.Logger
 }
 
+// NewLogWrapper creates a wrapper around log.Logger conforming to Logger.
 func NewLogWrapper(l *log.Logger) Logger { return &LogWrapper{l: l} }
 
-func (w *LogWrapper) Logf(f string, va ...interface{})   { w.l.Printf(f, va...) }
+// Logf implements Logger.
+func (w *LogWrapper) Logf(f string, va ...interface{}) { w.l.Printf(f, va...) }
+
+// Errorf implements Logger.
 func (w *LogWrapper) Errorf(f string, va ...interface{}) { w.l.Fatalf(f, va...) }
+
+// Fatalf implements Logger.
 func (w *LogWrapper) Fatalf(f string, va ...interface{}) { w.l.Fatalf(f, va...) }

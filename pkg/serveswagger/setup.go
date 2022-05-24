@@ -103,6 +103,7 @@ func Setup() (*restapi.Server, error) {
 	return server, nil
 }
 
+// RouteHandler returns a middleware.Responder that serves our html and the vulnerable functions.
 func RouteHandler(rt common.Route, pd common.ConstParams, req *http.Request) middleware.Responder {
 	return &responder{
 		rt: rt,

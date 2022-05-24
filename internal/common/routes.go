@@ -156,6 +156,7 @@ func ParseViewTemplates() error {
 	return nil
 }
 
+// Reset clears AllRoutes and rmap. For testing.
 func Reset() {
 	AllRoutes = nil
 	rmap = nil
