@@ -22,7 +22,10 @@ func TestParseTemplates(t *testing.T) {
 //ensure template is populated
 func TestServedTemplate(t *testing.T) {
 	Setup()
-	t.Cleanup(common.Reset)
+	t.Cleanup(func() {
+		http.DefaultServeMux = &http.ServeMux{}
+		common.Reset()
+	})
 
 	srvr := httptest.NewServer(nil)
 	defer srvr.Close()
@@ -72,7 +75,10 @@ func TestServedTemplate(t *testing.T) {
 // changes here should be mirrored in the test in servegin
 func TestRouteData(t *testing.T) {
 	Setup()
-	t.Cleanup(common.Reset)
+	t.Cleanup(func() {
+		http.DefaultServeMux = &http.ServeMux{}
+		common.Reset()
+	})
 	rmap := common.GetRouteMap()
 	var routeNames []string
 	for k := range rmap {
