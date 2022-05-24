@@ -38,7 +38,7 @@ paths:
       tags:
         - {{ routePkg $routeInfo }}
       summary: front page of the {{ $routeInfo.Name }} vulnerability
-      operationId: "{{ $routeInfo.Base }}Front"
+      operationId: {{ routeIdentifier $routeInfo }}Front
       produces:
         - text/html
       responses:
@@ -50,12 +50,12 @@ paths:
           description: error occured
   {{- range $sink := $routeInfo.Sinks }}
     {{- range $input := $routeInfo.Inputs }}
-  {{ $routeInfo.Base }}/{{ $sink.URL }}/{{ $input }}/{safety}: #TODO should input be a swagger parm?
+  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - {{ routePkg $routeInfo }}
       description: demonstrates {{ $routeInfo.Name }} via {{ $input }}, with vulnerable function {{ $sink.Name }}
-      operationId: get{{ capital $input }}{{ $sink.Name }}
+      operationId: {{ routeIdentifier $routeInfo }}Get{{ capital $input }}{{ sinkName $sink }}
       produces:
         - text/plain
       parameters:

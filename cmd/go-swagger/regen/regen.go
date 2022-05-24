@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bytes"
 	_ "embed"
 	"errors"
 	"fmt"
@@ -37,12 +38,6 @@ func main() {
 			// skip
 			continue
 		}
-		switch strings.Trim(r.Base, "/ ") {
-		case "cmdInjection":
-		default:
-			// skip others for now
-			continue
-		}
 		if len(r.Sinks) > 0 && len(r.Sinks[0].Name) > 0 {
 			rlist = append(rlist, r)
 		}
@@ -68,15 +63,16 @@ func main() {
 	}
 	tfuncs := template.FuncMap{
 		"capital":         strings.Title,
-		"assignStmt":      assignStmt,
 		"routePkg":        routePkg,
 		"routeIdentifier": routeIdentifier,
+		"sinkName":        sinkName,
+		"sinkFn":          sinkFn,
 	}
 
 	if err = generateYaml(tdata, tfuncs, genYml); err != nil {
 		log.Fatal(err)
 	}
-	if err = runSwagger(); err != nil {
+	if err = runSwagger(cmdDir); err != nil {
 		log.Fatal(err)
 	}
 	swagPkg, err := findSwagPkg()
@@ -89,8 +85,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer goFmt(genGo)
 	defer g.Close()
 	if err = generateCode(tdata, tfuncs, g); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func goFmt(path string) {
+	gf := exec.Command("gofmt", "-w", path)
+	gf.Stderr, gf.Stdout = os.Stderr, os.Stdout
+	if err := gf.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -110,12 +115,19 @@ func generateYaml(tdata tmplData, tfuncs template.FuncMap, w io.Writer) error {
 	return tmpl.Execute(w, tdata)
 }
 
-func runSwagger() error {
-	if false {
-		exec.Command("go-swagger" /*... TODO */)
-		panic("unimplemented")
-	}
-	return nil
+func runSwagger(cmdDir string) error {
+	//swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
+	swag := exec.Command("swagger")
+	swag.Args = append(swag.Args,
+		"generate", "server",
+		"--target", cmdDir,
+		"--name", "SwaggerBench",
+		"--spec", filepath.Join(cmdDir, "swagger.yml"),
+		"--principal", "interface{}",
+		"--exclude-main",
+	)
+	swag.Stdout, swag.Stderr = os.Stdout, os.Stderr
+	return swag.Run()
 }
 
 func generateCode(td tmplData, tfuncs template.FuncMap, w io.Writer) error {
@@ -126,14 +138,12 @@ func generateCode(td tmplData, tfuncs template.FuncMap, w io.Writer) error {
 	return tmpl.Execute(w, td)
 }
 
-func assignStmt(r *common.Route, s *common.Sink, i string) string {
-	m := sinkFn(i, s)
-	return fmt.Sprintf("api.%s%sHandler = %s.%sHandlerFunc(%s)", routeIdentifier(r), m, routePkg(r), m, m)
-}
-
 //sink name, as used by swagger in url
 func sinkName(s *common.Sink) string {
 	fname := s.URL
+	if len(fname) == 0 {
+		return "Sink"
+	}
 	idx := strings.LastIndexByte(fname, '.')
 	if idx < 0 {
 		return exportIdentifier(fname)
@@ -143,7 +153,7 @@ func sinkName(s *common.Sink) string {
 
 // name of wrapper around vulnerable function
 func sinkFn(in string, s *common.Sink) string {
-	return "Get" + strings.Title(in) + sinkName(s)
+	return "Get" + exportIdentifier(in) + sinkName(s)
 }
 
 // generates package name swagger uses for route
@@ -153,7 +163,6 @@ func routePkg(r *common.Route) string {
 	// ignore 0th letter - start at 1
 	j := 1
 	for i := 1; i < len(r.Base); i++ {
-		// fmt.Fprintf(os.Stderr, "i=%d j=%d n=%d N=%d\n", i, j, len(name), len(r.Name))
 		if pkg[j] != r.Base[i] {
 			//case changed, insert underscore (and advance 1)
 			pkg = pkg[:j] + "_" + pkg[j:]
@@ -161,20 +170,25 @@ func routePkg(r *common.Route) string {
 		}
 		j++
 	}
-	pkg = strings.TrimLeft(pkg, " -/")
-	return strings.TrimRight(pkg, " -/")
+	return strings.Trim(pkg, "-_ /")
 }
 
 //return an identifier for the route, suitable for use in an exported function name
-func routeIdentifier(r *common.Route) string {
-	return exportIdentifier(r.Base)
-}
+func routeIdentifier(r *common.Route) string { return exportIdentifier(r.Base) }
+
+//return an identifier suitable for use in an exported function name
 func exportIdentifier(id string) string {
-	id = strings.TrimLeft(id, "-./ _")
-	id = strings.TrimRight(id, "-./ +")
-	id = strings.ReplaceAll(id, "-", "_")
-	id = strings.ReplaceAll(id, ".", "_")
-	return strings.Title(id)
+	id = strings.Trim(id, "-./ _")
+	id = capitalizeAfter(id, "-._")
+	switch id {
+	case "xss", "xsrf":
+		//swagger replaces lowercase initialisms that the linter would complain about
+		// swag: https://github.com/go-openapi/swag/blob/e09cc4d/util.go#L41
+		// upstream: https://github.com/golang/lint/blob/3390df4df2787994aea98de825b964ac7944b817/lint.go#L732-L769
+		return strings.ToUpper(id)
+	default:
+		return strings.Title(id)
+	}
 }
 
 func findSwagCmd() (string, error) { return locateDir("cmd/go-swagger", 5) }
@@ -199,4 +213,23 @@ func locateDir(dir string, maxTries int) (string, error) {
 		return "", errors.New("not a dir")
 	}
 	return "", fmt.Errorf("cannot find %s after %d tries", dir, tries)
+}
+
+// remove any special symbol and capitalize the following letter
+func capitalizeAfter(s string, special string) string {
+	in := []byte(s)
+	for {
+		idx := bytes.IndexAny(in, special)
+		if idx == -1 {
+			return string(in)
+		}
+		if idx == len(in)-1 {
+			//last char
+			return string(in[:idx])
+		}
+		in = append(in[:idx], in[idx+1:]...)
+		if in[idx] >= 'a' && in[idx] <= 'z' {
+			in[idx] -= 'a' - 'A'
+		}
+	}
 }

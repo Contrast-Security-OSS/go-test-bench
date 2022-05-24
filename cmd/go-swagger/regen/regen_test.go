@@ -17,21 +17,21 @@ func Test_routePkg(t *testing.T) {
 		{
 			name: "1",
 			rt: common.Route{
-				Name: "cmdInjection",
+				Base: "/cmdInjection",
 			},
 			want: "cmd_injection",
 		},
 		{
 			name: "2",
 			rt: common.Route{
-				Name: "a",
+				Base: "/a",
 			},
 			want: "a",
 		},
 		{
 			name: "3",
 			rt: common.Route{
-				Name: "XaaaaaaaaaaajAAAAnnnnnnnnnnnnnnnnnn",
+				Base: "/XaaaaaaaaaaajAAAAnnnnnnnnnnnnnnnnnn",
 			},
 			want: "xaaaaaaaaaaaj_a_a_a_annnnnnnnnnnnnnnnnn",
 		},
