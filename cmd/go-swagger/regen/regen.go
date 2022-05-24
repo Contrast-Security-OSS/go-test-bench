@@ -183,16 +183,15 @@ func routeIdentifier(r *common.Route) string { return exportIdentifier(r.Base) }
 //return an identifier suitable for use in an exported function name
 func exportIdentifier(id string) string {
 	id = strings.Trim(id, "-./ _")
-	id = capitalizeAfter(id, "-._")
-	switch id {
-	case "xss", "xsrf":
-		//swagger replaces lowercase initialisms that the linter would complain about
-		// swag: https://github.com/go-openapi/swag/blob/e09cc4d/util.go#L41
-		// upstream: https://github.com/golang/lint/blob/3390df4df2787994aea98de825b964ac7944b817/lint.go#L732-L769
-		return strings.ToUpper(id)
-	default:
-		return strings.Title(id)
+	//swagger replaces lowercase initialisms that the linter would complain about
+	// swag: https://github.com/go-openapi/swag/blob/e09cc4d/util.go#L41
+	// upstream: https://github.com/golang/lint/blob/3390df4df2787994aea98de825b964ac7944b817/lint.go#L732-L769
+	initialisms := []string{"xss", "xsrf", "sql", "json"}
+	for _, s := range initialisms {
+		id = strings.ReplaceAll(id, s, strings.ToUpper(s))
 	}
+	id = capitalizeAfter(id, "-._")
+	return strings.Title(id)
 }
 
 func findSwagCmd() (string, error) { return locateDir("cmd/go-swagger", 5) }
