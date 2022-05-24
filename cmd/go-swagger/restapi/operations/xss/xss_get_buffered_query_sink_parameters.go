@@ -26,7 +26,7 @@ func NewXSSGetBufferedQuerySinkParams() XSSGetBufferedQuerySinkParams {
 // XSSGetBufferedQuerySinkParams contains all the bound params for the XSS get buffered query sink operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters XSSGetBuffered-QuerySink
+// swagger:parameters XSSGetBufferedQuerySink
 type XSSGetBufferedQuerySinkParams struct {
 
 	// HTTP Request Object

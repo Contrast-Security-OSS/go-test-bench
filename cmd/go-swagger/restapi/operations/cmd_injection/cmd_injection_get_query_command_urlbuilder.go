@@ -42,7 +42,7 @@ func (o *CmdInjectionGetQueryCommandURL) SetBasePath(bp string) {
 func (o *CmdInjectionGetQueryCommandURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/cmdInjection/Command/query/{safety}"
+	var _path = "/cmdInjection/exec.Command/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

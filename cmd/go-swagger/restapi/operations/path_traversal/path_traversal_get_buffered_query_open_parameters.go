@@ -26,7 +26,7 @@ func NewPathTraversalGetBufferedQueryOpenParams() PathTraversalGetBufferedQueryO
 // PathTraversalGetBufferedQueryOpenParams contains all the bound params for the path traversal get buffered query open operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PathTraversalGetBuffered-QueryOpen
+// swagger:parameters PathTraversalGetBufferedQueryOpen
 type PathTraversalGetBufferedQueryOpenParams struct {
 
 	// HTTP Request Object

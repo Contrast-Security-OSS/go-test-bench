@@ -29,7 +29,7 @@ func NewPathTraversalGetBufferedQueryReadFile(ctx *middleware.Context, handler P
 	return &PathTraversalGetBufferedQueryReadFile{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetBufferedQueryReadFile swagger:route GET /pathTraversal/ReadFile/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryReadFile
+/* PathTraversalGetBufferedQueryReadFile swagger:route GET /pathTraversal/os.ReadFile/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryReadFile
 
 demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile
 

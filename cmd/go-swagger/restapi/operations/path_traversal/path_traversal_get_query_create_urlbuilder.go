@@ -42,7 +42,7 @@ func (o *PathTraversalGetQueryCreateURL) SetBasePath(bp string) {
 func (o *PathTraversalGetQueryCreateURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pathTraversal/Create/query/{safety}"
+	var _path = "/pathTraversal/os.Create/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

@@ -29,7 +29,7 @@ func NewPathTraversalGetQueryOpen(ctx *middleware.Context, handler PathTraversal
 	return &PathTraversalGetQueryOpen{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetQueryOpen swagger:route GET /pathTraversal/Open/query/{safety} path_traversal pathTraversalGetQueryOpen
+/* PathTraversalGetQueryOpen swagger:route GET /pathTraversal/os.Open/query/{safety} path_traversal pathTraversalGetQueryOpen
 
 demonstrates Path Traversal via query, with vulnerable function os.Open
 

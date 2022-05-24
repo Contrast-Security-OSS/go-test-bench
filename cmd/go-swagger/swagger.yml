@@ -1,5 +1,5 @@
 # GENERATED CODE - DO NOT EDIT
-# Generated at 2022-05-24T15:44:12Z. To re-generate, run the following in the repo root:
+# Generated at 2022-05-24T19:34:18Z. To re-generate, run the following in the repo root:
 # go run ./cmd/go-swagger/regen/regen.go
 
 consumes:
@@ -46,7 +46,7 @@ paths:
             type: string
         default:
           description: error occured
-  /cmdInjection/Command/query/{safety}: #TODO should input be a swagger parm?
+  /cmdInjection/exec.Command/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - cmd_injection
@@ -69,58 +69,12 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /cmdInjection/Command/cookies/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - cmd_injection
-      description: demonstrates Command Injection via cookies, with vulnerable function exec.Command
-      operationId: CmdInjectionGetCookiesCommand
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /cmdInjection/CommandContext/query/{safety}: #TODO should input be a swagger parm?
+  /cmdInjection/exec.CommandContext/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - cmd_injection
       description: demonstrates Command Injection via query, with vulnerable function exec.CommandContext
       operationId: CmdInjectionGetQueryCommandContext
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /cmdInjection/CommandContext/cookies/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - cmd_injection
-      description: demonstrates Command Injection via cookies, with vulnerable function exec.CommandContext
-      operationId: CmdInjectionGetCookiesCommandContext
       produces:
         - text/plain
       parameters:
@@ -154,7 +108,7 @@ paths:
             type: string
         default:
           description: error occured
-  /pathTraversal/ReadFile/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.ReadFile/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
@@ -177,12 +131,12 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/ReadFile/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.ReadFile/buffered-query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
       description: demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile
-      operationId: PathTraversalGetBuffered-QueryReadFile
+      operationId: PathTraversalGetBufferedQueryReadFile
       produces:
         - text/plain
       parameters:
@@ -200,53 +154,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/ReadFile/headers/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via headers, with vulnerable function os.ReadFile
-      operationId: PathTraversalGetHeadersReadFile
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/ReadFile/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via body, with vulnerable function os.ReadFile
-      operationId: PathTraversalGetBodyReadFile
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/Open/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Open/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
@@ -269,12 +177,12 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/Open/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Open/buffered-query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
       description: demonstrates Path Traversal via buffered-query, with vulnerable function os.Open
-      operationId: PathTraversalGetBuffered-QueryOpen
+      operationId: PathTraversalGetBufferedQueryOpen
       produces:
         - text/plain
       parameters:
@@ -292,53 +200,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/Open/headers/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via headers, with vulnerable function os.Open
-      operationId: PathTraversalGetHeadersOpen
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/Open/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via body, with vulnerable function os.Open
-      operationId: PathTraversalGetBodyOpen
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/WriteFile/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.WriteFile/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
@@ -361,12 +223,12 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/WriteFile/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.WriteFile/buffered-query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
       description: demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile
-      operationId: PathTraversalGetBuffered-QueryWriteFile
+      operationId: PathTraversalGetBufferedQueryWriteFile
       produces:
         - text/plain
       parameters:
@@ -384,53 +246,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/WriteFile/headers/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via headers, with vulnerable function os.WriteFile
-      operationId: PathTraversalGetHeadersWriteFile
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/WriteFile/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via body, with vulnerable function os.WriteFile
-      operationId: PathTraversalGetBodyWriteFile
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/Create/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Create/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
@@ -453,58 +269,12 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/Create/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Create/buffered-query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - path_traversal
       description: demonstrates Path Traversal via buffered-query, with vulnerable function os.Create
-      operationId: PathTraversalGetBuffered-QueryCreate
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/Create/headers/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via headers, with vulnerable function os.Create
-      operationId: PathTraversalGetHeadersCreate
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /pathTraversal/Create/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - path_traversal
-      description: demonstrates Path Traversal via body, with vulnerable function os.Create
-      operationId: PathTraversalGetBodyCreate
+      operationId: PathTraversalGetBufferedQueryCreate
       produces:
         - text/plain
       parameters:
@@ -566,99 +336,7 @@ paths:
       tags:
         - xss
       description: demonstrates Reflected XSS via buffered-query, with vulnerable function _
-      operationId: XSSGetBuffered-QuerySink
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /xss/Sink/params/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - xss
-      description: demonstrates Reflected XSS via params, with vulnerable function _
-      operationId: XSSGetParamsSink
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /xss/Sink/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - xss
-      description: demonstrates Reflected XSS via body, with vulnerable function _
-      operationId: XSSGetBodySink
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /xss/Sink/buffered-body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - xss
-      description: demonstrates Reflected XSS via buffered-body, with vulnerable function _
-      operationId: XSSGetBuffered-BodySink
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /xss/Sink/response/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - xss
-      description: demonstrates Reflected XSS via response, with vulnerable function _
-      operationId: XSSGetResponseSink
+      operationId: XSSGetBufferedQuerySink
       produces:
         - text/plain
       parameters:
@@ -692,58 +370,12 @@ paths:
             type: string
         default:
           description: error occured
-  /sqlInjection/Exec/body/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - sql_injection
-      description: demonstrates SQL Injection via body, with vulnerable function sqlite3.exec
-      operationId: SQLInjectionGetBodyExec
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /sqlInjection/Exec/query/{safety}: #TODO should input be a swagger parm?
+  /sqlInjection/sqlite3.exec/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - sql_injection
       description: demonstrates SQL Injection via query, with vulnerable function sqlite3.exec
       operationId: SQLInjectionGetQueryExec
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
-  /sqlInjection/Exec/headers-json/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - sql_injection
-      description: demonstrates SQL Injection via headers-json, with vulnerable function sqlite3.exec
-      operationId: SQLInjectionGetHeaders-JsonExec
       produces:
         - text/plain
       parameters:
@@ -800,29 +432,6 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /ssrf/Sink/path/{safety}: #TODO should input be a swagger parm?
-    get:
-      tags:
-        - ssrf
-      description: demonstrates Server Side Request Forgery via path, with vulnerable function _
-      operationId: SsrfGetPathSink
-      produces:
-        - text/plain
-      parameters:
-        - $ref: "#/parameters/safetyParam"
-        - name: input
-          in: query #TODO how to handle other inputs
-          description: the user provided input for the query vulnerability
-          required: true
-          type: string
-      responses:
-        200:
-          description: returns the rendered response as a string
-          schema:
-            type: string
-            description: The response when succesful query happens
-        default:
-          description: Error occured
 
   /unvalidatedRedirect:
     get:
@@ -839,7 +448,7 @@ paths:
             type: string
         default:
           description: error occured
-  /unvalidatedRedirect/Redirect/query/{safety}: #TODO should input be a swagger parm?
+  /unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
         - unvalidated_redirect

@@ -29,7 +29,7 @@ func NewUnvalidatedRedirectGetQueryRedirect(ctx *middleware.Context, handler Unv
 	return &UnvalidatedRedirectGetQueryRedirect{Context: ctx, Handler: handler}
 }
 
-/* UnvalidatedRedirectGetQueryRedirect swagger:route GET /unvalidatedRedirect/Redirect/query/{safety} unvalidated_redirect unvalidatedRedirectGetQueryRedirect
+/* UnvalidatedRedirectGetQueryRedirect swagger:route GET /unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety} unvalidated_redirect unvalidatedRedirectGetQueryRedirect
 
 demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect
 

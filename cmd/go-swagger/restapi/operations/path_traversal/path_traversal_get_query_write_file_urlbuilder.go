@@ -42,7 +42,7 @@ func (o *PathTraversalGetQueryWriteFileURL) SetBasePath(bp string) {
 func (o *PathTraversalGetQueryWriteFileURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pathTraversal/WriteFile/query/{safety}"
+	var _path = "/pathTraversal/os.WriteFile/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

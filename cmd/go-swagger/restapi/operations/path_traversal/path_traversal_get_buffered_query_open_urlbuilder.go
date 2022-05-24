@@ -42,7 +42,7 @@ func (o *PathTraversalGetBufferedQueryOpenURL) SetBasePath(bp string) {
 func (o *PathTraversalGetBufferedQueryOpenURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pathTraversal/Open/buffered-query/{safety}"
+	var _path = "/pathTraversal/os.Open/buffered-query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

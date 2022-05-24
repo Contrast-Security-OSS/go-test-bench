@@ -42,7 +42,7 @@ func (o *SQLInjectionGetQueryExecURL) SetBasePath(bp string) {
 func (o *SQLInjectionGetQueryExecURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/sqlInjection/Exec/query/{safety}"
+	var _path = "/sqlInjection/sqlite3.exec/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

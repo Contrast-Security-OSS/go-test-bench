@@ -29,7 +29,7 @@ func NewPathTraversalGetBufferedQueryWriteFile(ctx *middleware.Context, handler 
 	return &PathTraversalGetBufferedQueryWriteFile{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetBufferedQueryWriteFile swagger:route GET /pathTraversal/WriteFile/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryWriteFile
+/* PathTraversalGetBufferedQueryWriteFile swagger:route GET /pathTraversal/os.WriteFile/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryWriteFile
 
 demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile
 

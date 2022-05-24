@@ -29,7 +29,7 @@ func NewPathTraversalGetQueryCreate(ctx *middleware.Context, handler PathTravers
 	return &PathTraversalGetQueryCreate{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetQueryCreate swagger:route GET /pathTraversal/Create/query/{safety} path_traversal pathTraversalGetQueryCreate
+/* PathTraversalGetQueryCreate swagger:route GET /pathTraversal/os.Create/query/{safety} path_traversal pathTraversalGetQueryCreate
 
 demonstrates Path Traversal via query, with vulnerable function os.Create
 

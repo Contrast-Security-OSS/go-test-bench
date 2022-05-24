@@ -26,7 +26,7 @@ func NewPathTraversalGetBufferedQueryReadFileParams() PathTraversalGetBufferedQu
 // PathTraversalGetBufferedQueryReadFileParams contains all the bound params for the path traversal get buffered query read file operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PathTraversalGetBuffered-QueryReadFile
+// swagger:parameters PathTraversalGetBufferedQueryReadFile
 type PathTraversalGetBufferedQueryReadFileParams struct {
 
 	// HTTP Request Object

@@ -26,7 +26,7 @@ func NewPathTraversalGetBufferedQueryCreateParams() PathTraversalGetBufferedQuer
 // PathTraversalGetBufferedQueryCreateParams contains all the bound params for the path traversal get buffered query create operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PathTraversalGetBuffered-QueryCreate
+// swagger:parameters PathTraversalGetBufferedQueryCreate
 type PathTraversalGetBufferedQueryCreateParams struct {
 
 	// HTTP Request Object

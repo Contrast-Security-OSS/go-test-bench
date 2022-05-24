@@ -42,7 +42,7 @@ func (o *PathTraversalGetQueryReadFileURL) SetBasePath(bp string) {
 func (o *PathTraversalGetQueryReadFileURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pathTraversal/ReadFile/query/{safety}"
+	var _path = "/pathTraversal/os.ReadFile/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {
