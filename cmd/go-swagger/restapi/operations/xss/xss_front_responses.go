@@ -14,7 +14,7 @@ import (
 // XSSFrontOKCode is the HTTP code returned for type XSSFrontOK
 const XSSFrontOKCode int = 200
 
-/*XSSFrontOK served front end for xss page of Swagger API
+/*XSSFrontOK served front end for Reflected XSS page of Swagger API
 
 swagger:response xssFrontOK
 */
@@ -72,13 +72,13 @@ func NewXSSFrontDefault(code int) *XSSFrontDefault {
 	}
 }
 
-// WithStatusCode adds the status to the xss front default response
+// WithStatusCode adds the status to the XSS front default response
 func (o *XSSFrontDefault) WithStatusCode(code int) *XSSFrontDefault {
 	o._statusCode = code
 	return o
 }
 
-// SetStatusCode sets the status to the xss front default response
+// SetStatusCode sets the status to the XSS front default response
 func (o *XSSFrontDefault) SetStatusCode(code int) {
 	o._statusCode = code
 }

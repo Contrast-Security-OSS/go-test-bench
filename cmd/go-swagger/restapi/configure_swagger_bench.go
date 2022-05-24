@@ -21,7 +21,9 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
 )
 
-//go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
+//go:generate go run ../regen/regen.go
+
+//original generate command: go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
 
 func configureFlags(api *operations.SwaggerBenchAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -52,6 +54,7 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		})
 	}
+	// CmdInjectionGetCookiesexecCommandHandler
 	if api.CmdInjectionGetQueryCommandHandler == nil {
 		api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
 			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
@@ -129,8 +132,6 @@ func uiMiddleware(handler http.Handler) http.Handler {
 		handler.ServeHTTP(w, r)
 	})
 }
-
-
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.

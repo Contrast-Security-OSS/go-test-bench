@@ -31,7 +31,7 @@ func NewSsrfFront(ctx *middleware.Context, handler SsrfFrontHandler) *SsrfFront 
 
 /* SsrfFront swagger:route GET /ssrf ssrf ssrfFront
 
-front page of the SSRF vulnerability
+front page of the Server Side Request Forgery vulnerability
 
 */
 type SsrfFront struct {

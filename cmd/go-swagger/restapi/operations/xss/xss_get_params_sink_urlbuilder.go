@@ -9,17 +9,24 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
 )
 
-// XSSFrontURL generates an URL for the XSS front operation
-type XSSFrontURL struct {
+// XSSGetParamsSinkURL generates an URL for the XSS get params sink operation
+type XSSGetParamsSinkURL struct {
+	Safety string
+
+	Input string
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *XSSFrontURL) WithBasePath(bp string) *XSSFrontURL {
+func (o *XSSGetParamsSinkURL) WithBasePath(bp string) *XSSGetParamsSinkURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -27,24 +34,40 @@ func (o *XSSFrontURL) WithBasePath(bp string) *XSSFrontURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *XSSFrontURL) SetBasePath(bp string) {
+func (o *XSSGetParamsSinkURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *XSSFrontURL) Build() (*url.URL, error) {
+func (o *XSSGetParamsSinkURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/xss"
+	var _path = "/xss/Sink/params/{safety}"
+
+	safety := o.Safety
+	if safety != "" {
+		_path = strings.Replace(_path, "{safety}", safety, -1)
+	} else {
+		return nil, errors.New("safety is required on XSSGetParamsSinkURL")
+	}
 
 	_basePath := o._basePath
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
+
+	qs := make(url.Values)
+
+	inputQ := o.Input
+	if inputQ != "" {
+		qs.Set("input", inputQ)
+	}
+
+	_result.RawQuery = qs.Encode()
 
 	return &_result, nil
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *XSSFrontURL) Must(u *url.URL, err error) *url.URL {
+func (o *XSSGetParamsSinkURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -55,17 +78,17 @@ func (o *XSSFrontURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *XSSFrontURL) String() string {
+func (o *XSSGetParamsSinkURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *XSSFrontURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *XSSGetParamsSinkURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on XSSFrontURL")
+		return nil, errors.New("scheme is required for a full url on XSSGetParamsSinkURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on XSSFrontURL")
+		return nil, errors.New("host is required for a full url on XSSGetParamsSinkURL")
 	}
 
 	base, err := o.Build()
@@ -79,6 +102,6 @@ func (o *XSSFrontURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *XSSFrontURL) StringFull(scheme, host string) string {
+func (o *XSSGetParamsSinkURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

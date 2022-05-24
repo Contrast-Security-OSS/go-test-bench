@@ -15,19 +15,19 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewGetQueryCommandContextParams creates a new GetQueryCommandContextParams object
+// NewCmdInjectionGetCookiesCommandContextParams creates a new CmdInjectionGetCookiesCommandContextParams object
 //
 // There are no default values defined in the spec.
-func NewGetQueryCommandContextParams() GetQueryCommandContextParams {
+func NewCmdInjectionGetCookiesCommandContextParams() CmdInjectionGetCookiesCommandContextParams {
 
-	return GetQueryCommandContextParams{}
+	return CmdInjectionGetCookiesCommandContextParams{}
 }
 
-// GetQueryCommandContextParams contains all the bound params for the get query command context operation
+// CmdInjectionGetCookiesCommandContextParams contains all the bound params for the cmd injection get cookies command context operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getQueryCommandContext
-type GetQueryCommandContextParams struct {
+// swagger:parameters CmdInjectionGetCookiesCommandContext
+type CmdInjectionGetCookiesCommandContextParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -47,8 +47,8 @@ type GetQueryCommandContextParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetQueryCommandContextParams() beforehand.
-func (o *GetQueryCommandContextParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewCmdInjectionGetCookiesCommandContextParams() beforehand.
+func (o *CmdInjectionGetCookiesCommandContextParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -71,7 +71,7 @@ func (o *GetQueryCommandContextParams) BindRequest(r *http.Request, route *middl
 }
 
 // bindInput binds and validates parameter Input from query.
-func (o *GetQueryCommandContextParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *CmdInjectionGetCookiesCommandContextParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("input", "query", rawData)
 	}
@@ -92,7 +92,7 @@ func (o *GetQueryCommandContextParams) bindInput(rawData []string, hasKey bool, 
 }
 
 // bindSafety binds and validates parameter Safety from path.
-func (o *GetQueryCommandContextParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *CmdInjectionGetCookiesCommandContextParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -110,7 +110,7 @@ func (o *GetQueryCommandContextParams) bindSafety(rawData []string, hasKey bool,
 }
 
 // validateSafety carries on validations for parameter Safety
-func (o *GetQueryCommandContextParams) validateSafety(formats strfmt.Registry) error {
+func (o *CmdInjectionGetCookiesCommandContextParams) validateSafety(formats strfmt.Registry) error {
 
 	if err := validate.EnumCase("safety", "path", o.Safety, []interface{}{"safe", "unsafe", "noop"}, true); err != nil {
 		return err

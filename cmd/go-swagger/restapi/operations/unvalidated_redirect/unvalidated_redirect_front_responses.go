@@ -14,7 +14,7 @@ import (
 // UnvalidatedRedirectFrontOKCode is the HTTP code returned for type UnvalidatedRedirectFrontOK
 const UnvalidatedRedirectFrontOKCode int = 200
 
-/*UnvalidatedRedirectFrontOK served front end for unvalidated redirect of the Swagger API
+/*UnvalidatedRedirectFrontOK served front end for Unvalidated Redirect page of Swagger API
 
 swagger:response unvalidatedRedirectFrontOK
 */

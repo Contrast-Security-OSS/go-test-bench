@@ -21,8 +21,6 @@ import (
 	"github.com/go-openapi/swag"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/path_traversal"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/sql_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
@@ -58,29 +56,56 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		CmdInjectionCmdInjectionFrontHandler: cmd_injection.CmdInjectionFrontHandlerFunc(func(params cmd_injection.CmdInjectionFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		}),
-		CmdInjectionGetQueryCommandHandler: cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
+		CmdInjectionCmdInjectionGetCookiesCommandHandler: cmd_injection.CmdInjectionGetCookiesCommandHandlerFunc(func(params cmd_injection.CmdInjectionGetCookiesCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetCookiesCommand has not yet been implemented")
 		}),
-		CmdInjectionGetQueryCommandContextHandler: cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommandContext has not yet been implemented")
+		CmdInjectionCmdInjectionGetCookiesCommandContextHandler: cmd_injection.CmdInjectionGetCookiesCommandContextHandlerFunc(func(params cmd_injection.CmdInjectionGetCookiesCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetCookiesCommandContext has not yet been implemented")
 		}),
-		PathTraversalPathTraversalFrontHandler: path_traversal.PathTraversalFrontHandlerFunc(func(params path_traversal.PathTraversalFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
+		CmdInjectionCmdInjectionGetQueryCommandHandler: cmd_injection.CmdInjectionGetQueryCommandHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommand has not yet been implemented")
 		}),
-		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
-			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
-		}),
-		SQLInjectionSQLInjectionFrontHandler: sql_injection.SQLInjectionFrontHandlerFunc(func(params sql_injection.SQLInjectionFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation sql_injection.SQLInjectionFront has not yet been implemented")
+		CmdInjectionCmdInjectionGetQueryCommandContextHandler: cmd_injection.CmdInjectionGetQueryCommandContextHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommandContext has not yet been implemented")
 		}),
 		SsrfSsrfFrontHandler: ssrf.SsrfFrontHandlerFunc(func(params ssrf.SsrfFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
 		}),
+		SsrfSsrfGetPathSinkHandler: ssrf.SsrfGetPathSinkHandlerFunc(func(params ssrf.SsrfGetPathSinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation ssrf.SsrfGetPathSink has not yet been implemented")
+		}),
+		SsrfSsrfGetQuerySinkHandler: ssrf.SsrfGetQuerySinkHandlerFunc(func(params ssrf.SsrfGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
+		}),
 		UnvalidatedRedirectUnvalidatedRedirectFrontHandler: unvalidated_redirect.UnvalidatedRedirectFrontHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
 		}),
+		UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler: unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectParams) middleware.Responder {
+			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectGetQueryRedirect has not yet been implemented")
+		}),
 		XSSXSSFrontHandler: xss.XSSFrontHandlerFunc(func(params xss.XSSFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSFront has not yet been implemented")
+		}),
+		XSSXSSGetBodySinkHandler: xss.XSSGetBodySinkHandlerFunc(func(params xss.XSSGetBodySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBodySink has not yet been implemented")
+		}),
+		XSSXSSGetBufferedBodySinkHandler: xss.XSSGetBufferedBodySinkHandlerFunc(func(params xss.XSSGetBufferedBodySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBufferedBodySink has not yet been implemented")
+		}),
+		XSSXSSGetBufferedQuerySinkHandler: xss.XSSGetBufferedQuerySinkHandlerFunc(func(params xss.XSSGetBufferedQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBufferedQuerySink has not yet been implemented")
+		}),
+		XSSXSSGetParamsSinkHandler: xss.XSSGetParamsSinkHandlerFunc(func(params xss.XSSGetParamsSinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetParamsSink has not yet been implemented")
+		}),
+		XSSXSSGetQuerySinkHandler: xss.XSSGetQuerySinkHandlerFunc(func(params xss.XSSGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetQuerySink has not yet been implemented")
+		}),
+		XSSXSSGetResponseSinkHandler: xss.XSSGetResponseSinkHandlerFunc(func(params xss.XSSGetResponseSinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetResponseSink has not yet been implemented")
+		}),
+		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
+			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
 		}),
 	}
 }
@@ -126,22 +151,40 @@ type SwaggerBenchAPI struct {
 
 	// CmdInjectionCmdInjectionFrontHandler sets the operation handler for the cmd injection front operation
 	CmdInjectionCmdInjectionFrontHandler cmd_injection.CmdInjectionFrontHandler
-	// CmdInjectionGetQueryCommandHandler sets the operation handler for the get query command operation
-	CmdInjectionGetQueryCommandHandler cmd_injection.GetQueryCommandHandler
-	// CmdInjectionGetQueryCommandContextHandler sets the operation handler for the get query command context operation
-	CmdInjectionGetQueryCommandContextHandler cmd_injection.GetQueryCommandContextHandler
-	// PathTraversalPathTraversalFrontHandler sets the operation handler for the path traversal front operation
-	PathTraversalPathTraversalFrontHandler path_traversal.PathTraversalFrontHandler
-	// SwaggerServerRootHandler sets the operation handler for the root operation
-	SwaggerServerRootHandler swagger_server.RootHandler
-	// SQLInjectionSQLInjectionFrontHandler sets the operation handler for the sql injection front operation
-	SQLInjectionSQLInjectionFrontHandler sql_injection.SQLInjectionFrontHandler
+	// CmdInjectionCmdInjectionGetCookiesCommandHandler sets the operation handler for the cmd injection get cookies command operation
+	CmdInjectionCmdInjectionGetCookiesCommandHandler cmd_injection.CmdInjectionGetCookiesCommandHandler
+	// CmdInjectionCmdInjectionGetCookiesCommandContextHandler sets the operation handler for the cmd injection get cookies command context operation
+	CmdInjectionCmdInjectionGetCookiesCommandContextHandler cmd_injection.CmdInjectionGetCookiesCommandContextHandler
+	// CmdInjectionCmdInjectionGetQueryCommandHandler sets the operation handler for the cmd injection get query command operation
+	CmdInjectionCmdInjectionGetQueryCommandHandler cmd_injection.CmdInjectionGetQueryCommandHandler
+	// CmdInjectionCmdInjectionGetQueryCommandContextHandler sets the operation handler for the cmd injection get query command context operation
+	CmdInjectionCmdInjectionGetQueryCommandContextHandler cmd_injection.CmdInjectionGetQueryCommandContextHandler
 	// SsrfSsrfFrontHandler sets the operation handler for the ssrf front operation
 	SsrfSsrfFrontHandler ssrf.SsrfFrontHandler
+	// SsrfSsrfGetPathSinkHandler sets the operation handler for the ssrf get path sink operation
+	SsrfSsrfGetPathSinkHandler ssrf.SsrfGetPathSinkHandler
+	// SsrfSsrfGetQuerySinkHandler sets the operation handler for the ssrf get query sink operation
+	SsrfSsrfGetQuerySinkHandler ssrf.SsrfGetQuerySinkHandler
 	// UnvalidatedRedirectUnvalidatedRedirectFrontHandler sets the operation handler for the unvalidated redirect front operation
 	UnvalidatedRedirectUnvalidatedRedirectFrontHandler unvalidated_redirect.UnvalidatedRedirectFrontHandler
-	// XSSXSSFrontHandler sets the operation handler for the xss front operation
+	// UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler sets the operation handler for the unvalidated redirect get query redirect operation
+	UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler
+	// XSSXSSFrontHandler sets the operation handler for the XSS front operation
 	XSSXSSFrontHandler xss.XSSFrontHandler
+	// XSSXSSGetBodySinkHandler sets the operation handler for the XSS get body sink operation
+	XSSXSSGetBodySinkHandler xss.XSSGetBodySinkHandler
+	// XSSXSSGetBufferedBodySinkHandler sets the operation handler for the XSS get buffered body sink operation
+	XSSXSSGetBufferedBodySinkHandler xss.XSSGetBufferedBodySinkHandler
+	// XSSXSSGetBufferedQuerySinkHandler sets the operation handler for the XSS get buffered query sink operation
+	XSSXSSGetBufferedQuerySinkHandler xss.XSSGetBufferedQuerySinkHandler
+	// XSSXSSGetParamsSinkHandler sets the operation handler for the XSS get params sink operation
+	XSSXSSGetParamsSinkHandler xss.XSSGetParamsSinkHandler
+	// XSSXSSGetQuerySinkHandler sets the operation handler for the XSS get query sink operation
+	XSSXSSGetQuerySinkHandler xss.XSSGetQuerySinkHandler
+	// XSSXSSGetResponseSinkHandler sets the operation handler for the XSS get response sink operation
+	XSSXSSGetResponseSinkHandler xss.XSSGetResponseSinkHandler
+	// SwaggerServerRootHandler sets the operation handler for the root operation
+	SwaggerServerRootHandler swagger_server.RootHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -228,29 +271,56 @@ func (o *SwaggerBenchAPI) Validate() error {
 	if o.CmdInjectionCmdInjectionFrontHandler == nil {
 		unregistered = append(unregistered, "cmd_injection.CmdInjectionFrontHandler")
 	}
-	if o.CmdInjectionGetQueryCommandHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.GetQueryCommandHandler")
+	if o.CmdInjectionCmdInjectionGetCookiesCommandHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetCookiesCommandHandler")
 	}
-	if o.CmdInjectionGetQueryCommandContextHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.GetQueryCommandContextHandler")
+	if o.CmdInjectionCmdInjectionGetCookiesCommandContextHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetCookiesCommandContextHandler")
 	}
-	if o.PathTraversalPathTraversalFrontHandler == nil {
-		unregistered = append(unregistered, "path_traversal.PathTraversalFrontHandler")
+	if o.CmdInjectionCmdInjectionGetQueryCommandHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetQueryCommandHandler")
 	}
-	if o.SwaggerServerRootHandler == nil {
-		unregistered = append(unregistered, "swagger_server.RootHandler")
-	}
-	if o.SQLInjectionSQLInjectionFrontHandler == nil {
-		unregistered = append(unregistered, "sql_injection.SQLInjectionFrontHandler")
+	if o.CmdInjectionCmdInjectionGetQueryCommandContextHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetQueryCommandContextHandler")
 	}
 	if o.SsrfSsrfFrontHandler == nil {
 		unregistered = append(unregistered, "ssrf.SsrfFrontHandler")
 	}
+	if o.SsrfSsrfGetPathSinkHandler == nil {
+		unregistered = append(unregistered, "ssrf.SsrfGetPathSinkHandler")
+	}
+	if o.SsrfSsrfGetQuerySinkHandler == nil {
+		unregistered = append(unregistered, "ssrf.SsrfGetQuerySinkHandler")
+	}
 	if o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
 		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectFrontHandler")
 	}
+	if o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler == nil {
+		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler")
+	}
 	if o.XSSXSSFrontHandler == nil {
 		unregistered = append(unregistered, "xss.XSSFrontHandler")
+	}
+	if o.XSSXSSGetBodySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetBodySinkHandler")
+	}
+	if o.XSSXSSGetBufferedBodySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetBufferedBodySinkHandler")
+	}
+	if o.XSSXSSGetBufferedQuerySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetBufferedQuerySinkHandler")
+	}
+	if o.XSSXSSGetParamsSinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetParamsSinkHandler")
+	}
+	if o.XSSXSSGetQuerySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetQuerySinkHandler")
+	}
+	if o.XSSXSSGetResponseSinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetResponseSinkHandler")
+	}
+	if o.SwaggerServerRootHandler == nil {
+		unregistered = append(unregistered, "swagger_server.RootHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -351,23 +421,19 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/cmdInjection/exec.Command/query/{safety}"] = cmd_injection.NewGetQueryCommand(o.context, o.CmdInjectionGetQueryCommandHandler)
+	o.handlers["GET"]["/cmdInjection/Command/cookies/{safety}"] = cmd_injection.NewCmdInjectionGetCookiesCommand(o.context, o.CmdInjectionCmdInjectionGetCookiesCommandHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/cmdInjection/exec.CommandContext/query/{safety}"] = cmd_injection.NewGetQueryCommandContext(o.context, o.CmdInjectionGetQueryCommandContextHandler)
+	o.handlers["GET"]["/cmdInjection/CommandContext/cookies/{safety}"] = cmd_injection.NewCmdInjectionGetCookiesCommandContext(o.context, o.CmdInjectionCmdInjectionGetCookiesCommandContextHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/pathTraversal"] = path_traversal.NewPathTraversalFront(o.context, o.PathTraversalPathTraversalFrontHandler)
+	o.handlers["GET"]["/cmdInjection/Command/query/{safety}"] = cmd_injection.NewCmdInjectionGetQueryCommand(o.context, o.CmdInjectionCmdInjectionGetQueryCommandHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"][""] = swagger_server.NewRoot(o.context, o.SwaggerServerRootHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/sqlInjection"] = sql_injection.NewSQLInjectionFront(o.context, o.SQLInjectionSQLInjectionFrontHandler)
+	o.handlers["GET"]["/cmdInjection/CommandContext/query/{safety}"] = cmd_injection.NewCmdInjectionGetQueryCommandContext(o.context, o.CmdInjectionCmdInjectionGetQueryCommandContextHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -375,11 +441,51 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/ssrf/Sink/path/{safety}"] = ssrf.NewSsrfGetPathSink(o.context, o.SsrfSsrfGetPathSinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/ssrf/Sink/query/{safety}"] = ssrf.NewSsrfGetQuerySink(o.context, o.SsrfSsrfGetQuerySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/unvalidatedRedirect"] = unvalidated_redirect.NewUnvalidatedRedirectFront(o.context, o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/unvalidatedRedirect/Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/xss"] = xss.NewXSSFront(o.context, o.XSSXSSFrontHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/body/{safety}"] = xss.NewXSSGetBodySink(o.context, o.XSSXSSGetBodySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/buffered-body/{safety}"] = xss.NewXSSGetBufferedBodySink(o.context, o.XSSXSSGetBufferedBodySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/buffered-query/{safety}"] = xss.NewXSSGetBufferedQuerySink(o.context, o.XSSXSSGetBufferedQuerySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/params/{safety}"] = xss.NewXSSGetParamsSink(o.context, o.XSSXSSGetParamsSinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/query/{safety}"] = xss.NewXSSGetQuerySink(o.context, o.XSSXSSGetQuerySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/response/{safety}"] = xss.NewXSSGetResponseSink(o.context, o.XSSXSSGetResponseSinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"][""] = swagger_server.NewRoot(o.context, o.SwaggerServerRootHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

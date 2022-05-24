@@ -29,7 +29,7 @@ func NewUnvalidatedRedirectFront(ctx *middleware.Context, handler UnvalidatedRed
 	return &UnvalidatedRedirectFront{Context: ctx, Handler: handler}
 }
 
-/* UnvalidatedRedirectFront swagger:route GET /unvalidatedRedirect unvalidated-redirect unvalidatedRedirectFront
+/* UnvalidatedRedirectFront swagger:route GET /unvalidatedRedirect unvalidated_redirect unvalidatedRedirectFront
 
 front page of the Unvalidated Redirect vulnerability
 

@@ -1,3 +1,7 @@
+# GENERATED CODE - DO NOT EDIT
+# Generated at 2022-05-24T15:26:21Z. To re-generate, run the following in the repo root:
+# go run ./cmd/go-swagger/regen/regen.go
+
 consumes:
   - application/io.goswagger.go-test-bench.v1+json
 info:
@@ -11,7 +15,6 @@ schemes:
 swagger: "2.0"
 
 paths:
-
   /:
     get:
       tags:
@@ -28,43 +31,36 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
-
   /cmdInjection:
     get:
       tags:
-        - cmd-injection
+        - cmd_injection
       summary: front page of the Command Injection vulnerability
-      operationId: cmdInjectionFront
+      operationId: CmdInjectionFront
       produces:
         - text/html
       responses:
         200:
-          description: served front end for command injection page of Swagger API
+          description: served front end for Command Injection page of Swagger API
           schema:
             type: string
         default:
           description: error occured
-
-
-  /cmdInjection/exec.Command/query/{safety}:
+  /cmdInjection/Command/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
-        - cmd-injection
-      description: |
-        Used to demonstrate how user input data can be passed to exec.Command
-      operationId: getQueryCommand
+        - cmd_injection
+      description: demonstrates Command Injection via query, with vulnerable function exec.Command
+      operationId: CmdInjectionGetQueryCommand
       produces:
         - text/plain
-
       parameters:
-        - $ref: '#/parameters/safetyParam'
-
-        -   name: input
-            in: query
-            description: the user provided input for the query vulnerability
-            required: true
-            type: string
-
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
       responses:
         200:
           description: returns the rendered response as a string
@@ -73,26 +69,67 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-
-  /cmdInjection/exec.CommandContext/query/{safety}:
+  /cmdInjection/Command/cookies/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
-        - cmd-injection
-      description: |
-        Used to demonstrate how user input data can be passed to exec.CommandContext
-      operationId: getQueryCommandContext
+        - cmd_injection
+      description: demonstrates Command Injection via cookies, with vulnerable function exec.Command
+      operationId: CmdInjectionGetCookiesCommand
       produces:
         - text/plain
-
       parameters:
-        - $ref: '#/parameters/safetyParam'
-
-        -   name: input
-            in: query
-            description: the user provided input for the query vulnerability
-            required: true
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
             type: string
-
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /cmdInjection/CommandContext/query/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - cmd_injection
+      description: demonstrates Command Injection via query, with vulnerable function exec.CommandContext
+      operationId: CmdInjectionGetQueryCommandContext
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /cmdInjection/CommandContext/cookies/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - cmd_injection
+      description: demonstrates Command Injection via cookies, with vulnerable function exec.CommandContext
+      operationId: CmdInjectionGetCookiesCommandContext
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
       responses:
         200:
           description: returns the rendered response as a string
@@ -106,81 +143,256 @@ paths:
     get:
       tags:
         - xss
-      summary: supposed to serve the frontend for the query or cookie vulns
-      operationId: xssFront
+      summary: front page of the Reflected XSS vulnerability
+      operationId: XSSFront
       produces:
         - text/html
       responses:
         200:
-          description: served front end for xss page of Swagger API
+          description: served front end for Reflected XSS page of Swagger API
           schema:
             type: string
         default:
           description: error occured
-
-  /pathTraversal:
+  /xss/Sink/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
-        - path-traversal
-      summary: front page of the Path Traversal Vulnerability
-      operationId: pathTraversalFront
+        - xss
+      description: demonstrates Reflected XSS via query, with vulnerable function _
+      operationId: XSSGetQuerySink
       produces:
-        - text/html
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
       responses:
         200:
-          description: served front end for path traversal page of Swagger API
+          description: returns the rendered response as a string
           schema:
             type: string
+            description: The response when succesful query happens
         default:
-          description: error occured
-
-  /unvalidatedRedirect:
+          description: Error occured
+  /xss/Sink/buffered-query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
-        - unvalidated-redirect
-      summary: front page of the Unvalidated Redirect vulnerability
-      operationId: unvalidatedRedirectFront
+        - xss
+      description: demonstrates Reflected XSS via buffered-query, with vulnerable function _
+      operationId: XSSGetBuffered-QuerySink
       produces:
-        - text/html
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
       responses:
         200:
-          description: served front end for unvalidated redirect of the Swagger API
+          description: returns the rendered response as a string
           schema:
             type: string
+            description: The response when succesful query happens
         default:
-          description: error occured
+          description: Error occured
+  /xss/Sink/params/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - xss
+      description: demonstrates Reflected XSS via params, with vulnerable function _
+      operationId: XSSGetParamsSink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /xss/Sink/body/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - xss
+      description: demonstrates Reflected XSS via body, with vulnerable function _
+      operationId: XSSGetBodySink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /xss/Sink/buffered-body/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - xss
+      description: demonstrates Reflected XSS via buffered-body, with vulnerable function _
+      operationId: XSSGetBuffered-BodySink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /xss/Sink/response/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - xss
+      description: demonstrates Reflected XSS via response, with vulnerable function _
+      operationId: XSSGetResponseSink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
 
   /ssrf:
     get:
       tags:
         - ssrf
-      summary: front page of the SSRF vulnerability
-      operationId: ssrfFront
+      summary: front page of the Server Side Request Forgery vulnerability
+      operationId: SsrfFront
       produces:
         - text/html
       responses:
         200:
-          description: served front end for SSRF Vulnerability of the Swagger API
+          description: served front end for Server Side Request Forgery page of Swagger API
           schema:
             type: string
         default:
           description: error occured
-
-  /sqlInjection:
+  /ssrf/Sink/query/{safety}: #TODO should input be a swagger parm?
     get:
       tags:
-        - sql-injection
-      summary: front page of the SQL Injection vulnerability
-      operationId: sqlInjectionFront
+        - ssrf
+      description: demonstrates Server Side Request Forgery via query, with vulnerable function _
+      operationId: SsrfGetQuerySink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+  /ssrf/Sink/path/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - ssrf
+      description: demonstrates Server Side Request Forgery via path, with vulnerable function _
+      operationId: SsrfGetPathSink
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+
+  /unvalidatedRedirect:
+    get:
+      tags:
+        - unvalidated_redirect
+      summary: front page of the Unvalidated Redirect vulnerability
+      operationId: UnvalidatedRedirectFront
       produces:
         - text/html
       responses:
         200:
-          description: served front end for SQL Injection Vulnerability of the Swagger API
+          description: served front end for Unvalidated Redirect page of Swagger API
           schema:
             type: string
         default:
           description: error occured
+  /unvalidatedRedirect/Redirect/query/{safety}: #TODO should input be a swagger parm?
+    get:
+      tags:
+        - unvalidated_redirect
+      description: demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect
+      operationId: UnvalidatedRedirectGetQueryRedirect
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query #TODO how to handle other inputs
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
 
 definitions:
   item:

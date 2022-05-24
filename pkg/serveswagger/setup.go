@@ -49,21 +49,9 @@ func Setup() (*restapi.Server, error) {
 	api.HTMLProducer = runtime.ProducerFunc(HTMLProducer)
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(SwaggerRootHandler)
-	pd := common.ConstParams{
-		Year:    time.Now().Year(),
-		Rulebar: rmap,
-		// TODO Addr: ,
-		// TODO Logo: ,
-		Framework: "go-swagger",
-	}
 
-	Init(api, rmap, pd)
-
-	// api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(CmdInjectionFront)
-
-	// api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(GetQueryCommand)
-
-	// api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(GetQueryCommandContext)
+	// lives in generated code. initializes all route handlers other than root.
+	generatedInit(api, rmap, SwaggerParams)
 
 	server := restapi.NewServer(api)
 

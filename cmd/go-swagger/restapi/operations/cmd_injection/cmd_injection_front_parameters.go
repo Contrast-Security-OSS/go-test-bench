@@ -23,7 +23,7 @@ func NewCmdInjectionFrontParams() CmdInjectionFrontParams {
 // CmdInjectionFrontParams contains all the bound params for the cmd injection front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters cmdInjectionFront
+// swagger:parameters CmdInjectionFront
 type CmdInjectionFrontParams struct {
 
 	// HTTP Request Object

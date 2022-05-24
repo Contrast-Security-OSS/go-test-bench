@@ -65,13 +65,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
         "summary": "front page of the Command Injection vulnerability",
-        "operationId": "cmdInjectionFront",
+        "operationId": "CmdInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for command injection page of Swagger API",
+            "description": "served front end for Command Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -82,16 +82,16 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.Command/query/{safety}": {
+    "/cmdInjection/Command/cookies/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
+        "description": "demonstrates Command Injection via cookies, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommand",
+        "operationId": "CmdInjectionGetCookiesCommand",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -118,16 +118,16 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.CommandContext/query/{safety}": {
+    "/cmdInjection/Command/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommandContext",
+        "operationId": "CmdInjectionGetQueryCommand",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -154,48 +154,74 @@ func init() {
         }
       }
     },
-    "/pathTraversal": {
+    "/cmdInjection/CommandContext/cookies/{safety}": {
       "get": {
+        "description": "demonstrates Command Injection via cookies, with vulnerable function exec.CommandContext",
         "produces": [
-          "text/html"
+          "text/plain"
         ],
         "tags": [
-          "path-traversal"
+          "cmd_injection"
         ],
-        "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversalFront",
+        "operationId": "CmdInjectionGetCookiesCommandContext",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
-            "description": "served front end for path traversal page of Swagger API",
+            "description": "returns the rendered response as a string",
             "schema": {
+              "description": "The response when succesful query happens",
               "type": "string"
             }
           },
           "default": {
-            "description": "error occured"
+            "description": "Error occured"
           }
         }
       }
     },
-    "/sqlInjection": {
+    "/cmdInjection/CommandContext/query/{safety}": {
       "get": {
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
-          "text/html"
+          "text/plain"
         ],
         "tags": [
-          "sql-injection"
+          "cmd_injection"
         ],
-        "summary": "front page of the SQL Injection vulnerability",
-        "operationId": "sqlInjectionFront",
+        "operationId": "CmdInjectionGetQueryCommandContext",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
-            "description": "served front end for SQL Injection Vulnerability of the Swagger API",
+            "description": "returns the rendered response as a string",
             "schema": {
+              "description": "The response when succesful query happens",
               "type": "string"
             }
           },
           "default": {
-            "description": "error occured"
+            "description": "Error occured"
           }
         }
       }
@@ -208,11 +234,11 @@ func init() {
         "tags": [
           "ssrf"
         ],
-        "summary": "front page of the SSRF vulnerability",
-        "operationId": "ssrfFront",
+        "summary": "front page of the Server Side Request Forgery vulnerability",
+        "operationId": "SsrfFront",
         "responses": {
           "200": {
-            "description": "served front end for SSRF Vulnerability of the Swagger API",
+            "description": "served front end for Server Side Request Forgery page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -223,25 +249,133 @@ func init() {
         }
       }
     },
+    "/ssrf/Sink/path/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via path, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetPathSink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/ssrf/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetQuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/unvalidatedRedirect": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "unvalidated-redirect"
+          "unvalidated_redirect"
         ],
         "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "unvalidatedRedirectFront",
+        "operationId": "UnvalidatedRedirectFront",
         "responses": {
           "200": {
-            "description": "served front end for unvalidated redirect of the Swagger API",
+            "description": "served front end for Unvalidated Redirect page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/unvalidatedRedirect/Redirect/query/{safety}": {
+      "get": {
+        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "unvalidated_redirect"
+        ],
+        "operationId": "UnvalidatedRedirectGetQueryRedirect",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -254,17 +388,233 @@ func init() {
         "tags": [
           "xss"
         ],
-        "summary": "supposed to serve the frontend for the query or cookie vulns",
-        "operationId": "xssFront",
+        "summary": "front page of the Reflected XSS vulnerability",
+        "operationId": "XSSFront",
         "responses": {
           "200": {
-            "description": "served front end for xss page of Swagger API",
+            "description": "served front end for Reflected XSS page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/body/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via body, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBodySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-body/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-body, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBuffered-BodySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBuffered-QuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/params/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via params, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetParamsSink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetQuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/response/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via response, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetResponseSink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -381,13 +731,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
         "summary": "front page of the Command Injection vulnerability",
-        "operationId": "cmdInjectionFront",
+        "operationId": "CmdInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for command injection page of Swagger API",
+            "description": "served front end for Command Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -398,16 +748,16 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.Command/query/{safety}": {
+    "/cmdInjection/Command/cookies/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
+        "description": "demonstrates Command Injection via cookies, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommand",
+        "operationId": "CmdInjectionGetCookiesCommand",
         "parameters": [
           {
             "enum": [
@@ -443,16 +793,16 @@ func init() {
         }
       }
     },
-    "/cmdInjection/exec.CommandContext/query/{safety}": {
+    "/cmdInjection/Command/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommandContext",
+        "operationId": "CmdInjectionGetQueryCommand",
         "parameters": [
           {
             "enum": [
@@ -488,48 +838,92 @@ func init() {
         }
       }
     },
-    "/pathTraversal": {
+    "/cmdInjection/CommandContext/cookies/{safety}": {
       "get": {
+        "description": "demonstrates Command Injection via cookies, with vulnerable function exec.CommandContext",
         "produces": [
-          "text/html"
+          "text/plain"
         ],
         "tags": [
-          "path-traversal"
+          "cmd_injection"
         ],
-        "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversalFront",
+        "operationId": "CmdInjectionGetCookiesCommandContext",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
-            "description": "served front end for path traversal page of Swagger API",
+            "description": "returns the rendered response as a string",
             "schema": {
+              "description": "The response when succesful query happens",
               "type": "string"
             }
           },
           "default": {
-            "description": "error occured"
+            "description": "Error occured"
           }
         }
       }
     },
-    "/sqlInjection": {
+    "/cmdInjection/CommandContext/query/{safety}": {
       "get": {
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
-          "text/html"
+          "text/plain"
         ],
         "tags": [
-          "sql-injection"
+          "cmd_injection"
         ],
-        "summary": "front page of the SQL Injection vulnerability",
-        "operationId": "sqlInjectionFront",
+        "operationId": "CmdInjectionGetQueryCommandContext",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
-            "description": "served front end for SQL Injection Vulnerability of the Swagger API",
+            "description": "returns the rendered response as a string",
             "schema": {
+              "description": "The response when succesful query happens",
               "type": "string"
             }
           },
           "default": {
-            "description": "error occured"
+            "description": "Error occured"
           }
         }
       }
@@ -542,11 +936,11 @@ func init() {
         "tags": [
           "ssrf"
         ],
-        "summary": "front page of the SSRF vulnerability",
-        "operationId": "ssrfFront",
+        "summary": "front page of the Server Side Request Forgery vulnerability",
+        "operationId": "SsrfFront",
         "responses": {
           "200": {
-            "description": "served front end for SSRF Vulnerability of the Swagger API",
+            "description": "served front end for Server Side Request Forgery page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -557,25 +951,160 @@ func init() {
         }
       }
     },
+    "/ssrf/Sink/path/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via path, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetPathSink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/ssrf/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetQuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/unvalidatedRedirect": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "unvalidated-redirect"
+          "unvalidated_redirect"
         ],
         "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "unvalidatedRedirectFront",
+        "operationId": "UnvalidatedRedirectFront",
         "responses": {
           "200": {
-            "description": "served front end for unvalidated redirect of the Swagger API",
+            "description": "served front end for Unvalidated Redirect page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/unvalidatedRedirect/Redirect/query/{safety}": {
+      "get": {
+        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "unvalidated_redirect"
+        ],
+        "operationId": "UnvalidatedRedirectGetQueryRedirect",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -588,17 +1117,287 @@ func init() {
         "tags": [
           "xss"
         ],
-        "summary": "supposed to serve the frontend for the query or cookie vulns",
-        "operationId": "xssFront",
+        "summary": "front page of the Reflected XSS vulnerability",
+        "operationId": "XSSFront",
         "responses": {
           "200": {
-            "description": "served front end for xss page of Swagger API",
+            "description": "served front end for Reflected XSS page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/body/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via body, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBodySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-body/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-body, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBuffered-BodySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBuffered-QuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/params/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via params, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetParamsSink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetQuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/response/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via response, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetResponseSink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
