@@ -18,6 +18,8 @@ import (
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
 )
 
 var (
@@ -30,7 +32,9 @@ var (
 
 func main() {
 	cmdi.RegisterRoutes(nil)
-	// TODO other routes
+	sqli.RegisterRoutes(nil)
+	pathtraversal.RegisterRoutes(nil)
+
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 	var rlist = make(common.Routes, 0, len(rmap))
 	for _, r := range rmap {
