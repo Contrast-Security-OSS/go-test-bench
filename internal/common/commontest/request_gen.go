@@ -21,8 +21,8 @@ type RouteTestRequests struct {
 	Sinks []SinkTest
 }
 
-// UnsafeRequests generates an unsafe request for each input and sink defined
-// for this endpoint.
+// UnsafeRouteRequests generates an unsafe request for each input
+// and sink defined for this endpoint.
 func UnsafeRouteRequests(r *common.Route, addr string) ([]SinkTest, error) {
 	reqs := make([]SinkTest, 0, len(r.Inputs)*len(r.Sinks))
 	for _, s := range r.Sinks {

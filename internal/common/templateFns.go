@@ -97,7 +97,7 @@ func inputTitle(input string) string {
 	return title
 }
 
-// determine http method from input type
+// MethodFromInput determines the http method from the input type.
 func MethodFromInput(in string) string {
 	for _, i := range []string{"cookie", "body"} {
 		if strings.Contains(in, i) {

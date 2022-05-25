@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+// RouteInputs defines the inputs used by each route.
 type RouteInputs map[string][]string
 
 // DefaultRouteInputs defines the inputs used by each route. Exported so
