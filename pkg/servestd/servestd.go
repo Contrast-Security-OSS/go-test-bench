@@ -58,6 +58,15 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) 
 }
 
 func newHandler(v common.Route) http.HandlerFunc {
+	for _, s := range v.Sinks {
+		if s.Handler == nil {
+			var err error
+			s.Handler, err = common.GenericHandler(s)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println(v.Name, r.URL.Path)
 		var parms = common.Parameters{
@@ -85,9 +94,6 @@ func newHandler(v common.Route) http.HandlerFunc {
 					w.WriteHeader(http.StatusNotFound)
 					return
 				}
-				if s.Handler == nil {
-					s.Handler = common.GenericHandler(s)
-				}
 
 				in := common.GetUserInput(r)
 				data, status := s.Handler(mode, in, nil)
@@ -112,9 +118,9 @@ func Setup() {
 	log.Println("Templates loaded.")
 
 	// register all routes at this point.
-	cmdi.RegisterRoutes(nil)
-	sqli.RegisterRoutes(nil)
-	pathtraversal.RegisterRoutes(nil)
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 

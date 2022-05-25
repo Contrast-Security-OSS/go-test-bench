@@ -14,8 +14,8 @@ import (
 )
 
 // RegisterRoutes is called in framework init to register routes in this package.
-func RegisterRoutes(frameworkSinks []common.Sink) {
-	sinks := []common.Sink{
+func RegisterRoutes(frameworkSinks ...*common.Sink) {
+	sinks := []*common.Sink{
 		{
 			Name:                 "sqlite3.exec",
 			Handler:              sqliteInj{}.execHandler,

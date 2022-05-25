@@ -5,7 +5,6 @@ go 1.14
 require (
 	github.com/gin-contrib/multitemplate v0.0.0-20210428235909-8a2f6dd269a0
 	github.com/gin-gonic/gin v1.7.4
-	github.com/google/go-cmp v0.5.2
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/loads v0.21.1
 	github.com/go-openapi/runtime v0.23.3
@@ -13,10 +12,9 @@ require (
 	github.com/go-openapi/strfmt v0.21.2
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
+	github.com/google/go-cmp v0.5.2
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
-	github.com/xdg-go/stringprep v1.0.2 // indirect
 	go.mongodb.org/mongo-driver v1.8.3
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 )

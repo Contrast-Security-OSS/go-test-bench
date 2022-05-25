@@ -13,8 +13,8 @@ import (
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
-func RegisterRoutes(frameworkSinks []common.Sink) {
-	sinks := []common.Sink{
+func RegisterRoutes(frameworkSinks ...*common.Sink) {
+	sinks := []*common.Sink{
 		{
 			Name:                "os.ReadFile",
 			Sanitize:            url.QueryEscape,

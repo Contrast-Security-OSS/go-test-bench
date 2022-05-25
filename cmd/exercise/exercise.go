@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common/commontest"
 )
 
 type exercises struct {
@@ -13,19 +14,21 @@ type exercises struct {
 	log     common.Logger
 	verbose bool
 	addr    string
-	reqs    []common.RouteTestRequests
+	reqs    []commontest.RouteTestRequests
 }
 
+// exercise was split up so that tests can report sub-test names
 func exercise(log common.Logger, verbose bool, addr string) error {
 	e := &exercises{
 		log:     log,
 		verbose: verbose,
 		addr:    addr,
 	}
+	// create requests
 	if err := e.init(); err != nil {
 		return err
 	}
-	// Generate requests
+	// send requests
 	for _, r := range e.reqs {
 		for _, s := range r.Sinks {
 			e.run(e.log, s)
@@ -35,6 +38,7 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 	return nil
 }
 
+// determine framework, then create (but do not send) requests
 func (e *exercises) init() error {
 	e.client = http.DefaultClient
 
@@ -56,19 +60,17 @@ func (e *exercises) init() error {
 	default:
 		e.log.Fatalf("unsupported application framework: %s", f)
 	}
-	e.reqs, err = common.UnsafeRequests(e.addr)
+	e.reqs, err = commontest.UnsafeRequests(e.addr)
 	if err != nil {
 		e.log.Fatalf("failed to generate requests for %s framework: %s", f, err)
 	}
 	return nil
 }
 
-func (e *exercises) run(log common.Logger, s common.SinkTest) {
-
-	// Exercise app
-	// for _, r := range reqs {
-	if s.Status == 0 {
-		s.Status = http.StatusOK
+// send requests
+func (e *exercises) run(log common.Logger, s commontest.SinkTest) {
+	if s.ExpectedStatus == 0 {
+		s.ExpectedStatus = http.StatusOK
 	}
 	if strings.Contains(s.R.URL.Path, "unvalidatedRedirect") {
 		// temporary fixup - unvalidated redirect does not specify the input type in url
@@ -81,8 +83,8 @@ func (e *exercises) run(log common.Logger, s common.SinkTest) {
 	if err != nil {
 		log.Errorf("%s: %s", s.R.URL, err)
 	}
-	if res.StatusCode != s.Status {
-		log.Errorf("expected status=%d, got status=%d with url=%s", s.Status, res.StatusCode, s.R.URL)
+	if res.StatusCode != s.ExpectedStatus {
+		log.Errorf("expected status=%d, got status=%d with url=%s", s.ExpectedStatus, res.StatusCode, s.R.URL)
 	} else {
 		if e.verbose {
 			log.Logf("route exercised: %s", s.R.URL.String())

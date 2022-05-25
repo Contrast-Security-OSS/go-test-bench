@@ -9,7 +9,7 @@ import (
 // `opaque` can be set to some framework-specific struct - for example, gin.Context.
 //
 // Prefer statuses 200 (success), 400 (generic, expected error), and 500 (generic, unexpected error).
-type HandlerFn func(safety Safety, in string, opaque interface{}) (data string, status int)
+type HandlerFn func(safety Safety, payload string, opaque interface{}) (data string, status int)
 
 // VulnerableFnWrapper is a function wrapping something vulnerable. Used
 // to adapt things for use with GenericHandler. 'raw' indicates data
@@ -17,14 +17,14 @@ type HandlerFn func(safety Safety, in string, opaque interface{}) (data string, 
 type VulnerableFnWrapper func(opaque interface{}, payload string) (data string, raw bool, err error)
 
 // GenericHandler returns a generic replacement for HandlerFn. It requires VulnerableFnWrapper and Sanitize to be set.
-func GenericHandler(s Sink) func(safety Safety, payload string, opaque interface{}) (data string, status int) {
+func GenericHandler(s *Sink) (HandlerFn, error) {
+	if s.Sanitize == nil {
+		return nil, fmt.Errorf("sink %#v: internal error - Sanitizer cannot be nil", s)
+	}
+	if s.VulnerableFnWrapper == nil {
+		return nil, fmt.Errorf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s)
+	}
 	return func(safety Safety, payload string, opaque interface{}) (data string, status int) {
-		if s.Sanitize == nil {
-			return fmt.Sprintf("sink %#v: internal error - Sanitizer cannot be nil", s), http.StatusInternalServerError
-		}
-		if s.VulnerableFnWrapper == nil {
-			return fmt.Sprintf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s), http.StatusInternalServerError
-		}
 		switch safety {
 		case Unsafe:
 			// nothing to do here
@@ -52,5 +52,5 @@ func GenericHandler(s Sink) func(safety Safety, payload string, opaque interface
 		}
 		data = fmt.Sprintf("%q: %s action with payload=%q resulted in err=%s\nand data=\\\n%s", s.Name, safety, payload, e, res)
 		return data, status
-	}
+	}, nil
 }

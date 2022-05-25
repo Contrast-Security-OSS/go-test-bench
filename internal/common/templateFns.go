@@ -20,7 +20,7 @@ func FuncMap() template.FuncMap {
 		// determine if input type is for curl
 		"needsCurl": needsCurl,
 		// determine http method from input type
-		"methodFromInput": methodFromInput,
+		"methodFromInput": MethodFromInput,
 	}
 }
 
@@ -98,7 +98,7 @@ func inputTitle(input string) string {
 }
 
 // determine http method from input type
-func methodFromInput(in string) string {
+func MethodFromInput(in string) string {
 	for _, i := range []string{"cookie", "body"} {
 		if strings.Contains(in, i) {
 			return http.MethodPost

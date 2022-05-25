@@ -22,7 +22,7 @@ type Route struct {
 	TmplFile string   // name of template used for non-result page; default is Base + '.gohtml'
 	Products []string // relevant Contrast products
 	Inputs   []string // input methods supported by this app: query, cookies, body, headers, headers-json, ...
-	Sinks    []Sink   // one per vulnerable function
+	Sinks    []*Sink  // one per vulnerable function
 	Payload  string   // must be set for the default template.
 
 	genericTmpl bool
@@ -37,6 +37,9 @@ func (r *Route) String() string {
 	}
 	return strings.Join(lines, "    \n")
 }
+
+// UsesGenericTmpl returns true if the route uses the generic vulnerability template.
+func (r *Route) UsesGenericTmpl() bool { return r.genericTmpl }
 
 // RouteMap is a map from base path to Route
 type RouteMap map[string]Route

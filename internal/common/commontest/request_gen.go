@@ -1,16 +1,18 @@
-package common
+package commontest
 
 import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
 // SinkTest is data used by cmd/exercise and in testing.
 type SinkTest struct {
-	R      *http.Request
-	Status int
-	Name   string
+	R              *http.Request
+	ExpectedStatus int
+	Name           string
 }
 
 // RouteTestRequests is data used by cmd/exercise and in testing.
@@ -21,16 +23,16 @@ type RouteTestRequests struct {
 
 // UnsafeRequests generates an unsafe request for each input and sink defined
 // for this endpoint.
-func (r *Route) UnsafeRequests(addr string) ([]SinkTest, error) {
+func UnsafeRouteRequests(r *common.Route, addr string) ([]SinkTest, error) {
 	reqs := make([]SinkTest, 0, len(r.Inputs)*len(r.Sinks))
 	for _, s := range r.Sinks {
 		if len(s.Name) == 0 || s.Name == "_" {
 			continue
 		}
 		for _, i := range r.Inputs {
-			method := methodFromInput(i)
+			method := common.MethodFromInput(i)
 			var u string
-			if r.genericTmpl {
+			if r.UsesGenericTmpl() {
 				// different param order, to more easily work with gin
 				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, s.Name, i)
 			} else {
@@ -43,9 +45,9 @@ func (r *Route) UnsafeRequests(addr string) ([]SinkTest, error) {
 			s.AddPayloadToRequest(req, i, "", r.Payload)
 
 			reqs = append(reqs, SinkTest{
-				Name:   strings.Join([]string{s.Name, i}, "/"),
-				R:      req,
-				Status: s.ExpectedUnsafeStatus,
+				Name:           strings.Join([]string{s.Name, i}, "/"),
+				R:              req,
+				ExpectedStatus: s.ExpectedUnsafeStatus,
 			})
 		}
 	}
@@ -56,12 +58,12 @@ func (r *Route) UnsafeRequests(addr string) ([]SinkTest, error) {
 // endpoints common to all app frameworks.
 func UnsafeRequests(addr string) ([]RouteTestRequests, error) {
 	var reqs []RouteTestRequests
-	rmap := GetRouteMap()
+	rmap := common.GetRouteMap()
 	if len(rmap) == 0 {
 		return nil, fmt.Errorf("init error - no routes returned by GetRouteMap")
 	}
 	for _, route := range rmap {
-		sinks, err := route.UnsafeRequests(addr)
+		sinks, err := UnsafeRouteRequests(&route, addr)
 		if err != nil {
 			return nil, fmt.Errorf("route %s: %w", route.Base, err)
 		}

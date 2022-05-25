@@ -59,7 +59,14 @@ func add(router *gin.Engine, rt common.Route) {
 		c.HTML(http.StatusOK, rt.TmplFile, templateData(rt.Base))
 	})
 	for _, s := range rt.Sinks {
-		sinkFn := func(s common.Sink) func(c *gin.Context) {
+		if s.Handler == nil {
+			var err error
+			s.Handler, err = common.GenericHandler(s)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		sinkFn := func(s *common.Sink) func(c *gin.Context) {
 			return func(c *gin.Context) {
 				c.Header("Cache-Control", "no-store") //makes development a whole lot easier
 				mode := common.Safety(c.Param("mode"))
@@ -69,9 +76,6 @@ func add(router *gin.Engine, rt common.Route) {
 					log.Printf("%s: error %s", c.Request.URL.Path, e)
 				}
 
-				if s.Handler == nil {
-					s.Handler = common.GenericHandler(s)
-				}
 				data, status := s.Handler(mode, payload, c)
 				if len(data) > 0 {
 					// don't unconditionally write this, as it can result in
@@ -105,9 +109,9 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	base["Addr"] = addr
 
 	//register all routes at this point, before AllRoutes is used.
-	cmdi.RegisterRoutes(nil)
-	sqli.RegisterRoutes(nil)
-	pathtraversal.RegisterRoutes([]common.Sink{ginPathTraversal})
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes(&ginPathTraversal)
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 

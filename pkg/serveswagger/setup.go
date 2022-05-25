@@ -40,7 +40,7 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
-	cmdi.RegisterRoutes(nil)
+	cmdi.RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
@@ -145,7 +145,11 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 				return
 			}
 			if s.Handler == nil {
-				s.Handler = common.GenericHandler(s)
+				var err error
+				s.Handler, err = common.GenericHandler(s)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 			in := common.GetUserInput(r.req)
 			data, status := s.Handler(mode, in, p)
