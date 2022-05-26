@@ -7,9 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path/filepath"
 	"runtime"
-	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
@@ -45,10 +43,8 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 	}
 	payload := "../../../../../../../../../../../../etc/passwd"
 	if runtime.GOOS == "windows" {
-		hosts := filepath.Join(os.Getenv("SYSTEMROOT"), `System32\drivers\etc\hosts`)
-		relParents := strings.Repeat(`..\`, 10)
-		hosts = strings.SplitN(hosts, `\`, 2)[1] // remove drive letter
-		payload = relParents + hosts             // a relative path that should point to the hosts file
+		// we know this file exists
+		payload = "internal/pathtraversal/secrets.txt"
 	}
 	common.Register(common.Route{
 		Name:     "Path Traversal",
