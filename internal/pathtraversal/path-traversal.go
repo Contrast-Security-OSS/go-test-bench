@@ -50,6 +50,12 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 		}
 		// we know this file exists
 		payload = filepath.Clean(views + `\..\internal\pathtraversal\secrets.txt`)
+		for i := range sinks {
+			if sinks[i].Name == "os.WriteFile" || sinks[i].Name == "os.Create" {
+				//because we're using a writeable file, these will succeed.
+				sinks[i].ExpectedUnsafeStatus = http.StatusOK
+			}
+		}
 	}
 	common.Register(common.Route{
 		Name:     "Path Traversal",
