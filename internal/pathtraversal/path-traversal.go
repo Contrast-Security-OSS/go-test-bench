@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"runtime"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
@@ -43,8 +44,12 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 	}
 	payload := "../../../../../../../../../../../../etc/passwd"
 	if runtime.GOOS == "windows" {
+		views, err := common.FindViewsDir()
+		if err != nil {
+			log.Fatalf("finding path to file for path traversal: %s", err)
+		}
 		// we know this file exists
-		payload = "internal/pathtraversal/secrets.txt"
+		payload = filepath.Clean(views + `\..\internal\pathtraversal\secrets.txt`)
 	}
 	common.Register(common.Route{
 		Name:     "Path Traversal",
