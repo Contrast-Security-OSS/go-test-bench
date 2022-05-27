@@ -3,6 +3,7 @@ package servegin
 import (
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,6 +11,7 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
@@ -57,21 +59,49 @@ func add(router *gin.Engine, rt common.Route) {
 		c.HTML(http.StatusOK, rt.TmplFile, templateData(rt.Base))
 	})
 	for _, s := range rt.Sinks {
-		sinkFn := func(c *gin.Context) {
-			mode := c.Param("mode")
-			source := c.Param("source")
-			payload := extractInput(c, source)
-
-			tmpl, b := s.Handler(mode, payload)
-			if b {
-				log.Fatal("error: bool arg is not handled")
+		if s.Handler == nil {
+			var err error
+			s.Handler, err = common.GenericHandler(s)
+			if err != nil {
+				log.Fatal(err)
 			}
-			c.String(http.StatusOK, string(tmpl))
 		}
+		sinkFn := func(s *common.Sink) func(c *gin.Context) {
+			return func(c *gin.Context) {
+				c.Header("Cache-Control", "no-store") //makes development a whole lot easier
+				mode := common.Safety(c.Param("mode"))
+				source := c.Param("source")
+				payload := extractInput(c, source)
+				for _, e := range c.Errors {
+					log.Printf("%s: error %s", c.Request.URL.Path, e)
+				}
+
+				data, status := s.Handler(mode, payload, c)
+				if len(data) > 0 {
+					// don't unconditionally write this, as it can result in
+					// - a warning (when status changes), or
+					// - a panic (when content-length is already set and headers are written)
+					c.String(status, data)
+				}
+			}
+		}(s)
 		sinkPg := base.Group("/" + s.URL)
 		//route data isn't a perfect match for the method(s) we actually use, so just accept anything
 		sinkPg.Any("/:source/:mode", sinkFn)
 	}
+}
+
+var ginPathTraversal = common.Sink{
+	Name:     "gin.File",
+	Sanitize: url.QueryEscape,
+	VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, raw bool, err error) {
+		c, ok := opaque.(*gin.Context)
+		if !ok {
+			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
+		}
+		c.File(payload)
+		return "", true, nil
+	},
 }
 
 // Setup loads templates, sets up routes, etc.
@@ -79,8 +109,9 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	base["Addr"] = addr
 
 	//register all routes at this point, before AllRoutes is used.
-	cmdi.RegisterRoutes("gin")
-	sqli.RegisterRoutes("gin")
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes(&ginPathTraversal)
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
@@ -103,7 +134,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	for _, h := range common.AllRoutes {
 		add(router, h)
 	}
-	addPathTraversal(router)
 	addReflectedXSS(router)
 	addSSRF(router)
 	addUnvalidatedRedirect(router)
@@ -118,25 +148,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 
 //temporary fixes until remainder of code migrates to new model
 func preMigrationFixups(rmap common.RouteMap) common.RouteMap {
-	//for path traversal, gin supports an additional method
-	//this will go into path traversal's RegisterRoutes() func when it's migrated
-	pt, ok := rmap["pathTraversal"]
-	if !ok {
-		for k := range rmap {
-			log.Println(k)
-		}
-		log.Fatal("path traversal is missing")
-	}
-	pt.Sinks = append(
-		[]common.Sink{{
-			Name:   "gin.File",
-			URL:    "/pathTraversal",
-			Method: "GET",
-		}},
-		pt.Sinks...,
-	)
-	rmap["pathTraversal"] = pt
-
 	// unvalidated redirect; for now, just handle the gin method
 	ur, ok := rmap["unvalidatedRedirect"]
 	if !ok {

@@ -3,154 +3,74 @@ package commontest
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
+
+// SinkTest is data used by cmd/exercise and in testing.
+type SinkTest struct {
+	R              *http.Request
+	ExpectedStatus int
+	Name           string
+}
+
+// RouteTestRequests is data used by cmd/exercise and in testing.
+type RouteTestRequests struct {
+	Name  string
+	Sinks []SinkTest
+}
+
+// UnsafeRouteRequests generates an unsafe request for each input
+// and sink defined for this endpoint.
+func UnsafeRouteRequests(r *common.Route, addr string) ([]SinkTest, error) {
+	reqs := make([]SinkTest, 0, len(r.Inputs)*len(r.Sinks))
+	for _, s := range r.Sinks {
+		if len(s.Name) == 0 || s.Name == "_" {
+			continue
+		}
+		for _, i := range r.Inputs {
+			method := common.MethodFromInput(i)
+			var u string
+			if r.UsesGenericTmpl() {
+				// different param order, to more easily work with gin
+				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, s.Name, i)
+			} else {
+				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, i, s.Name)
+			}
+			req, err := http.NewRequest(method, u, nil)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create request: %w", err)
+			}
+			s.AddPayloadToRequest(req, i, "", r.Payload)
+
+			reqs = append(reqs, SinkTest{
+				Name:           strings.Join([]string{s.Name, i}, "/"),
+				R:              req,
+				ExpectedStatus: s.ExpectedUnsafeStatus,
+			})
+		}
+	}
+	return reqs, nil
+}
 
 // UnsafeRequests generates a list of requests for all unsafe
 // endpoints common to all app frameworks.
-func UnsafeRequests(addr string) ([]*http.Request, error) {
-	var reqs []*http.Request
-	type generator func(addr string) ([]*http.Request, error)
-	for _, gen := range []generator{
-		unsafeCmdInjections,
-		unsafePathTraversals,
-		unsafeSQLInjections,
-		unsafeSSRF,
-		unsafeXSS,
-	} {
-		newReqs, err := gen(addr)
+func UnsafeRequests(addr string) ([]RouteTestRequests, error) {
+	var reqs []RouteTestRequests
+	rmap := common.GetRouteMap()
+	if len(rmap) == 0 {
+		return nil, fmt.Errorf("init error - no routes returned by GetRouteMap")
+	}
+	for _, route := range rmap {
+		sinks, err := UnsafeRouteRequests(&route, addr)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("route %s: %w", route.Base, err)
 		}
-		reqs = append(reqs, newReqs...)
+		reqs = append(reqs, RouteTestRequests{
+			Name:  route.Name,
+			Sinks: sinks,
+		})
 	}
-	return reqs, nil
-}
-
-func unsafeCmdInjections(addr string) ([]*http.Request, error) {
-	types := []string{"query", "cookies"}
-	fns := []string{"exec.Command", "exec.CommandContext"}
-
-	reqs := make([]*http.Request, 0, len(types)*len(fns))
-	for _, fn := range fns {
-		for _, t := range types {
-			method := http.MethodGet
-			if t == "cookies" {
-				method = http.MethodPost
-			}
-			// TODO: This route is non-standard. Flipped param order for source and sink.
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/cmdInjection/%s/%s/unsafe", addr, fn, t), nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			AddUserInput(t, r, "", "hello there!; echo hack hack hack")
-			reqs = append(reqs, r)
-		}
-	}
-
-	return reqs, nil
-}
-
-func unsafePathTraversals(addr string) ([]*http.Request, error) {
-	types := []string{"query", "buffered-query", "headers", "body"}
-	fns := []string{"ioutil.ReadFile", "ioutil.WriteFile"}
-
-	reqs := make([]*http.Request, 0, len(types)*len(fns))
-	for _, fn := range fns {
-		for _, t := range types {
-			method := http.MethodGet
-			if t == "body" {
-				method = http.MethodPost
-			}
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/pathTraversal/%s/%s/unsafe", addr, t, fn), nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			file := "README.md"
-			if strings.Contains(fn, "Write") {
-				file = os.DevNull // We don't actually want to overwrite files
-			}
-			AddUserInput(t, r, "", file)
-			reqs = append(reqs, r)
-		}
-	}
-
-	return reqs, nil
-}
-
-func unsafeXSS(addr string) ([]*http.Request, error) {
-	types := []string{"query", "buffered-query", "params", "body", "buffered-body", "response"}
-	fns := []string{"reflectedXss"}
-
-	reqs := make([]*http.Request, 0, len(types)*len(fns))
-	for _, fn := range fns {
-		for _, t := range types {
-			method := http.MethodGet
-			if t == "headers-json" || t == "body" {
-				method = http.MethodPost
-			}
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/xss/%s/%s/unsafe", addr, t, fn), nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			AddUserInput(t, r, "", "<script>alert(1);</script>")
-			reqs = append(reqs, r)
-		}
-	}
-
-	return reqs, nil
-}
-
-func unsafeSQLInjections(addr string) ([]*http.Request, error) {
-	types := []string{"headers-json", "query", "body"}
-	fns := []string{"sqlite3.exec"}
-
-	reqs := make([]*http.Request, 0, len(types)*len(fns))
-	for _, fn := range fns {
-		for _, t := range types {
-			method := http.MethodGet
-			if t == "headers-json" || t == "body" {
-				method = http.MethodPost
-			}
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/sqlInjection/%s/%s/unsafe", addr, fn, t), nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			if t == "headers-json" {
-				addHeadersJSONCreds(r)
-			} else {
-				AddUserInput(t, r, "", "Robert'; DROP TABLE Students;--")
-			}
-			reqs = append(reqs, r)
-		}
-	}
-
-	return reqs, nil
-}
-
-func unsafeSSRF(addr string) ([]*http.Request, error) {
-	types := []string{"query", "path"}
-	fns := []string{"default", "http", "request"}
-
-	reqs := make([]*http.Request, 0, len(types)*len(fns))
-	for _, fn := range fns {
-		for _, t := range types {
-			method := http.MethodGet
-			// TODO: This route is non-standard. Missing /unsafe and flipped param order for sink and source
-			r, err := http.NewRequest(method, fmt.Sprintf("http://%s/ssrf/%s/%s", addr, fn, t), nil)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create request: %w", err)
-			}
-			// BUG: The path route is actually a query param.
-			// This will make the payload match the app, but we need to fix the app.
-			if t == "path" {
-				t = "query"
-			}
-			AddUserInput(t, r, "", "www.example.com")
-			reqs = append(reqs, r)
-		}
-	}
-
 	return reqs, nil
 }

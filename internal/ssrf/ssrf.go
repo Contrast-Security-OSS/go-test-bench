@@ -26,7 +26,7 @@ func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (temp
 	case "request":
 		requestHandler(w, r, sep[3])
 	default:
-		log.Println("THIS IS NOT A LIBRARY")
+		log.Printf("THIS IS NOT A LIBRARY: %s in %s", sep[2], r.URL.Path)
 	}
 
 	return template.HTML(""), false

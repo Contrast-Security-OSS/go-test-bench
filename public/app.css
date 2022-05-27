@@ -37,6 +37,7 @@ body {
 .sidebar {
   display: none;
 }
+
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
@@ -47,33 +48,37 @@ body {
     display: block;
     padding: 20px;
     overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
     background-color: #ebf9f7;
     border-right: 1px solid #eee;
   }
 
   /* .gin matches common.StaticData{Framework:"Gin"} */
-  .gin .sidebar{
-    background-color:#d3f3ee;
+  .gin .sidebar {
+    background-color: #d3f3ee;
   }
 
-  .sidebar .nav-sidebar > li > a:hover,
-  .sidebar .nav-sidebar > li > a:focus {
+  .sidebar .nav-sidebar>li>a:hover,
+  .sidebar .nav-sidebar>li>a:focus {
     background-color: #c4ede7
   }
 }
 
 /* Sidebar navigation */
 .nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
+  margin-right: -21px;
+  /* 20px padding + 1px border */
   margin-bottom: 20px;
   margin-left: -20px;
 }
-.nav-sidebar > li > a {
+
+.nav-sidebar>li>a {
   padding-right: 20px;
   padding-left: 20px;
 }
-.nav-sidebar li.unimplemented{
+
+.nav-sidebar li.unimplemented {
   color: #999;
   font-style: italic;
   font-size: small;
@@ -85,12 +90,14 @@ body {
   padding-bottom: 5px;
   width: 100%;
 }
+
 .nav-sidebar li.unimplemented:hover,
-.nav-sidebar li.unimplemented:focus{
+.nav-sidebar li.unimplemented:focus {
   background-color: #eee;
 }
+
 /* tooltip */
-.nav-sidebar li.unimplemented .tooltiptext{
+.nav-sidebar li.unimplemented .tooltiptext {
   visibility: hidden;
   overflow: initial;
   background-color: #555;
@@ -103,7 +110,8 @@ body {
   top: 0px;
   left: 70%;
 }
-.nav-sidebar li.unimplemented:hover .tooltiptext{
+
+.nav-sidebar li.unimplemented:hover .tooltiptext {
   visibility: visible;
 }
 
@@ -113,25 +121,30 @@ body {
 .main {
   padding: 20px;
 }
+
 @media (min-width: 768px) {
   .main {
     padding-right: 40px;
     padding-left: 40px;
   }
 }
+
 .main .page-header {
   margin-top: 0;
 }
-img.logo{
+
+img.logo {
   max-width: 30%;
-  max-height:10em;
+  max-height: 10em;
   float: right;
   clear: right;
 }
-div.logo-clear{
+
+div.logo-clear {
   clear: right;
 }
-img.construction{
+
+img.construction {
   height: 10em;
 }
 
@@ -143,12 +156,15 @@ img.construction{
   margin-bottom: 30px;
   text-align: center;
 }
+
 .placeholders h4 {
   margin-bottom: 0;
 }
+
 .placeholder {
   margin-bottom: 20px;
 }
+
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
@@ -158,13 +174,16 @@ img.construction{
 body a {
   color: #258cbe;
 }
+
 .banner-dark {
   background: #3cc3b2;
 }
+
 /* .gin matches common.StaticData{Framework:"Gin"} */
-.gin .banner-dark{
+.gin .banner-dark {
   background: #3176d9;
 }
+
 .badge-success {
   background-color: #28a745;
 }
@@ -176,6 +195,7 @@ body a {
 body code {
   color: #3cc3b2;
 }
+
 .bs-callout {
   padding: 20px;
   margin: 20px 0;
@@ -183,52 +203,141 @@ body code {
   border-left-width: 5px;
   border-radius: 3px;
 }
+
 .bs-callout h4 {
   margin-top: 0;
   margin-bottom: 5px;
 }
+
 .bs-callout p:last-child {
   margin-bottom: 0;
 }
+
 .bs-callout code {
   border-radius: 3px;
 }
-.bs-callout + .bs-callout {
+
+.bs-callout+.bs-callout {
   margin-top: -5px;
 }
+
 .bs-callout-default {
   border-left-color: #777;
 }
+
 .bs-callout-default h4 {
   color: #777;
 }
+
 .bs-callout-primary {
   border-left-color: #428bca;
 }
+
 .bs-callout-primary h4 {
   color: #428bca;
 }
+
 .bs-callout-success {
   border-left-color: #5cb85c;
 }
+
 .bs-callout-success h4 {
   color: #5cb85c;
 }
+
 .bs-callout-danger {
   border-left-color: #d9534f;
 }
+
 .bs-callout-danger h4 {
   color: #d9534f;
 }
+
 .bs-callout-warning {
   border-left-color: #f0ad4e;
 }
+
 .bs-callout-warning h4 {
   color: #f0ad4e;
 }
+
 .bs-callout-info {
   border-left-color: #5bc0de;
 }
+
 .bs-callout-info h4 {
   color: #5bc0de;
+}
+
+/* colored <pre> for curl */
+pre.noop {
+  background-color: #ffd;
+}
+
+pre.unsafe {
+  background-color: #fdd;
+}
+
+pre.safe {
+  background-color: #dfd;
+}
+
+/* sink tabs https://stackoverflow.com/a/25499401 */
+.tabs {
+  position: relative;
+  min-height: 200px;
+  /* This part sucks */
+  clear: both;
+  margin: 25px 0;
+}
+
+.tab {
+  float: left;
+}
+
+.tab label.tlabel {
+  background: #ccc;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-left: -1px;
+  position: relative;
+  left: 1px;
+  border-radius: 8px 8px 0px 0px;
+}
+
+.tab label code {
+  color: #29746a;
+  background-color: #ccc;
+}
+
+.tab [type=radio] {
+  display: none;
+}
+
+.tabcontent {
+  position: absolute;
+  /* covers tabs otherwise - was top: 28px; */
+  top: 40px;
+  left: 0;
+  background: white;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  height: fit-content;
+}
+
+[type=radio]:checked~label.tlabel {
+  background: white;
+  border-bottom: 1px solid white;
+  z-index: 2;
+}
+
+[type=radio]:checked~label>code {
+  color: #3cc3b2;
+  background-color: #fff;
+}
+
+[type=radio]:checked~label~.tabcontent {
+  z-index: 1;
 }

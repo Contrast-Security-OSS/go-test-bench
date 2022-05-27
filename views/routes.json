@@ -45,26 +45,6 @@
         ]
     },
 
-    "pathTraversal" :  {
-        "base"     :  "/pathTraversal",
-        "name"     :  "Path Traversal",
-        "link"     :  "https://owasp.org/www-community/attacks/Path_Traversal",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "headers", "body"],
-        "sinks"    :  [
-            {
-                "name"   : "ioutil.ReadFile",
-                "url"    : "\/pathTraversal",
-                "method" : "GET"
-            },
-            {
-                "name"   : "ioutil.WriteFile",
-                "url"    : "\/pathTraversal",
-                "method" : "GET"
-            }
-        ]
-    },
-
     "ssjs" :  {
         "base"     :  "/ssjs",
         "name"     :  "SSJS Injection",
@@ -85,7 +65,7 @@
         "name"     :  "Server Side Request Forgery",
         "link"     :  "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery",
         "products" :  ["Assess"],
-        "inputs"   :  ["query"],
+        "inputs"   :  ["query","path"],
         "sinks"    :  [
             {
                 "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
@@ -138,7 +118,8 @@
                 "url"    : "\/unvalidatedRedirect\/http.Redirect\/",
                 "method" : "GET"
             }
-        ]
+        ],
+        "payload": "http://www.example.com"
     },
 
     "xpathInjection" :  {
@@ -161,7 +142,7 @@
         "name"     :  "Reflected XSS",
         "link"     :  "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
         "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "params", "body"],
+        "inputs"   :  ["query","buffered-query", "params", "body","buffered-body","response"],
         "sinks"    :  [
             {
                 "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",

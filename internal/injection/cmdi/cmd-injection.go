@@ -3,8 +3,9 @@ package cmdi
 import (
 	"bytes"
 	"context"
-	"html/template"
+	"fmt"
 	"log"
+	"net/http"
 	"os/exec"
 	"strings"
 
@@ -12,42 +13,43 @@ import (
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
-func RegisterRoutes( /* framework - unused */ string) {
+func RegisterRoutes(frameworkSinks ...*common.Sink) {
+	sinks := []*common.Sink{
+		{
+			Name:    "exec.Command",
+			Handler: execHandler,
+		},
+		{
+			Name:    "exec.CommandContext",
+			Handler: execHandlerCtx,
+		},
+	}
+	sinks = append(sinks, frameworkSinks...)
 	common.Register(common.Route{
 		Name:     "Command Injection",
 		Link:     "https://www.owasp.org/index.php/Command_Injection",
 		Base:     "cmdInjection",
 		Products: []string{"Assess", "Protect"},
 		Inputs:   []string{"query", "cookies"},
-		Sinks: []common.Sink{
-			{
-				Name:    "exec.Command",
-				Method:  "GET",
-				Handler: ExecHandler,
-			},
-			{
-				Name:    "exec.CommandContext",
-				Method:  "GET",
-				Handler: ExecHandlerCtx,
-			},
-		},
+		Sinks:    sinks,
+		Payload:  "hello there! && echo hack hack hack",
 	})
 }
 
-// ExecHandler performs the vulnerability, using exec.Command
-func ExecHandler(mode, in string) (template.HTML, bool) {
+// perform the vulnerability, using exec.Command
+func execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
 	var cmd *exec.Cmd
 	switch mode {
-	case "safe":
+	case common.Safe:
 		cmd = exec.Command("echo", in)
-	case "unsafe":
+	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			break
+			return "one or more args required", http.StatusBadRequest
 		}
 		cmd = exec.Command(args[0], args[1:]...)
-	case "noop":
-		return template.HTML("NOOP"), false
+	case common.NOOP:
+		return "NOOP", http.StatusOK
 	default:
 		log.Fatalf("Error running execHandler. Unknown option  %q passed", mode)
 	}
@@ -55,26 +57,30 @@ func ExecHandler(mode, in string) (template.HTML, bool) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Printf("Could not run command in %s: err = %s", mode, err)
+		msg := fmt.Sprintf("Could not run command in %s: err = %s", mode, err)
+		if _, err = out.WriteString(msg); err != nil {
+			log.Print("failed to add error to returned data:", err)
+		}
+		log.Print(msg)
 	}
-	return template.HTML(out.String()), false
+	return out.String(), http.StatusOK
 }
 
-// ExecHandlerCtx performs the vulnerability, using exec.CommandContext
-func ExecHandlerCtx(mode, in string) (template.HTML, bool) {
+// perform the vulnerability, using exec.CommandContext
+func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, int) {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch mode {
-	case "safe":
+	case common.Safe:
 		cmd = exec.CommandContext(ctx, "echo", in)
-	case "unsafe":
+	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			break
+			return "one or more args required", http.StatusBadRequest
 		}
 		cmd = exec.CommandContext(ctx, args[0], args[1:]...)
-	case "noop":
-		return template.HTML("NOOP"), false
+	case common.NOOP:
+		return "NOOP", http.StatusOK
 	default:
 		log.Fatalf("Error running execHandlerCtx. Unknown option  %q passed", mode)
 	}
@@ -82,9 +88,11 @@ func ExecHandlerCtx(mode, in string) (template.HTML, bool) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Printf("Could not run command in %s: err = %s", mode, err)
+		msg := fmt.Sprintf("Could not run command in %s: err = %s", mode, err)
+		out.WriteString(msg)
+		log.Print(msg)
 	}
-	return template.HTML(out.String()), false
+	return out.String(), http.StatusOK
 }
 
 // assembles a command that will run unsanitized user input in a system shell

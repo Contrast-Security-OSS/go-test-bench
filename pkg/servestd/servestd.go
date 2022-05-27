@@ -58,46 +58,53 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) 
 }
 
 func newHandler(v common.Route) http.HandlerFunc {
+	for _, s := range v.Sinks {
+		if s.Handler == nil {
+			var err error
+			s.Handler, err = common.GenericHandler(s)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println(v.Name, r.URL.Path)
 		var parms = common.Parameters{
 			ConstParams: Pd,
 			Name:        v.Base,
 		}
-		var data = template.HTML(v.TmplFile)
-		isTmpl := true
 		elems := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-		// To figure out whether we're serving a sink or the main page, check the
-		// element with index 1 against each Sink.URL; if no match, serve main page.
-		// Seems like there should be a less ugly way...
-		found := false
-	loop:
-		for _, s := range v.Sinks {
-			if len(elems) > 1 && elems[1] == s.URL {
-				mode := elems[len(elems)-1]
-				switch mode {
-				case "unsafe", "safe", "noop":
-					// valid modes
-					found = true
-				default:
-					// invalid
-					break loop
-				}
-				data, isTmpl = s.Handler(mode, common.GetUserInput(r))
-				break loop //label isn't required, but helps readability
-			}
-		}
-		if !found {
-			w.WriteHeader(http.StatusNotFound)
-		}
-		if isTmpl {
-			err := common.Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
+		if len(elems) < 2 {
+			// main page
+			err := common.Templates[v.TmplFile].ExecuteTemplate(w, "layout.gohtml", &parms)
 			if err != nil {
 				log.Print(err.Error())
+				fmt.Fprintf(w, "template error: %s", err)
 			}
-		} else {
-			fmt.Fprint(w, data)
+			return
 		}
+		for _, s := range v.Sinks {
+			if elems[1] == s.URL {
+				mode := common.Safety(elems[len(elems)-1])
+				switch mode {
+				case common.NOOP, common.Safe, common.Unsafe:
+					// valid modes
+				default:
+					// invalid
+					w.WriteHeader(http.StatusNotFound)
+					return
+				}
+
+				in := common.GetUserInput(r)
+				data, status := s.Handler(mode, in, nil)
+				w.WriteHeader(status)
+				w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
+				fmt.Fprint(w, data)
+				return
+			}
+		}
+		// does not match any sink or the main page
+		w.WriteHeader(http.StatusNotFound)
 	}
 }
 
@@ -110,9 +117,10 @@ func Setup() {
 	}
 	log.Println("Templates loaded.")
 
-	//register all routes at this point.
-	cmdi.RegisterRoutes("stdlib")
-	sqli.RegisterRoutes("stdlib")
+	// register all routes at this point.
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
@@ -138,7 +146,6 @@ func Setup() {
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
-	http.HandleFunc("/pathTraversal/", makeHandler(pathtraversal.Handler, "pathTraversal"))
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))

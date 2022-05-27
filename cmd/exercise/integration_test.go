@@ -37,7 +37,7 @@ func TestExerciseIntegration(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(func() {
 				// TODO: Refactor to remove this global state
-				common.AllRoutes = nil
+				common.Reset()
 				http.DefaultServeMux = http.NewServeMux()
 			})
 			handler := test.setup(t)
@@ -45,11 +45,25 @@ func TestExerciseIntegration(t *testing.T) {
 			t.Cleanup(srv.Close)
 			addr := strings.TrimPrefix(srv.URL, "http://")
 
-			err := exercise(addr)
-			if err != nil {
+			e := &exercises{
+				log:  t,
+				addr: addr,
+			}
+			if err := e.init(); err != nil {
 				t.Fatal(err)
 			}
+			for _, r := range e.reqs {
+				if len(r.Sinks) == 0 {
+					continue
+				}
+				t.Run(r.Name, func(t *testing.T) {
+					for _, s := range r.Sinks {
+						t.Run(s.Name, func(t *testing.T) {
+							e.run(e.log, s)
+						})
+					}
+				})
+			}
 		})
-
 	}
 }

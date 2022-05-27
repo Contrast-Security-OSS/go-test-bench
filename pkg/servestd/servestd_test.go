@@ -1,12 +1,14 @@
 package servestd
 
 import (
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servetest"
 )
 
 func TestParseTemplates(t *testing.T) {
@@ -19,6 +21,11 @@ func TestParseTemplates(t *testing.T) {
 //ensure template is populated
 func TestServedTemplate(t *testing.T) {
 	Setup()
+	t.Cleanup(func() {
+		http.DefaultServeMux = &http.ServeMux{}
+		common.Reset()
+	})
+
 	srvr := httptest.NewServer(nil)
 	defer srvr.Close()
 	Pd.Addr = srvr.URL
@@ -60,11 +67,15 @@ func TestServedTemplate(t *testing.T) {
 				}
 				t.Logf("\n%s", strings.Join(rb, "\n"))
 			}
-			// for _, s := range route.Sinks {
-			// 	t.Run(s.Name, func(t *testing.T) {
-			//TODO check each sink
-			// 	})
-			// }
 		})
 	}
+}
+
+func TestRouteData(t *testing.T) {
+	Setup()
+	t.Cleanup(func() {
+		http.DefaultServeMux = &http.ServeMux{}
+		common.Reset()
+	})
+	servetest.TestRouteData(t, nil, nil)
 }

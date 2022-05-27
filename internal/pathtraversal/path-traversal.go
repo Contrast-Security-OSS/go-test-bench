@@ -3,182 +3,116 @@ package pathtraversal
 import (
 	"bytes"
 	"fmt"
-	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
+	"path/filepath"
+	"runtime"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
-func pathTTemplate(w http.ResponseWriter, r *http.Request, data common.Parameters) (template.HTML, bool) {
-	return "pathTraversal.gohtml", true
-}
-
-func readFileHandler(w http.ResponseWriter, r *http.Request, method string, inputs string, isBuffered bool) (template.HTML, bool) {
-	log.Printf("Executing pathTraversal readFile ; method = %s ; use of bytes.Buffer = %t\n", method, isBuffered)
-	var data string
-	var err error
-	switch method {
-	case "safe":
-		inputs = url.QueryEscape(inputs)
-		if isBuffered {
-			data, err = bufferedReadFile(inputs)
-		} else {
-			data, err = readFile(inputs)
-		}
-
-		if err != nil {
-			return template.HTML("Congrats, you are safe! Error from readFile: " + err.Error()), false
-			//fmt.Fprintf(w, "Congrats, you are safe! Error from readFile: ")
-			//http.Error(w, err.Error(),500)
-		} else if data == "" {
-			return template.HTML("Congrats, you are safe! No data was read."), false
-		}
-	case "unsafe":
-		if isBuffered {
-			data, err = bufferedReadFile(inputs)
-		} else {
-			data, err = readFile(inputs)
-		}
-	default:
-		data = "INVALID URL"
+// RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
+func RegisterRoutes(frameworkSinks ...*common.Sink) {
+	sinks := []*common.Sink{
+		{
+			Name:                "os.ReadFile",
+			Sanitize:            url.QueryEscape,
+			VulnerableFnWrapper: osReadFile,
+		},
+		{
+			Name:                "os.Open",
+			Sanitize:            url.QueryEscape,
+			VulnerableFnWrapper: osOpen,
+		},
+		{
+			Name:                 "os.WriteFile",
+			Sanitize:             url.QueryEscape,
+			VulnerableFnWrapper:  osWriteFile,
+			ExpectedUnsafeStatus: http.StatusBadRequest,
+		},
+		{
+			Name:                 "os.Create",
+			Sanitize:             url.QueryEscape,
+			VulnerableFnWrapper:  osCreate,
+			ExpectedUnsafeStatus: http.StatusBadRequest,
+		},
 	}
-	return template.HTML(data), false
+	if len(frameworkSinks) > 0 {
+		sinks = append(sinks, frameworkSinks...)
+	}
+	payload := "../../../../../../../../../../../../etc/passwd"
+	if runtime.GOOS == "windows" {
+		views, err := common.FindViewsDir()
+		if err != nil {
+			log.Fatalf("finding path to file for path traversal: %s", err)
+		}
+		// we know this file exists
+		payload = filepath.Clean(views + `\..\internal\pathtraversal\secrets.txt`)
+		for i := range sinks {
+			if sinks[i].Name == "os.WriteFile" || sinks[i].Name == "os.Create" {
+				//because we're using a writeable file, these will succeed.
+				sinks[i].ExpectedUnsafeStatus = http.StatusOK
+			}
+		}
+	}
+	common.Register(common.Route{
+		Name:     "Path Traversal",
+		Link:     "https://owasp.org/www-community/attacks/Path_Traversal",
+		Base:     "pathTraversal",
+		Products: []string{"Assess", "Protect"},
+		Inputs:   []string{"query", "buffered-query", "headers", "body"},
+		Sinks:    sinks,
+		Payload:  payload,
+	})
 }
 
-// bufferedReadFile read the given file using bytes.Buffer
-func bufferedReadFile(filename string) (string, error) {
-	fr, err := os.Open(filename)
+// read the given file using os.ReadFile
+func osReadFile(_ interface{}, payload string) (data string, raw bool, err error) {
+	var content []byte
+	content, err = os.ReadFile(payload)
 	if err != nil {
 		log.Println(err)
-		return "", err
+		return "", false, err
+	}
+	if len(content) == 0 {
+		return fmt.Sprintf("successfully read from %s; 0 bytes returned", payload), false, nil
+	}
+	return string(content), false, nil
+}
+
+// read the given file using os.Open and bytes.Buffer
+func osOpen(_ interface{}, payload string) (data string, raw bool, err error) {
+	fr, err := os.Open(payload)
+	if err != nil {
+		return "", false, fmt.Errorf("os.Open: error %w", err)
 	}
 	defer fr.Close()
 
 	var buf bytes.Buffer
-	buf.ReadFrom(fr)
-
-	return buf.String(), nil
-}
-
-// readFile read the given file using ioutil.ReadFile
-func readFile(filename string) (string, error) {
-	content, err := ioutil.ReadFile(filename)
-	data := string(content)
+	_, err = buf.ReadFrom(fr)
 	if err != nil {
-		log.Println(err)
-		return "", err
+		return "", false, fmt.Errorf("bytes.(Buffer).ReadFrom: error %w", err)
 	}
-	if data == "" || err != nil {
-		data = "Done!"
-	} else {
-		data = string(content)
-	}
-	return data, nil
+	return buf.String(), false, nil
 }
 
-func writeFileHandler(w http.ResponseWriter, r *http.Request, method string, inputs string, isBuffered bool) (template.HTML, bool) {
-	log.Printf("Executing pathTraversal writeFile ; method =  %s ; use of bytes.Buffer = %t\n", method, isBuffered)
-	var data, message string
-	var err error
-	switch method {
-	case "safe":
-		inputs = url.QueryEscape(inputs)
-		if isBuffered {
-			message = "buffered pathTraversal"
-			err = bufferedWriteFile(inputs, message)
-		} else {
-			message = "pathTraversal"
-			err = writeFile(inputs, message)
-		}
-		data = message
-		if err != nil {
-			return template.HTML("Congrats, you are safe! Error from writeFile: " + err.Error()), false
-		} else if data == "" {
-			return template.HTML("Congrats, you are safe! No data was written."), false
-		} else { //something was written!
-			data = "Wrote \"" + message + "\" to: " + inputs
-			log.Printf("%s was written with pathTraversal\n", inputs)
-		}
-	case "unsafe":
-		if isBuffered {
-			message = "buffered pathTraversal"
-			err = bufferedWriteFile(inputs, message)
-		} else {
-			message = "pathTraversal"
-			err = writeFile(inputs, message)
-		}
-		data = message
-		if data == "" || err != nil {
-			data = "Done!"
-		} else {
-			data = "Wrote \"" + message + "\" to: " + inputs
-		}
-	default:
-		data = "INVALID URL"
-	}
-	return template.HTML(data), false
+// write to the given file using os.WriteFile
+func osWriteFile(_ interface{}, payload string) (data string, raw bool, err error) {
+	return "", false, os.WriteFile(payload, []byte("writing to file via os.WriteFile"), 0644)
 }
 
-// bufferedWriteFile write message content in the given file using bytes.Buffer
-func bufferedWriteFile(filename, message string) error {
-	var buf bytes.Buffer
-	fmt.Fprint(&buf, message)
+// write to the given file using os.Create
+func osCreate(_ interface{}, payload string) (data string, raw bool, err error) {
+	buf := bytes.NewBufferString("writing to file via os.Create")
 
-	fr, err := os.Create(filename)
+	fr, err := os.Create(payload)
 	if err != nil {
-		log.Println(err)
-		return err
+		return "", false, err
 	}
 	defer fr.Close()
 
 	_, err = buf.WriteTo(fr)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-// bufferedWriteFile write message content in the given file using ioutil.WriteFile
-func writeFile(filename, message string) error {
-	err := ioutil.WriteFile(filename, []byte(message), 0644)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-//Handler is the API handler for path traversal
-func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
-	splitURL := strings.Split(r.URL.Path, "/")
-	if len(splitURL) < 4 {
-		return pathTTemplate(w, r, pd)
-	}
-	if splitURL[2] != "body" && splitURL[2] != "headers" && splitURL[2] != "query" && splitURL[2] != "buffered-query" {
-		return template.HTML("INVALID URL"), false
-	}
-	if splitURL[4] == "noop" {
-		return template.HTML("NOOP"), false
-	}
-
-	isBuffered := strings.Contains(splitURL[2], "buffered")
-
-	userInput := common.GetUserInput(r)
-
-	switch splitURL[3] {
-	case "ioutil.ReadFile":
-		return readFileHandler(w, r, splitURL[4], userInput, isBuffered)
-	case "ioutil.WriteFile":
-		return writeFileHandler(w, r, splitURL[4], userInput, isBuffered)
-	default: //should be an error instead
-		return template.HTML("INVALID URL"), false
-	}
+	return "", false, err
 }
