@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT EDIT
-// Generated at 2022-05-24T19:34:18Z. To re-generate, run the following in the repo root:
+// Generated at 2022-06-06T19:32:24Z. To re-generate, run the following in the repo root:
 // go run ./cmd/go-swagger/regen/regen.go
 
 package serveswagger

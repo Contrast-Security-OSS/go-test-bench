@@ -1,5 +1,5 @@
 # GENERATED CODE - DO NOT EDIT
-# Generated at 2022-05-24T19:34:18Z. To re-generate, run the following in the repo root:
+# Generated at 2022-06-06T19:32:24Z. To re-generate, run the following in the repo root:
 # go run ./cmd/go-swagger/regen/regen.go
 
 consumes:
@@ -46,7 +46,7 @@ paths:
             type: string
         default:
           description: error occured
-  /cmdInjection/exec.Command/query/{safety}: #TODO should input be a swagger parm?
+  /cmdInjection/exec.Command/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - cmd_injection
@@ -57,7 +57,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -69,7 +69,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /cmdInjection/exec.CommandContext/query/{safety}: #TODO should input be a swagger parm?
+  /cmdInjection/exec.CommandContext/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - cmd_injection
@@ -80,7 +80,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -108,7 +108,7 @@ paths:
             type: string
         default:
           description: error occured
-  /pathTraversal/os.ReadFile/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.ReadFile/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -119,7 +119,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -131,7 +131,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.ReadFile/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.ReadFile/buffered-query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -142,7 +142,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -154,7 +154,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.Open/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Open/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -165,7 +165,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -177,7 +177,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.Open/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Open/buffered-query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -188,7 +188,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -200,7 +200,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.WriteFile/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.WriteFile/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -211,7 +211,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -223,7 +223,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.WriteFile/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.WriteFile/buffered-query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -234,7 +234,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -246,7 +246,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.Create/query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Create/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -257,7 +257,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -269,7 +269,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /pathTraversal/os.Create/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /pathTraversal/os.Create/buffered-query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - path_traversal
@@ -280,7 +280,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -308,7 +308,7 @@ paths:
             type: string
         default:
           description: error occured
-  /xss/Sink/query/{safety}: #TODO should input be a swagger parm?
+  /xss/Sink/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - xss
@@ -319,7 +319,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -331,7 +331,7 @@ paths:
             description: The response when succesful query happens
         default:
           description: Error occured
-  /xss/Sink/buffered-query/{safety}: #TODO should input be a swagger parm?
+  /xss/Sink/buffered-query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - xss
@@ -342,7 +342,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -370,7 +370,7 @@ paths:
             type: string
         default:
           description: error occured
-  /sqlInjection/sqlite3.exec/query/{safety}: #TODO should input be a swagger parm?
+  /sqlInjection/sqlite3.exec/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - sql_injection
@@ -381,7 +381,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -409,7 +409,7 @@ paths:
             type: string
         default:
           description: error occured
-  /ssrf/Sink/query/{safety}: #TODO should input be a swagger parm?
+  /ssrf/Sink/query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - ssrf
@@ -420,7 +420,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
@@ -448,7 +448,7 @@ paths:
             type: string
         default:
           description: error occured
-  /unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}: #TODO should input be a swagger parm?
+  /unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - unvalidated_redirect
@@ -459,7 +459,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string
