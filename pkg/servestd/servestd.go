@@ -148,5 +148,9 @@ func Setup() {
 
 	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
+	pub, err := common.LocateDir("public", 5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(pub))))
 }

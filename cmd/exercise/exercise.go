@@ -28,6 +28,8 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 	if err := e.init(); err != nil {
 		return err
 	}
+	e.checkAssets(log)
+
 	// send requests
 	for _, r := range e.reqs {
 		for _, s := range r.Sinks {
@@ -43,7 +45,6 @@ func (e *exercises) init() error {
 	e.client = http.DefaultClient
 
 	framework := e.checkFramework()
-	e.checkAssets()
 
 	var err error
 	e.reqs, err = commontest.UnsafeRequests(e.addr)
@@ -76,21 +77,21 @@ func (e *exercises) checkFramework() string {
 }
 
 // ensure assets (currently only app.css) are loadable
-func (e *exercises) checkAssets() {
+func (e *exercises) checkAssets(log common.Logger) {
 	res, err := e.client.Get("http://" + e.addr + "/assets/app.css")
 	if err != nil {
-		e.log.Errorf("failed to GET %s: %s", res.Request.URL, err)
+		log.Errorf("failed to GET %s: %s", res.Request.URL, err)
 	}
-	wantCT := "application/css"
-	if ct := res.Header.Get("Content-Type"); ct != wantCT {
-		e.log.Errorf("expected content type %q, got %q", wantCT, ct)
+	wantCT := "text/css"
+	if ct := res.Header.Get("Content-Type"); !strings.HasPrefix(ct, wantCT) {
+		log.Errorf("expected content type %q, got %q", wantCT, ct)
 	}
 	if b, err := io.ReadAll(res.Body); err != nil || len(b) < 1024 {
 		estr := "(nil)"
 		if err != nil {
 			estr = err.Error()
 		}
-		e.log.Errorf("undersize or unreadable css: len=%d err=%s", len(b), estr)
+		log.Errorf("undersize or unreadable css: len=%d err=%s", len(b), estr)
 	}
 }
 

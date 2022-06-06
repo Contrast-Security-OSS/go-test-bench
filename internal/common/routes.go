@@ -128,7 +128,7 @@ func LocateDir(dir string, maxTries int) (string, error) {
 	if !fi.IsDir() {
 		return "", errors.New("not a dir")
 	}
-	return "", fmt.Errorf("cannot find %s after %d tries", dir, tries)
+	return "", fmt.Errorf("cannot find %s in any of %d parent dirs", dir, tries)
 }
 
 // Templates is the map we use to lookup the parsed templates
