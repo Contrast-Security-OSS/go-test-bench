@@ -33,7 +33,7 @@ var SwaggerParams = common.ConstParams{
 	Addr:      DefaultAddr,
 }
 
-// remove unsupported input types so they are not rendered
+// FilterInputTypes removes unsupported input types so they are not rendered.
 // NOTE: this filtering only has an effect on routes using the generic template
 // TODO(XXX): support things other than query and buffered-query
 func FilterInputTypes(rmap common.RouteMap) {
