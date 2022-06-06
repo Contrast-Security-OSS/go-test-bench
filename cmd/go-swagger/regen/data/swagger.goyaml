@@ -50,7 +50,7 @@ paths:
           description: error occured
   {{- range $sink := $routeInfo.Sinks }}
     {{- range $input := $routeInfo.Inputs }}
-  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}: #TODO should input be a swagger parm?
+  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}: #TODO(GO-1388) input should be a swagger parameter
     get:
       tags:
         - {{ routePkg $routeInfo }}
@@ -61,7 +61,7 @@ paths:
       parameters:
         - $ref: "#/parameters/safetyParam"
         - name: input
-          in: query #TODO how to handle other inputs
+          in: query
           description: the user provided input for the query vulnerability
           required: true
           type: string

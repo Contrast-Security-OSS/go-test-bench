@@ -33,6 +33,32 @@ var SwaggerParams = common.ConstParams{
 	Addr:      DefaultAddr,
 }
 
+// remove unsupported input types so they are not rendered
+// NOTE: this filtering only has an effect on routes using the generic template
+// TODO(XXX): support things other than query and buffered-query
+func FilterInputTypes(rmap common.RouteMap) {
+	allowContains := []string{
+		"query", // query, buffered-query
+	}
+	for path, rt := range rmap {
+		for i := 0; i < len(rt.Inputs); {
+			allow := false
+			for _, a := range allowContains {
+				if strings.Contains(rt.Inputs[i], a) {
+					allow = true
+					break
+				}
+			}
+			if !allow {
+				rt.Inputs = append(rt.Inputs[:i], rt.Inputs[i+1:]...)
+				continue
+			}
+			i++
+		}
+		rmap[path] = rt
+	}
+}
+
 // Setup sets up the configuration for the go-swagger server
 func Setup() (*restapi.Server, error) {
 	// load up the swagger spec.
@@ -52,11 +78,13 @@ func Setup() (*restapi.Server, error) {
 	if err := common.ParseViewTemplates(); err != nil {
 		return nil, err
 	}
-	cmdi.RegisterRoutes(nil)
-	sqli.RegisterRoutes(nil)
-	pathtraversal.RegisterRoutes(nil)
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
+	FilterInputTypes(rmap)
+
 	// lives in generated code. initializes all route handlers other than root.
 	generatedInit(api, rmap, &SwaggerParams)
 

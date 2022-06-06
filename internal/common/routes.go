@@ -119,7 +119,7 @@ func LocateDir(dir string, maxTries int) (string, error) {
 		if err == nil && fi.IsDir() {
 			return filepath.Clean(path), nil
 		}
-		path = "../" + path
+		path = filepath.Join("..", path)
 		tries++
 	}
 	if err != nil {

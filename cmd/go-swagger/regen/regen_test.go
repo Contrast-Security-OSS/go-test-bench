@@ -15,21 +15,21 @@ func Test_routePkg(t *testing.T) {
 		rt         common.Route
 	}{
 		{
-			name: "1",
-			rt: common.Route{
-				Base: "/cmdInjection",
-			},
-			want: "cmd_injection",
-		},
-		{
-			name: "2",
+			name: "basic - trims leading slash",
 			rt: common.Route{
 				Base: "/a",
 			},
 			want: "a",
 		},
 		{
-			name: "3",
+			name: "camel case to snake case",
+			rt: common.Route{
+				Base: "/cmdInjection",
+			},
+			want: "cmd_injection",
+		},
+		{
+			name: "camel case to snake case works for adjacent letters",
 			rt: common.Route{
 				Base: "/XaaaaaaaaaaajAAAAnnnnnnnnnnnnnnnnnn",
 			},

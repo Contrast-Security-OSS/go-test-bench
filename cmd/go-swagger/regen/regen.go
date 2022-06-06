@@ -1,4 +1,4 @@
-// Command gen generates go-swagger yaml and handlers from route data.
+// Command regen generates go-swagger yaml and handlers from route data.
 package main
 
 import (
@@ -18,6 +18,7 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 )
 
 var (
@@ -29,24 +30,20 @@ var (
 )
 
 func main() {
-	cmdi.RegisterRoutes(nil)
-	sqli.RegisterRoutes(nil)
-	pathtraversal.RegisterRoutes(nil)
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
+
+	// do not generate code for input types currently unsupported with swagger.
+	serveswagger.FilterInputTypes(rmap)
+
 	var rlist = make(common.Routes, 0, len(rmap))
 	for _, r := range rmap {
 		if len(r.Sinks) == 0 || len(r.Sinks[0].Name) == 0 {
 			// skip
 			continue
-		}
-		for i := 0; i < len(r.Inputs); {
-			// TODO support things other than query and buffered-query
-			if !strings.Contains(r.Inputs[i], "query") {
-				r.Inputs = append(r.Inputs[:i], r.Inputs[i+1:]...)
-				continue
-			}
-			i++
 		}
 		if len(r.Inputs) == 0 {
 			continue
