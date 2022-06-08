@@ -125,7 +125,11 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	router.HTMLRender = loadTemplates()
 	log.Println("Templates loaded.")
 
-	router.StaticFS("/assets/", http.Dir("./public"))
+	pub, err := common.LocateDir("public", 5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	router.StaticFS("/assets/", http.Dir(pub))
 	router.GET("/", func(c *gin.Context) {
 		c.Header("Application-Framework", "Gin")
 		c.HTML(http.StatusOK, "index.gohtml", templateData(""))

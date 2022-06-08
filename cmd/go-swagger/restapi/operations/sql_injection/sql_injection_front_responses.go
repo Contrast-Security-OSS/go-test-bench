@@ -14,7 +14,7 @@ import (
 // SQLInjectionFrontOKCode is the HTTP code returned for type SQLInjectionFrontOK
 const SQLInjectionFrontOKCode int = 200
 
-/*SQLInjectionFrontOK served front end for SQL Injection Vulnerability of the Swagger API
+/*SQLInjectionFrontOK served front end for SQL Injection page of Swagger API
 
 swagger:response sqlInjectionFrontOK
 */
@@ -72,13 +72,13 @@ func NewSQLInjectionFrontDefault(code int) *SQLInjectionFrontDefault {
 	}
 }
 
-// WithStatusCode adds the status to the sql injection front default response
+// WithStatusCode adds the status to the SQL injection front default response
 func (o *SQLInjectionFrontDefault) WithStatusCode(code int) *SQLInjectionFrontDefault {
 	o._statusCode = code
 	return o
 }
 
-// SetStatusCode sets the status to the sql injection front default response
+// SetStatusCode sets the status to the SQL injection front default response
 func (o *SQLInjectionFrontDefault) SetStatusCode(code int) {
 	o._statusCode = code
 }

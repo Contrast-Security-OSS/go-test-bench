@@ -23,7 +23,7 @@ func NewSsrfFrontParams() SsrfFrontParams {
 // SsrfFrontParams contains all the bound params for the ssrf front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters ssrfFront
+// swagger:parameters SsrfFront
 type SsrfFrontParams struct {
 
 	// HTTP Request Object

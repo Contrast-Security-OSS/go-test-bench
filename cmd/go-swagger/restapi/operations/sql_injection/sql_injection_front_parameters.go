@@ -20,10 +20,10 @@ func NewSQLInjectionFrontParams() SQLInjectionFrontParams {
 	return SQLInjectionFrontParams{}
 }
 
-// SQLInjectionFrontParams contains all the bound params for the sql injection front operation
+// SQLInjectionFrontParams contains all the bound params for the SQL injection front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters sqlInjectionFront
+// swagger:parameters SQLInjectionFront
 type SQLInjectionFrontParams struct {
 
 	// HTTP Request Object

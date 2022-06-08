@@ -31,6 +31,7 @@ func TestExerciseIntegration(t *testing.T) {
 				return router
 			},
 		},
+		// TODO(GO-1397): add support for go-swagger to this test and the exercise app
 	}
 
 	for name, test := range tests {
@@ -52,6 +53,9 @@ func TestExerciseIntegration(t *testing.T) {
 			if err := e.init(); err != nil {
 				t.Fatal(err)
 			}
+			t.Run("check css asset content type", func(t *testing.T) {
+				e.checkAssets(t)
+			})
 			for _, r := range e.reqs {
 				if len(r.Sinks) == 0 {
 					continue

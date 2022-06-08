@@ -65,13 +65,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
         "summary": "front page of the Command Injection vulnerability",
-        "operationId": "cmdInjectionFront",
+        "operationId": "CmdInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for command injection page of Swagger API",
+            "description": "served front end for Command Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -84,14 +84,14 @@ func init() {
     },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommand",
+        "operationId": "CmdInjectionGetQueryCommand",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -120,14 +120,14 @@ func init() {
     },
     "/cmdInjection/exec.CommandContext/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommandContext",
+        "operationId": "CmdInjectionGetQueryCommandContext",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -160,13 +160,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "path-traversal"
+          "path_traversal"
         ],
-        "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversalFront",
+        "summary": "front page of the Path Traversal vulnerability",
+        "operationId": "PathTraversalFront",
         "responses": {
           "200": {
-            "description": "served front end for path traversal page of Swagger API",
+            "description": "served front end for Path Traversal page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -177,25 +177,349 @@ func init() {
         }
       }
     },
+    "/pathTraversal/os.Create/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Create",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryCreate",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Create/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.Create",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryCreate",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Open/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Open",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryOpen",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Open/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.Open",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryOpen",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.ReadFile/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryReadFile",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.ReadFile/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.ReadFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryReadFile",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.WriteFile/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryWriteFile",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.WriteFile/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.WriteFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryWriteFile",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/sqlInjection": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "sql-injection"
+          "sql_injection"
         ],
         "summary": "front page of the SQL Injection vulnerability",
-        "operationId": "sqlInjectionFront",
+        "operationId": "SQLInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for SQL Injection Vulnerability of the Swagger API",
+            "description": "served front end for SQL Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/sqlInjection/sqlite3.exec/query/{safety}": {
+      "get": {
+        "description": "demonstrates SQL Injection via query, with vulnerable function sqlite3.exec",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "sql_injection"
+        ],
+        "operationId": "SQLInjectionGetQueryExec",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -208,11 +532,11 @@ func init() {
         "tags": [
           "ssrf"
         ],
-        "summary": "front page of the SSRF vulnerability",
-        "operationId": "ssrfFront",
+        "summary": "front page of the Server Side Request Forgery vulnerability",
+        "operationId": "SsrfFront",
         "responses": {
           "200": {
-            "description": "served front end for SSRF Vulnerability of the Swagger API",
+            "description": "served front end for Server Side Request Forgery page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -223,25 +547,97 @@ func init() {
         }
       }
     },
+    "/ssrf/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetQuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/unvalidatedRedirect": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "unvalidated-redirect"
+          "unvalidated_redirect"
         ],
         "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "unvalidatedRedirectFront",
+        "operationId": "UnvalidatedRedirectFront",
         "responses": {
           "200": {
-            "description": "served front end for unvalidated redirect of the Swagger API",
+            "description": "served front end for Unvalidated Redirect page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}": {
+      "get": {
+        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "unvalidated_redirect"
+        ],
+        "operationId": "UnvalidatedRedirectGetQueryRedirect",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -254,17 +650,89 @@ func init() {
         "tags": [
           "xss"
         ],
-        "summary": "supposed to serve the frontend for the query or cookie vulns",
-        "operationId": "xssFront",
+        "summary": "front page of the Reflected XSS vulnerability",
+        "operationId": "XSSFront",
         "responses": {
           "200": {
-            "description": "served front end for xss page of Swagger API",
+            "description": "served front end for Reflected XSS page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBufferedQuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetQuerySink",
+        "parameters": [
+          {
+            "$ref": "#/parameters/safetyParam"
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -381,13 +849,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
         "summary": "front page of the Command Injection vulnerability",
-        "operationId": "cmdInjectionFront",
+        "operationId": "CmdInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for command injection page of Swagger API",
+            "description": "served front end for Command Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -400,14 +868,14 @@ func init() {
     },
     "/cmdInjection/exec.Command/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.Command\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommand",
+        "operationId": "CmdInjectionGetQueryCommand",
         "parameters": [
           {
             "enum": [
@@ -445,14 +913,14 @@ func init() {
     },
     "/cmdInjection/exec.CommandContext/query/{safety}": {
       "get": {
-        "description": "Used to demonstrate how user input data can be passed to exec.CommandContext\n",
+        "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
           "text/plain"
         ],
         "tags": [
-          "cmd-injection"
+          "cmd_injection"
         ],
-        "operationId": "getQueryCommandContext",
+        "operationId": "CmdInjectionGetQueryCommandContext",
         "parameters": [
           {
             "enum": [
@@ -494,13 +962,13 @@ func init() {
           "text/html"
         ],
         "tags": [
-          "path-traversal"
+          "path_traversal"
         ],
-        "summary": "front page of the Path Traversal Vulnerability",
-        "operationId": "pathTraversalFront",
+        "summary": "front page of the Path Traversal vulnerability",
+        "operationId": "PathTraversalFront",
         "responses": {
           "200": {
-            "description": "served front end for path traversal page of Swagger API",
+            "description": "served front end for Path Traversal page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -511,25 +979,430 @@ func init() {
         }
       }
     },
+    "/pathTraversal/os.Create/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Create",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryCreate",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Create/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.Create",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryCreate",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Open/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Open",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryOpen",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.Open/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.Open",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryOpen",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.ReadFile/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryReadFile",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.ReadFile/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.ReadFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryReadFile",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.WriteFile/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetBufferedQueryWriteFile",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/pathTraversal/os.WriteFile/query/{safety}": {
+      "get": {
+        "description": "demonstrates Path Traversal via query, with vulnerable function os.WriteFile",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "path_traversal"
+        ],
+        "operationId": "PathTraversalGetQueryWriteFile",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/sqlInjection": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "sql-injection"
+          "sql_injection"
         ],
         "summary": "front page of the SQL Injection vulnerability",
-        "operationId": "sqlInjectionFront",
+        "operationId": "SQLInjectionFront",
         "responses": {
           "200": {
-            "description": "served front end for SQL Injection Vulnerability of the Swagger API",
+            "description": "served front end for SQL Injection page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/sqlInjection/sqlite3.exec/query/{safety}": {
+      "get": {
+        "description": "demonstrates SQL Injection via query, with vulnerable function sqlite3.exec",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "sql_injection"
+        ],
+        "operationId": "SQLInjectionGetQueryExec",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -542,11 +1415,11 @@ func init() {
         "tags": [
           "ssrf"
         ],
-        "summary": "front page of the SSRF vulnerability",
-        "operationId": "ssrfFront",
+        "summary": "front page of the Server Side Request Forgery vulnerability",
+        "operationId": "SsrfFront",
         "responses": {
           "200": {
-            "description": "served front end for SSRF Vulnerability of the Swagger API",
+            "description": "served front end for Server Side Request Forgery page of Swagger API",
             "schema": {
               "type": "string"
             }
@@ -557,25 +1430,115 @@ func init() {
         }
       }
     },
+    "/ssrf/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "ssrf"
+        ],
+        "operationId": "SsrfGetQuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
     "/unvalidatedRedirect": {
       "get": {
         "produces": [
           "text/html"
         ],
         "tags": [
-          "unvalidated-redirect"
+          "unvalidated_redirect"
         ],
         "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "unvalidatedRedirectFront",
+        "operationId": "UnvalidatedRedirectFront",
         "responses": {
           "200": {
-            "description": "served front end for unvalidated redirect of the Swagger API",
+            "description": "served front end for Unvalidated Redirect page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}": {
+      "get": {
+        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "unvalidated_redirect"
+        ],
+        "operationId": "UnvalidatedRedirectGetQueryRedirect",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }
@@ -588,17 +1551,107 @@ func init() {
         "tags": [
           "xss"
         ],
-        "summary": "supposed to serve the frontend for the query or cookie vulns",
-        "operationId": "xssFront",
+        "summary": "front page of the Reflected XSS vulnerability",
+        "operationId": "XSSFront",
         "responses": {
           "200": {
-            "description": "served front end for xss page of Swagger API",
+            "description": "served front end for Reflected XSS page of Swagger API",
             "schema": {
               "type": "string"
             }
           },
           "default": {
             "description": "error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/buffered-query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetBufferedQuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
+          }
+        }
+      }
+    },
+    "/xss/Sink/query/{safety}": {
+      "get": {
+        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "xss"
+        ],
+        "operationId": "XSSGetQuerySink",
+        "parameters": [
+          {
+            "enum": [
+              "safe",
+              "unsafe",
+              "noop"
+            ],
+            "type": "string",
+            "description": "safety qualifier",
+            "name": "safety",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "the user provided input for the query vulnerability",
+            "name": "input",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the rendered response as a string",
+            "schema": {
+              "description": "The response when succesful query happens",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Error occured"
           }
         }
       }

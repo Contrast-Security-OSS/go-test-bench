@@ -10,13 +10,14 @@ import (
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/cmd_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )
@@ -32,6 +33,32 @@ var SwaggerParams = common.ConstParams{
 	Addr:      DefaultAddr,
 }
 
+// FilterInputTypes removes unsupported input types so they are not rendered.
+// NOTE: this filtering only has an effect on routes using the generic template
+// TODO(XXX): support things other than query and buffered-query
+func FilterInputTypes(rmap common.RouteMap) {
+	allowContains := []string{
+		"query", // query, buffered-query
+	}
+	for path, rt := range rmap {
+		for i := 0; i < len(rt.Inputs); {
+			allow := false
+			for _, a := range allowContains {
+				if strings.Contains(rt.Inputs[i], a) {
+					allow = true
+					break
+				}
+			}
+			if !allow {
+				rt.Inputs = append(rt.Inputs[:i], rt.Inputs[i+1:]...)
+				continue
+			}
+			i++
+		}
+		rmap[path] = rt
+	}
+}
+
 // Setup sets up the configuration for the go-swagger server
 func Setup() (*restapi.Server, error) {
 	// load up the swagger spec.
@@ -40,10 +67,6 @@ func Setup() (*restapi.Server, error) {
 		log.Fatalln(err)
 	}
 
-	cmdi.RegisterRoutes()
-
-	rmap := common.PopulateRouteMap(common.AllRoutes)
-
 	// set up the handlers for the api
 	api := operations.NewSwaggerBenchAPI(swaggerSpec)
 
@@ -51,21 +74,19 @@ func Setup() (*restapi.Server, error) {
 
 	api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(SwaggerRootHandler)
 
-	api.CmdInjectionCmdInjectionFrontHandler = cmd_injection.CmdInjectionFrontHandlerFunc(
-		func(p cmd_injection.CmdInjectionFrontParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
-	api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(
-		func(p cmd_injection.GetQueryCommandParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
-	api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(
-		func(p cmd_injection.GetQueryCommandContextParams) middleware.Responder {
-			return RouteHandler(rmap["/cmdInjection"], SwaggerParams, p.HTTPRequest)
-		},
-	)
+	// set up currently supported routes and resources
+	if err := common.ParseViewTemplates(); err != nil {
+		return nil, err
+	}
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
+
+	rmap := common.PopulateRouteMap(common.AllRoutes)
+	FilterInputTypes(rmap)
+
+	// lives in generated code. initializes all route handlers other than root.
+	generatedInit(api, rmap, &SwaggerParams)
 
 	server := restapi.NewServer(api)
 
@@ -93,22 +114,17 @@ func Setup() (*restapi.Server, error) {
 	server.ConfigureAPI()
 	server.Port = 8080
 
-	// set up currently supported routes and resources
-	if err := common.ParseViewTemplates(); err != nil {
-		return nil, err
-	}
-
 	SwaggerParams.Rulebar = rmap
 
 	return server, nil
 }
 
 // RouteHandler returns a middleware.Responder that serves our html and the vulnerable functions.
-func RouteHandler(rt common.Route, pd common.ConstParams, req *http.Request) middleware.Responder {
+func RouteHandler(rt common.Route, pd *common.ConstParams, req *http.Request) middleware.Responder {
 	return &responder{
 		rt: rt,
 		params: common.Parameters{
-			ConstParams: pd,
+			ConstParams: *pd,
 			Name:        rt.Base,
 		},
 		req: req,

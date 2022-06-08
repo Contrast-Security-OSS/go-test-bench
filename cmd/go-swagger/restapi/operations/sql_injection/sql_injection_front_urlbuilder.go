@@ -11,7 +11,7 @@ import (
 	golangswaggerpaths "path"
 )
 
-// SQLInjectionFrontURL generates an URL for the sql injection front operation
+// SQLInjectionFrontURL generates an URL for the SQL injection front operation
 type SQLInjectionFrontURL struct {
 	_basePath string
 }

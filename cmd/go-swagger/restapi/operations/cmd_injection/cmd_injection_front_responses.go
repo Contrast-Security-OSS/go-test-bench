@@ -14,7 +14,7 @@ import (
 // CmdInjectionFrontOKCode is the HTTP code returned for type CmdInjectionFrontOK
 const CmdInjectionFrontOKCode int = 200
 
-/*CmdInjectionFrontOK served front end for command injection page of Swagger API
+/*CmdInjectionFrontOK served front end for Command Injection page of Swagger API
 
 swagger:response cmdInjectionFrontOK
 */

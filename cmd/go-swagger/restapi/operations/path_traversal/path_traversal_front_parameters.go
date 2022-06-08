@@ -23,7 +23,7 @@ func NewPathTraversalFrontParams() PathTraversalFrontParams {
 // PathTraversalFrontParams contains all the bound params for the path traversal front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters pathTraversalFront
+// swagger:parameters PathTraversalFront
 type PathTraversalFrontParams struct {
 
 	// HTTP Request Object

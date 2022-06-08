@@ -11,7 +11,7 @@ import (
 	golangswaggerpaths "path"
 )
 
-// XSSFrontURL generates an URL for the xss front operation
+// XSSFrontURL generates an URL for the XSS front operation
 type XSSFrontURL struct {
 	_basePath string
 }

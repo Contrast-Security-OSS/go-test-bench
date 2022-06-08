@@ -20,10 +20,10 @@ func NewXSSFrontParams() XSSFrontParams {
 	return XSSFrontParams{}
 }
 
-// XSSFrontParams contains all the bound params for the xss front operation
+// XSSFrontParams contains all the bound params for the XSS front operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters xssFront
+// swagger:parameters XSSFront
 type XSSFrontParams struct {
 
 	// HTTP Request Object

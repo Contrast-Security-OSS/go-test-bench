@@ -23,10 +23,13 @@ security professionals. Any maintainers are welcome to make pull requests.
 
 ## How to Run Locally
 
+* standard library
 ```bash
-    go build -o app ./cmd/std # or ./cmd/gin for Gin framework
+    go build -o app ./cmd/std
     ./app
 ```
+
+To run with gin instead, substitute `gin` for `std` in the build command; likewise for `go-swagger`.
 
 View app at [http://localhost:8080](http://localhost:8080)
 
@@ -47,3 +50,26 @@ View app at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 ## Acknowledgements
 
 The development [team](docs/acknowledgements.md).
+
+
+## Experimenting with the code
+
+### organization
+
+* code for vulnerable functions is located in `internal/`
+  * exception: vulnerable functions from a particular framework (see below)
+* framework-specific code is located under `cmd/` and `pkg/`
+* html templates and css are under `views/`
+* vulnerability and route data
+  * old data is in `views/routes.json`
+  * new data is in go structs, located in the relevant package under `internal/`
+  * we are in the process of migrating all data from routes.json to the new form.
+
+### quirks
+
+Each framework is different. We've tried to separate framework logic from vulnerability logic so that adding a framework necessitates a minimum of changes to vulnerability logic, and vice versa.
+
+#### swagger
+Swagger is a bit unique, in that it has a lot of generated code and requires a swagger spec. To maintain a single source of truth, we generate the swagger spec from our route data. We also generate boilerplate tying a route handler to each swagger endpoint.
+
+For details, see [cmd/go-swagger/README.md](cmd/go-swagger/README.md)

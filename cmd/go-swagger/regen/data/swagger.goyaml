@@ -1,0 +1,125 @@
+# {{ .GenNotice }}
+# Generated at {{ .Timestamp }}. To re-generate, run the following in the repo root:
+# {{ .GenCmd }}
+
+consumes:
+  - application/io.goswagger.go-test-bench.v1+json
+info:
+  description: An API built with go-swagger to generate intentionally vulnerable endpoints
+  title: swagger-bench
+  version: 1.0.0
+produces:
+  - application/io.goswagger.go-test-bench.v1+json
+schemes:
+  - http
+swagger: "2.0"
+
+paths:
+  /:
+    get:
+      tags:
+        - swagger-server
+      operationId: root
+      produces:
+        - text/html
+      responses:
+        200:
+          description: serves to display the root of the swagger API for the test bench
+          schema:
+            type: string
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+
+{{- range $routeInfo := .Routes }}
+  {{ $routeInfo.Base }}:
+    get:
+      tags:
+        - {{ routePkg $routeInfo }}
+      summary: front page of the {{ $routeInfo.Name }} vulnerability
+      operationId: {{ routeIdentifier $routeInfo }}Front
+      produces:
+        - text/html
+      responses:
+        200:
+          description: served front end for {{ $routeInfo.Name }} page of Swagger API
+          schema:
+            type: string
+        default:
+          description: error occured
+  {{- range $sink := $routeInfo.Sinks }}
+    {{- range $input := $routeInfo.Inputs }}
+  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}: #TODO(GO-1388) input should be a swagger parameter
+    get:
+      tags:
+        - {{ routePkg $routeInfo }}
+      description: demonstrates {{ $routeInfo.Name }} via {{ $input }}, with vulnerable function {{ $sink.Name }}
+      operationId: {{ routeIdentifier $routeInfo }}{{ sinkFn $input $sink }}
+      produces:
+        - text/plain
+      parameters:
+        - $ref: "#/parameters/safetyParam"
+        - name: input
+          in: query
+          description: the user provided input for the query vulnerability
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns the rendered response as a string
+          schema:
+            type: string
+            description: The response when succesful query happens
+        default:
+          description: Error occured
+    {{- end -}}
+  {{ end }}
+{{ end }}
+definitions:
+  item:
+    type: object
+    required:
+      - description
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      description:
+        type: string
+        minLength: 1
+      completed:
+        type: boolean
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+
+parameters:
+  commandParam:
+    in: path
+    name: command
+    description: specify if exec.Command or exec.CommandContext should be invoked
+    required: true
+    type: string
+    enum:
+      - exec.Command
+      - exec.CommandContext
+
+  safetyParam:
+    name: safety
+    in: path
+    description: safety qualifier
+    required: true
+    type: string
+    enum:
+      - safe
+      - unsafe
+      - noop

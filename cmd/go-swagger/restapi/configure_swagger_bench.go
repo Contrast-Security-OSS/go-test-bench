@@ -4,6 +4,7 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 	"strings"
 
@@ -19,9 +20,12 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
-//go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
+//go:generate go run ../regen/regen.go
+
+//original generate command: //go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
 
 func configureFlags(api *operations.SwaggerBenchAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -52,14 +56,14 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		})
 	}
-	if api.CmdInjectionGetQueryCommandHandler == nil {
-		api.CmdInjectionGetQueryCommandHandler = cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
+	if api.CmdInjectionCmdInjectionGetQueryCommandHandler == nil {
+		api.CmdInjectionCmdInjectionGetQueryCommandHandler = cmd_injection.CmdInjectionGetQueryCommandHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommand has not yet been implemented")
 		})
 	}
-	if api.CmdInjectionGetQueryCommandContextHandler == nil {
-		api.CmdInjectionGetQueryCommandContextHandler = cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommandContext has not yet been implemented")
+	if api.CmdInjectionCmdInjectionGetQueryCommandContextHandler == nil {
+		api.CmdInjectionCmdInjectionGetQueryCommandContextHandler = cmd_injection.CmdInjectionGetQueryCommandContextHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommandContext has not yet been implemented")
 		})
 	}
 	if api.PathTraversalPathTraversalFrontHandler == nil {
@@ -67,9 +71,44 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
 		})
 	}
-	if api.SwaggerServerRootHandler == nil {
-		api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
-			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
+	if api.PathTraversalPathTraversalGetBufferedQueryCreateHandler == nil {
+		api.PathTraversalPathTraversalGetBufferedQueryCreateHandler = path_traversal.PathTraversalGetBufferedQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryCreate has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetBufferedQueryOpenHandler == nil {
+		api.PathTraversalPathTraversalGetBufferedQueryOpenHandler = path_traversal.PathTraversalGetBufferedQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryOpen has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetBufferedQueryReadFileHandler == nil {
+		api.PathTraversalPathTraversalGetBufferedQueryReadFileHandler = path_traversal.PathTraversalGetBufferedQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryReadFile has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler == nil {
+		api.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler = path_traversal.PathTraversalGetBufferedQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryWriteFile has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetQueryCreateHandler == nil {
+		api.PathTraversalPathTraversalGetQueryCreateHandler = path_traversal.PathTraversalGetQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryCreate has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetQueryOpenHandler == nil {
+		api.PathTraversalPathTraversalGetQueryOpenHandler = path_traversal.PathTraversalGetQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryOpen has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetQueryReadFileHandler == nil {
+		api.PathTraversalPathTraversalGetQueryReadFileHandler = path_traversal.PathTraversalGetQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryReadFile has not yet been implemented")
+		})
+	}
+	if api.PathTraversalPathTraversalGetQueryWriteFileHandler == nil {
+		api.PathTraversalPathTraversalGetQueryWriteFileHandler = path_traversal.PathTraversalGetQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryWriteFile has not yet been implemented")
 		})
 	}
 	if api.SQLInjectionSQLInjectionFrontHandler == nil {
@@ -77,9 +116,19 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation sql_injection.SQLInjectionFront has not yet been implemented")
 		})
 	}
+	if api.SQLInjectionSQLInjectionGetQueryExecHandler == nil {
+		api.SQLInjectionSQLInjectionGetQueryExecHandler = sql_injection.SQLInjectionGetQueryExecHandlerFunc(func(params sql_injection.SQLInjectionGetQueryExecParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionGetQueryExec has not yet been implemented")
+		})
+	}
 	if api.SsrfSsrfFrontHandler == nil {
 		api.SsrfSsrfFrontHandler = ssrf.SsrfFrontHandlerFunc(func(params ssrf.SsrfFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
+		})
+	}
+	if api.SsrfSsrfGetQuerySinkHandler == nil {
+		api.SsrfSsrfGetQuerySinkHandler = ssrf.SsrfGetQuerySinkHandlerFunc(func(params ssrf.SsrfGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
 		})
 	}
 	if api.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
@@ -87,9 +136,29 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
 		})
 	}
+	if api.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler == nil {
+		api.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler = unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectParams) middleware.Responder {
+			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectGetQueryRedirect has not yet been implemented")
+		})
+	}
 	if api.XSSXSSFrontHandler == nil {
 		api.XSSXSSFrontHandler = xss.XSSFrontHandlerFunc(func(params xss.XSSFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSFront has not yet been implemented")
+		})
+	}
+	if api.XSSXSSGetBufferedQuerySinkHandler == nil {
+		api.XSSXSSGetBufferedQuerySinkHandler = xss.XSSGetBufferedQuerySinkHandlerFunc(func(params xss.XSSGetBufferedQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBufferedQuerySink has not yet been implemented")
+		})
+	}
+	if api.XSSXSSGetQuerySinkHandler == nil {
+		api.XSSXSSGetQuerySinkHandler = xss.XSSGetQuerySinkHandlerFunc(func(params xss.XSSGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetQuerySink has not yet been implemented")
+		})
+	}
+	if api.SwaggerServerRootHandler == nil {
+		api.SwaggerServerRootHandler = swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
+			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
 		})
 	}
 
@@ -118,7 +187,16 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 	return handler
 }
 
-var assetHandler http.Handler = http.StripPrefix("/assets/", http.FileServer(http.Dir("./public")))
+var assetHandler http.Handler = http.StripPrefix("/assets/",
+	http.FileServer(http.Dir(
+		func() string {
+			dir, err := common.LocateDir("public", 5)
+			if err != nil {
+				log.Fatal(err)
+			}
+			return dir
+		}())),
+)
 
 func uiMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -129,8 +207,6 @@ func uiMiddleware(handler http.Handler) http.Handler {
 		handler.ServeHTTP(w, r)
 	})
 }
-
-
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.

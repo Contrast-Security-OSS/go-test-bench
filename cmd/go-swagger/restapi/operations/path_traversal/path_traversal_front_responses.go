@@ -14,7 +14,7 @@ import (
 // PathTraversalFrontOKCode is the HTTP code returned for type PathTraversalFrontOK
 const PathTraversalFrontOKCode int = 200
 
-/*PathTraversalFrontOK served front end for path traversal page of Swagger API
+/*PathTraversalFrontOK served front end for Path Traversal page of Swagger API
 
 swagger:response pathTraversalFrontOK
 */

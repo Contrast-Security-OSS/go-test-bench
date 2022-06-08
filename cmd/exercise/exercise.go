@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"io"
 	"net/http"
 	"strings"
 
@@ -28,6 +28,8 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 	if err := e.init(); err != nil {
 		return err
 	}
+	e.checkAssets(log)
+
 	// send requests
 	for _, r := range e.reqs {
 		for _, s := range r.Sinks {
@@ -42,13 +44,24 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 func (e *exercises) init() error {
 	e.client = http.DefaultClient
 
-	// Send request to app root to determine framework
+	framework := e.checkFramework()
+
+	var err error
+	e.reqs, err = commontest.UnsafeRequests(e.addr)
+	if err != nil {
+		e.log.Fatalf("failed to generate requests for %s framework: %s", framework, err)
+	}
+	return nil
+}
+
+// Send request to app root to determine checkFramework
+func (e *exercises) checkFramework() string {
 	res, err := e.client.Get("http://" + e.addr)
 	if err != nil {
-		return fmt.Errorf("failed to GET root: %s", err)
+		e.log.Fatalf("failed to GET root: %s", err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("unsuccessful root response: %d", res.StatusCode)
+		e.log.Fatalf("unsuccessful root response: %d", res.StatusCode)
 	}
 
 	f := res.Header.Get("Application-Framework")
@@ -60,11 +73,26 @@ func (e *exercises) init() error {
 	default:
 		e.log.Fatalf("unsupported application framework: %s", f)
 	}
-	e.reqs, err = commontest.UnsafeRequests(e.addr)
+	return f
+}
+
+// ensure assets (currently only app.css) are loadable
+func (e *exercises) checkAssets(log common.Logger) {
+	res, err := e.client.Get("http://" + e.addr + "/assets/app.css")
 	if err != nil {
-		e.log.Fatalf("failed to generate requests for %s framework: %s", f, err)
+		log.Errorf("failed to GET %s: %s", res.Request.URL, err)
 	}
-	return nil
+	wantCT := "text/css"
+	if ct := res.Header.Get("Content-Type"); !strings.HasPrefix(ct, wantCT) {
+		log.Errorf("expected content type %q, got %q", wantCT, ct)
+	}
+	if b, err := io.ReadAll(res.Body); err != nil || len(b) < 1024 {
+		estr := "(nil)"
+		if err != nil {
+			estr = err.Error()
+		}
+		log.Errorf("undersize or unreadable css: len=%d err=%s", len(b), estr)
+	}
 }
 
 // send requests

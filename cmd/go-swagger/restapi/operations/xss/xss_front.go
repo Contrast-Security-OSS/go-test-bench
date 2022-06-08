@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// XSSFrontHandlerFunc turns a function with the right signature into a xss front handler
+// XSSFrontHandlerFunc turns a function with the right signature into a XSS front handler
 type XSSFrontHandlerFunc func(XSSFrontParams) middleware.Responder
 
 // Handle executing the request and returning a response
@@ -19,19 +19,19 @@ func (fn XSSFrontHandlerFunc) Handle(params XSSFrontParams) middleware.Responder
 	return fn(params)
 }
 
-// XSSFrontHandler interface for that can handle valid xss front params
+// XSSFrontHandler interface for that can handle valid XSS front params
 type XSSFrontHandler interface {
 	Handle(XSSFrontParams) middleware.Responder
 }
 
-// NewXSSFront creates a new http.Handler for the xss front operation
+// NewXSSFront creates a new http.Handler for the XSS front operation
 func NewXSSFront(ctx *middleware.Context, handler XSSFrontHandler) *XSSFront {
 	return &XSSFront{Context: ctx, Handler: handler}
 }
 
 /* XSSFront swagger:route GET /xss xss xssFront
 
-supposed to serve the frontend for the query or cookie vulns
+front page of the Reflected XSS vulnerability
 
 */
 type XSSFront struct {

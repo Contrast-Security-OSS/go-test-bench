@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// SQLInjectionFrontHandlerFunc turns a function with the right signature into a sql injection front handler
+// SQLInjectionFrontHandlerFunc turns a function with the right signature into a SQL injection front handler
 type SQLInjectionFrontHandlerFunc func(SQLInjectionFrontParams) middleware.Responder
 
 // Handle executing the request and returning a response
@@ -19,17 +19,17 @@ func (fn SQLInjectionFrontHandlerFunc) Handle(params SQLInjectionFrontParams) mi
 	return fn(params)
 }
 
-// SQLInjectionFrontHandler interface for that can handle valid sql injection front params
+// SQLInjectionFrontHandler interface for that can handle valid SQL injection front params
 type SQLInjectionFrontHandler interface {
 	Handle(SQLInjectionFrontParams) middleware.Responder
 }
 
-// NewSQLInjectionFront creates a new http.Handler for the sql injection front operation
+// NewSQLInjectionFront creates a new http.Handler for the SQL injection front operation
 func NewSQLInjectionFront(ctx *middleware.Context, handler SQLInjectionFrontHandler) *SQLInjectionFront {
 	return &SQLInjectionFront{Context: ctx, Handler: handler}
 }
 
-/* SQLInjectionFront swagger:route GET /sqlInjection sql-injection sqlInjectionFront
+/* SQLInjectionFront swagger:route GET /sqlInjection sql_injection sqlInjectionFront
 
 front page of the SQL Injection vulnerability
 

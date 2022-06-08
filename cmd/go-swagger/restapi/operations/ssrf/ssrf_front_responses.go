@@ -14,7 +14,7 @@ import (
 // SsrfFrontOKCode is the HTTP code returned for type SsrfFrontOK
 const SsrfFrontOKCode int = 200
 
-/*SsrfFrontOK served front end for SSRF Vulnerability of the Swagger API
+/*SsrfFrontOK served front end for Server Side Request Forgery page of Swagger API
 
 swagger:response ssrfFrontOK
 */

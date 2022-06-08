@@ -58,29 +58,68 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		CmdInjectionCmdInjectionFrontHandler: cmd_injection.CmdInjectionFrontHandlerFunc(func(params cmd_injection.CmdInjectionFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation cmd_injection.CmdInjectionFront has not yet been implemented")
 		}),
-		CmdInjectionGetQueryCommandHandler: cmd_injection.GetQueryCommandHandlerFunc(func(params cmd_injection.GetQueryCommandParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommand has not yet been implemented")
+		CmdInjectionCmdInjectionGetQueryCommandHandler: cmd_injection.CmdInjectionGetQueryCommandHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommand has not yet been implemented")
 		}),
-		CmdInjectionGetQueryCommandContextHandler: cmd_injection.GetQueryCommandContextHandlerFunc(func(params cmd_injection.GetQueryCommandContextParams) middleware.Responder {
-			return middleware.NotImplemented("operation cmd_injection.GetQueryCommandContext has not yet been implemented")
+		CmdInjectionCmdInjectionGetQueryCommandContextHandler: cmd_injection.CmdInjectionGetQueryCommandContextHandlerFunc(func(params cmd_injection.CmdInjectionGetQueryCommandContextParams) middleware.Responder {
+			return middleware.NotImplemented("operation cmd_injection.CmdInjectionGetQueryCommandContext has not yet been implemented")
 		}),
 		PathTraversalPathTraversalFrontHandler: path_traversal.PathTraversalFrontHandlerFunc(func(params path_traversal.PathTraversalFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation path_traversal.PathTraversalFront has not yet been implemented")
 		}),
-		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
-			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
+		PathTraversalPathTraversalGetBufferedQueryCreateHandler: path_traversal.PathTraversalGetBufferedQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryOpenHandler: path_traversal.PathTraversalGetBufferedQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryReadFileHandler: path_traversal.PathTraversalGetBufferedQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetBufferedQueryWriteFileHandler: path_traversal.PathTraversalGetBufferedQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetBufferedQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetBufferedQueryWriteFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryCreateHandler: path_traversal.PathTraversalGetQueryCreateHandlerFunc(func(params path_traversal.PathTraversalGetQueryCreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryCreate has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryOpenHandler: path_traversal.PathTraversalGetQueryOpenHandlerFunc(func(params path_traversal.PathTraversalGetQueryOpenParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryOpen has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryReadFileHandler: path_traversal.PathTraversalGetQueryReadFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryReadFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryReadFile has not yet been implemented")
+		}),
+		PathTraversalPathTraversalGetQueryWriteFileHandler: path_traversal.PathTraversalGetQueryWriteFileHandlerFunc(func(params path_traversal.PathTraversalGetQueryWriteFileParams) middleware.Responder {
+			return middleware.NotImplemented("operation path_traversal.PathTraversalGetQueryWriteFile has not yet been implemented")
 		}),
 		SQLInjectionSQLInjectionFrontHandler: sql_injection.SQLInjectionFrontHandlerFunc(func(params sql_injection.SQLInjectionFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation sql_injection.SQLInjectionFront has not yet been implemented")
 		}),
+		SQLInjectionSQLInjectionGetQueryExecHandler: sql_injection.SQLInjectionGetQueryExecHandlerFunc(func(params sql_injection.SQLInjectionGetQueryExecParams) middleware.Responder {
+			return middleware.NotImplemented("operation sql_injection.SQLInjectionGetQueryExec has not yet been implemented")
+		}),
 		SsrfSsrfFrontHandler: ssrf.SsrfFrontHandlerFunc(func(params ssrf.SsrfFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
+		}),
+		SsrfSsrfGetQuerySinkHandler: ssrf.SsrfGetQuerySinkHandlerFunc(func(params ssrf.SsrfGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
 		}),
 		UnvalidatedRedirectUnvalidatedRedirectFrontHandler: unvalidated_redirect.UnvalidatedRedirectFrontHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
 		}),
+		UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler: unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectParams) middleware.Responder {
+			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectGetQueryRedirect has not yet been implemented")
+		}),
 		XSSXSSFrontHandler: xss.XSSFrontHandlerFunc(func(params xss.XSSFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSFront has not yet been implemented")
+		}),
+		XSSXSSGetBufferedQuerySinkHandler: xss.XSSGetBufferedQuerySinkHandlerFunc(func(params xss.XSSGetBufferedQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBufferedQuerySink has not yet been implemented")
+		}),
+		XSSXSSGetQuerySinkHandler: xss.XSSGetQuerySinkHandlerFunc(func(params xss.XSSGetQuerySinkParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetQuerySink has not yet been implemented")
+		}),
+		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
+			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
 		}),
 	}
 }
@@ -126,22 +165,48 @@ type SwaggerBenchAPI struct {
 
 	// CmdInjectionCmdInjectionFrontHandler sets the operation handler for the cmd injection front operation
 	CmdInjectionCmdInjectionFrontHandler cmd_injection.CmdInjectionFrontHandler
-	// CmdInjectionGetQueryCommandHandler sets the operation handler for the get query command operation
-	CmdInjectionGetQueryCommandHandler cmd_injection.GetQueryCommandHandler
-	// CmdInjectionGetQueryCommandContextHandler sets the operation handler for the get query command context operation
-	CmdInjectionGetQueryCommandContextHandler cmd_injection.GetQueryCommandContextHandler
+	// CmdInjectionCmdInjectionGetQueryCommandHandler sets the operation handler for the cmd injection get query command operation
+	CmdInjectionCmdInjectionGetQueryCommandHandler cmd_injection.CmdInjectionGetQueryCommandHandler
+	// CmdInjectionCmdInjectionGetQueryCommandContextHandler sets the operation handler for the cmd injection get query command context operation
+	CmdInjectionCmdInjectionGetQueryCommandContextHandler cmd_injection.CmdInjectionGetQueryCommandContextHandler
 	// PathTraversalPathTraversalFrontHandler sets the operation handler for the path traversal front operation
 	PathTraversalPathTraversalFrontHandler path_traversal.PathTraversalFrontHandler
-	// SwaggerServerRootHandler sets the operation handler for the root operation
-	SwaggerServerRootHandler swagger_server.RootHandler
-	// SQLInjectionSQLInjectionFrontHandler sets the operation handler for the sql injection front operation
+	// PathTraversalPathTraversalGetBufferedQueryCreateHandler sets the operation handler for the path traversal get buffered query create operation
+	PathTraversalPathTraversalGetBufferedQueryCreateHandler path_traversal.PathTraversalGetBufferedQueryCreateHandler
+	// PathTraversalPathTraversalGetBufferedQueryOpenHandler sets the operation handler for the path traversal get buffered query open operation
+	PathTraversalPathTraversalGetBufferedQueryOpenHandler path_traversal.PathTraversalGetBufferedQueryOpenHandler
+	// PathTraversalPathTraversalGetBufferedQueryReadFileHandler sets the operation handler for the path traversal get buffered query read file operation
+	PathTraversalPathTraversalGetBufferedQueryReadFileHandler path_traversal.PathTraversalGetBufferedQueryReadFileHandler
+	// PathTraversalPathTraversalGetBufferedQueryWriteFileHandler sets the operation handler for the path traversal get buffered query write file operation
+	PathTraversalPathTraversalGetBufferedQueryWriteFileHandler path_traversal.PathTraversalGetBufferedQueryWriteFileHandler
+	// PathTraversalPathTraversalGetQueryCreateHandler sets the operation handler for the path traversal get query create operation
+	PathTraversalPathTraversalGetQueryCreateHandler path_traversal.PathTraversalGetQueryCreateHandler
+	// PathTraversalPathTraversalGetQueryOpenHandler sets the operation handler for the path traversal get query open operation
+	PathTraversalPathTraversalGetQueryOpenHandler path_traversal.PathTraversalGetQueryOpenHandler
+	// PathTraversalPathTraversalGetQueryReadFileHandler sets the operation handler for the path traversal get query read file operation
+	PathTraversalPathTraversalGetQueryReadFileHandler path_traversal.PathTraversalGetQueryReadFileHandler
+	// PathTraversalPathTraversalGetQueryWriteFileHandler sets the operation handler for the path traversal get query write file operation
+	PathTraversalPathTraversalGetQueryWriteFileHandler path_traversal.PathTraversalGetQueryWriteFileHandler
+	// SQLInjectionSQLInjectionFrontHandler sets the operation handler for the SQL injection front operation
 	SQLInjectionSQLInjectionFrontHandler sql_injection.SQLInjectionFrontHandler
+	// SQLInjectionSQLInjectionGetQueryExecHandler sets the operation handler for the SQL injection get query exec operation
+	SQLInjectionSQLInjectionGetQueryExecHandler sql_injection.SQLInjectionGetQueryExecHandler
 	// SsrfSsrfFrontHandler sets the operation handler for the ssrf front operation
 	SsrfSsrfFrontHandler ssrf.SsrfFrontHandler
+	// SsrfSsrfGetQuerySinkHandler sets the operation handler for the ssrf get query sink operation
+	SsrfSsrfGetQuerySinkHandler ssrf.SsrfGetQuerySinkHandler
 	// UnvalidatedRedirectUnvalidatedRedirectFrontHandler sets the operation handler for the unvalidated redirect front operation
 	UnvalidatedRedirectUnvalidatedRedirectFrontHandler unvalidated_redirect.UnvalidatedRedirectFrontHandler
-	// XSSXSSFrontHandler sets the operation handler for the xss front operation
+	// UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler sets the operation handler for the unvalidated redirect get query redirect operation
+	UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler
+	// XSSXSSFrontHandler sets the operation handler for the XSS front operation
 	XSSXSSFrontHandler xss.XSSFrontHandler
+	// XSSXSSGetBufferedQuerySinkHandler sets the operation handler for the XSS get buffered query sink operation
+	XSSXSSGetBufferedQuerySinkHandler xss.XSSGetBufferedQuerySinkHandler
+	// XSSXSSGetQuerySinkHandler sets the operation handler for the XSS get query sink operation
+	XSSXSSGetQuerySinkHandler xss.XSSGetQuerySinkHandler
+	// SwaggerServerRootHandler sets the operation handler for the root operation
+	SwaggerServerRootHandler swagger_server.RootHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -228,29 +293,68 @@ func (o *SwaggerBenchAPI) Validate() error {
 	if o.CmdInjectionCmdInjectionFrontHandler == nil {
 		unregistered = append(unregistered, "cmd_injection.CmdInjectionFrontHandler")
 	}
-	if o.CmdInjectionGetQueryCommandHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.GetQueryCommandHandler")
+	if o.CmdInjectionCmdInjectionGetQueryCommandHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetQueryCommandHandler")
 	}
-	if o.CmdInjectionGetQueryCommandContextHandler == nil {
-		unregistered = append(unregistered, "cmd_injection.GetQueryCommandContextHandler")
+	if o.CmdInjectionCmdInjectionGetQueryCommandContextHandler == nil {
+		unregistered = append(unregistered, "cmd_injection.CmdInjectionGetQueryCommandContextHandler")
 	}
 	if o.PathTraversalPathTraversalFrontHandler == nil {
 		unregistered = append(unregistered, "path_traversal.PathTraversalFrontHandler")
 	}
-	if o.SwaggerServerRootHandler == nil {
-		unregistered = append(unregistered, "swagger_server.RootHandler")
+	if o.PathTraversalPathTraversalGetBufferedQueryCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetBufferedQueryWriteFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryCreateHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryCreateHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryOpenHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryOpenHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryReadFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryReadFileHandler")
+	}
+	if o.PathTraversalPathTraversalGetQueryWriteFileHandler == nil {
+		unregistered = append(unregistered, "path_traversal.PathTraversalGetQueryWriteFileHandler")
 	}
 	if o.SQLInjectionSQLInjectionFrontHandler == nil {
 		unregistered = append(unregistered, "sql_injection.SQLInjectionFrontHandler")
 	}
+	if o.SQLInjectionSQLInjectionGetQueryExecHandler == nil {
+		unregistered = append(unregistered, "sql_injection.SQLInjectionGetQueryExecHandler")
+	}
 	if o.SsrfSsrfFrontHandler == nil {
 		unregistered = append(unregistered, "ssrf.SsrfFrontHandler")
+	}
+	if o.SsrfSsrfGetQuerySinkHandler == nil {
+		unregistered = append(unregistered, "ssrf.SsrfGetQuerySinkHandler")
 	}
 	if o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
 		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectFrontHandler")
 	}
+	if o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler == nil {
+		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler")
+	}
 	if o.XSSXSSFrontHandler == nil {
 		unregistered = append(unregistered, "xss.XSSFrontHandler")
+	}
+	if o.XSSXSSGetBufferedQuerySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetBufferedQuerySinkHandler")
+	}
+	if o.XSSXSSGetQuerySinkHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetQuerySinkHandler")
+	}
+	if o.SwaggerServerRootHandler == nil {
+		unregistered = append(unregistered, "swagger_server.RootHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -351,11 +455,11 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/cmdInjection/exec.Command/query/{safety}"] = cmd_injection.NewGetQueryCommand(o.context, o.CmdInjectionGetQueryCommandHandler)
+	o.handlers["GET"]["/cmdInjection/exec.Command/query/{safety}"] = cmd_injection.NewCmdInjectionGetQueryCommand(o.context, o.CmdInjectionCmdInjectionGetQueryCommandHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/cmdInjection/exec.CommandContext/query/{safety}"] = cmd_injection.NewGetQueryCommandContext(o.context, o.CmdInjectionGetQueryCommandContextHandler)
+	o.handlers["GET"]["/cmdInjection/exec.CommandContext/query/{safety}"] = cmd_injection.NewCmdInjectionGetQueryCommandContext(o.context, o.CmdInjectionCmdInjectionGetQueryCommandContextHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -363,7 +467,35 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"][""] = swagger_server.NewRoot(o.context, o.SwaggerServerRootHandler)
+	o.handlers["GET"]["/pathTraversal/os.Create/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryCreate(o.context, o.PathTraversalPathTraversalGetBufferedQueryCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.Open/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryOpen(o.context, o.PathTraversalPathTraversalGetBufferedQueryOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.ReadFile/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryReadFile(o.context, o.PathTraversalPathTraversalGetBufferedQueryReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.WriteFile/buffered-query/{safety}"] = path_traversal.NewPathTraversalGetBufferedQueryWriteFile(o.context, o.PathTraversalPathTraversalGetBufferedQueryWriteFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.Create/query/{safety}"] = path_traversal.NewPathTraversalGetQueryCreate(o.context, o.PathTraversalPathTraversalGetQueryCreateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.Open/query/{safety}"] = path_traversal.NewPathTraversalGetQueryOpen(o.context, o.PathTraversalPathTraversalGetQueryOpenHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.ReadFile/query/{safety}"] = path_traversal.NewPathTraversalGetQueryReadFile(o.context, o.PathTraversalPathTraversalGetQueryReadFileHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/pathTraversal/os.WriteFile/query/{safety}"] = path_traversal.NewPathTraversalGetQueryWriteFile(o.context, o.PathTraversalPathTraversalGetQueryWriteFileHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -371,7 +503,15 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/sqlInjection/sqlite3.exec/query/{safety}"] = sql_injection.NewSQLInjectionGetQueryExec(o.context, o.SQLInjectionSQLInjectionGetQueryExecHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/ssrf"] = ssrf.NewSsrfFront(o.context, o.SsrfSsrfFrontHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/ssrf/Sink/query/{safety}"] = ssrf.NewSsrfGetQuerySink(o.context, o.SsrfSsrfGetQuerySinkHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -379,7 +519,23 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/unvalidatedRedirect/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/xss"] = xss.NewXSSFront(o.context, o.XSSXSSFrontHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/buffered-query/{safety}"] = xss.NewXSSGetBufferedQuerySink(o.context, o.XSSXSSGetBufferedQuerySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/xss/Sink/query/{safety}"] = xss.NewXSSGetQuerySink(o.context, o.XSSXSSGetQuerySinkHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"][""] = swagger_server.NewRoot(o.context, o.SwaggerServerRootHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
