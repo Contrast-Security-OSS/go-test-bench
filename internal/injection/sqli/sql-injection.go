@@ -13,6 +13,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const mime = "text/plain"
+
 // RegisterRoutes is called in framework init to register routes in this package.
 func RegisterRoutes(frameworkSinks ...*common.Sink) {
 	sinks := []*common.Sink{
@@ -39,13 +41,13 @@ type sqliteInj struct {
 	db   *sql.DB
 }
 
-func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
+func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) (string, string, int) {
 	log.Println("sqlite exec handler")
 	var err error
 	var res sql.Result
 
 	if err = si.initDB(); err != nil {
-		return err.Error(), http.StatusBadRequest
+		return err.Error(), mime, http.StatusBadRequest
 	}
 	defer si.cleanupDB()
 
@@ -59,14 +61,14 @@ func (si sqliteInj) execHandler(mode common.Safety, in string, _ interface{}) (s
 		query := "SELECT '?' as '?'"
 		res, err = si.db.Exec(query, in, "test")
 	default: // mode is no-op or invalid
-		return "NOOP", http.StatusOK
+		return "NOOP", mime, http.StatusOK
 	}
 
 	if err != nil {
-		return err.Error(), http.StatusBadRequest
+		return err.Error(), mime, http.StatusBadRequest
 	}
 	r := fmt.Sprintf("Result: %#v\n", res)
-	return r, http.StatusOK
+	return r, mime, http.StatusOK
 }
 
 func (si *sqliteInj) initDB() error {

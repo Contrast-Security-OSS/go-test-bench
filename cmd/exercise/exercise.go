@@ -11,7 +11,6 @@ import (
 
 type exercises struct {
 	client  *http.Client
-	log     common.Logger
 	verbose bool
 	addr    string
 	reqs    []commontest.RouteTestRequests
@@ -20,12 +19,11 @@ type exercises struct {
 // exercise was split up so that tests can report sub-test names
 func exercise(log common.Logger, verbose bool, addr string) error {
 	e := &exercises{
-		log:     log,
 		verbose: verbose,
 		addr:    addr,
 	}
 	// create requests
-	if err := e.init(); err != nil {
+	if err := e.init(log); err != nil {
 		return err
 	}
 	e.checkAssets(log)
@@ -33,7 +31,7 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 	// send requests
 	for _, r := range e.reqs {
 		for _, s := range r.Sinks {
-			e.run(e.log, s)
+			e.run(log, s)
 		}
 	}
 	log.Logf("All routes exercised")
@@ -41,27 +39,27 @@ func exercise(log common.Logger, verbose bool, addr string) error {
 }
 
 // determine framework, then create (but do not send) requests
-func (e *exercises) init() error {
+func (e *exercises) init(log common.Logger) error {
 	e.client = http.DefaultClient
 
-	framework := e.checkFramework()
+	framework := e.checkFramework(log)
 
 	var err error
 	e.reqs, err = commontest.UnsafeRequests(e.addr)
 	if err != nil {
-		e.log.Fatalf("failed to generate requests for %s framework: %s", framework, err)
+		log.Fatalf("failed to generate requests for %s framework: %s", framework, err)
 	}
 	return nil
 }
 
-// Send request to app root to determine checkFramework
-func (e *exercises) checkFramework() string {
+// Send request to app root to identify the framework in use
+func (e *exercises) checkFramework(log common.Logger) string {
 	res, err := e.client.Get("http://" + e.addr)
 	if err != nil {
-		e.log.Fatalf("failed to GET root: %s", err)
+		log.Fatalf("failed to GET root: %s", err)
 	}
 	if res.StatusCode != http.StatusOK {
-		e.log.Fatalf("unsuccessful root response: %d", res.StatusCode)
+		log.Fatalf("unsuccessful root response: %d", res.StatusCode)
 	}
 
 	f := res.Header.Get("Application-Framework")
@@ -69,9 +67,9 @@ func (e *exercises) checkFramework() string {
 	case "Stdlib", "Gin":
 		//below
 	case "":
-		e.log.Fatalf("failed to determine application framework: no Application-Framework header")
+		log.Fatalf("failed to determine application framework: no Application-Framework header")
 	default:
-		e.log.Fatalf("unsupported application framework: %s", f)
+		log.Fatalf("unsupported application framework: %s", f)
 	}
 	return f
 }

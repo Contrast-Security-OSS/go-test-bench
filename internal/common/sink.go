@@ -76,7 +76,9 @@ func (s *Sink) AddPayloadToRequest(req *http.Request, inputType, key, payload st
 	case "headers":
 		req.Header.Set(key, payload)
 	case "params":
-		req.URL.Path = path.Join(req.URL.Path, payload)
+		// do not use path.Join() as it would clean the result,
+		// changing http:// to http:/ and breaking the request
+		req.URL.Path = strings.Join([]string{req.URL.Path, payload}, "/")
 	case "response":
 		// BUG: This endpoint doesn't actually read a response.
 		// For now, just add a header since it's quick

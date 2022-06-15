@@ -29,8 +29,12 @@ func extractInput(c *gin.Context, source string) string {
 	case "buffered-query":
 		return buffer(c.Query("input"))
 	case "params":
+		p := c.Param("param")
+		if len(p) == 0 {
+			return ""
+		}
 		// path parameter includes leading slash, so we chop it off.
-		return c.Param("param")[1:]
+		return p[1:]
 	case "body":
 		return c.PostForm("input")
 	case "buffered-body":

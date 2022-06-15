@@ -60,22 +60,6 @@
         ]
     },
 
-    "ssrf" :  {
-        "base"     :  "/ssrf",
-        "name"     :  "Server Side Request Forgery",
-        "link"     :  "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery",
-        "products" :  ["Assess"],
-        "inputs"   :  ["query","path"],
-        "sinks"    :  [
-            {
-                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
-                "name"   : "_",
-                "url"    : "",
-                "method" : ""
-            }
-        ]
-    },
-
     "unsafeFileUpload" :  {
         "base"     :  "/unsafeFileUpload",
         "name"     :  "Unsafe File Upload",
@@ -115,7 +99,7 @@
         "sinks"    :  [
             {
                 "name"   : "http.Redirect",
-                "url"    : "\/unvalidatedRedirect\/http.Redirect\/",
+                "url"    : "http.Redirect",
                 "method" : "GET"
             }
         ],

@@ -1,0 +1,51 @@
+{{define "pathParam"}}
+
+{{- /* requires a special script to insert the form field's content into the url itself (rather than a query) */}}
+
+
+{{- /* outside the form so it won't be sent as a query */ -}}
+<label>Payload</label>
+<input id="{{.Sink.URL}}paraminput" class="form-control" value="{{ .Route.Payload }}" />
+
+<form class='{{.Sink.URL}}param' method="{{methodFromInput .Input}}" action="{{ .Route.Base }}/{{ .Sink.URL }}/{{ .Input }}/unsafe/{{ .Route.Payload }}" target="_blank">
+{{/* normal buttons get injected after any .form-group - don't use that class, as they would interfere */}}
+  <div style="margin-top: 15px;">
+    <button type='button' name='{{.Sink.URL}}unsafe' class="method left btn btn-danger">Unsafe</button>
+    {{/* why is there a gap between these two ?! */}}
+    <button type='button' name='{{.Sink.URL}}noop' class="method right btn btn-warning">No-Op</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<script type="text/javascript">
+$(() => {
+  const state = {
+    action: "{{ .Route.Base }}/{{ .Sink.URL }}/{{ .Input }}/{safety}/{site}",
+    safety: "default",
+    site: "http://example.com"
+  };
+  if(state.safety==='default'){
+    //initial state
+    state.safety='unsafe';
+    updateAction();
+  }
+  $('#{{.Sink.URL}}paraminput').on('keyup', (e) => {
+    state.site = $('#{{.Sink.URL}}paraminput').val();
+    updateAction();
+  });
+  function updateAction(){
+    if (state.site) {
+      let val = state.action.replace('{safety}',state.safety).replace('{site}',state.site);
+      $('form.{{.Sink.URL}}param').attr('action', val);
+    }
+  }
+  $('[name={{.Sink.URL}}unsafe]').on('click',(e)=>{
+    state.safety='unsafe';
+    updateAction();
+  });
+  $('[name={{.Sink.URL}}noop]').on('click',(e)=>{
+    state.safety='noop';
+    updateAction();
+  });
+});
+</script>
+{{end}}

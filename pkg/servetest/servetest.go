@@ -21,7 +21,7 @@ func DefaultRouteInputs() RouteInputs {
 		"pathTraversal":       {"query", "buffered-query", "headers", "body"},
 		"xss":                 {"query", "buffered-query", "params", "body", "buffered-body", "response"},
 		"sqlInjection":        {"headers-json", "query", "body"},
-		"ssrf":                {"query", "path"},
+		"ssrf":                {"query", "params"},
 		"unvalidatedRedirect": {"query"},
 	}
 }

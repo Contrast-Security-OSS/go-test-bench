@@ -12,6 +12,7 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/ssrf"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
@@ -76,18 +77,29 @@ func add(router *gin.Engine, rt common.Route) {
 					log.Printf("%s: error %s", c.Request.URL.Path, e)
 				}
 
-				data, status := s.Handler(mode, payload, c)
+				data, mime, status := s.Handler(mode, payload, c)
 				if len(data) > 0 {
 					// don't unconditionally write this, as it can result in
 					// - a warning (when status changes), or
 					// - a panic (when content-length is already set and headers are written)
+					if len(mime) == 0 {
+						mime = "text/plain"
+					}
+					c.Header("Content-Type", mime)
 					c.String(status, data)
 				}
 			}
 		}(s)
 		sinkPg := base.Group("/" + s.URL)
+		rel := "/:source/:mode"
 		//route data isn't a perfect match for the method(s) we actually use, so just accept anything
-		sinkPg.Any("/:source/:mode", sinkFn)
+		sinkPg.Any(rel, sinkFn)
+		for _, i := range rt.Inputs {
+			if i == "params" {
+				sinkPg.Any(rel+"/*param", sinkFn)
+				break
+			}
+		}
 	}
 }
 
@@ -112,6 +124,7 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes(&ginPathTraversal)
+	ssrf.RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
@@ -139,7 +152,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 		add(router, h)
 	}
 	addReflectedXSS(router)
-	addSSRF(router)
 	addUnvalidatedRedirect(router)
 
 	// setting up a database to execute the built query
