@@ -50,13 +50,15 @@ paths:
           description: error occured
   {{- range $sink := $routeInfo.Sinks }}
     {{- range $input := $routeInfo.Inputs }}
-  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}: #TODO(GO-1388) input should be a swagger parameter
+  {{ $routeInfo.Base }}/{{ sinkName $sink }}/{{ $input }}/{safety}:   {{- /* TODO(GO-1388) input should be a swagger parameter */}}
     get:
       tags:
         - {{ routePkg $routeInfo }}
       description: demonstrates {{ $routeInfo.Name }} via {{ $input }}, with vulnerable function {{ $sink.Name }}
       operationId: {{ routeIdentifier $routeInfo }}{{ sinkFn $input $sink }}
       produces:
+        {{- /* most endpoints will only produce text/plain, but it's easier to allow other types than to deal with special cases */}}
+        - text/html
         - text/plain
       parameters:
         - $ref: "#/parameters/safetyParam"

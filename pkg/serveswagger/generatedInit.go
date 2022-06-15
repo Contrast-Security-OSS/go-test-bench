@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT EDIT
-// Generated at 2022-06-06T19:32:24Z. To re-generate, run the following in the repo root:
+// Generated at 2022-06-13T20:39:17Z. To re-generate, run the following in the repo root:
 // go run ./cmd/go-swagger/regen/regen.go
 
 package serveswagger
@@ -122,8 +122,8 @@ func generatedInit(api *operations.SwaggerBenchAPI, rmap common.RouteMap, pd *co
 			return RouteHandler(rmap["/ssrf"], pd, p.HTTPRequest)
 		},
 	)
-	api.SsrfSsrfGetQuerySinkHandler = ssrf.SsrfGetQuerySinkHandlerFunc(
-		func(p ssrf.SsrfGetQuerySinkParams) middleware.Responder {
+	api.SsrfSsrfGetQueryHTTPHandler = ssrf.SsrfGetQueryHTTPHandlerFunc(
+		func(p ssrf.SsrfGetQueryHTTPParams) middleware.Responder {
 			return RouteHandler(rmap["/ssrf"], pd, p.HTTPRequest)
 		},
 	)

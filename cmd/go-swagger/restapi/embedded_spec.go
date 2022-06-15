@@ -86,6 +86,7 @@ func init() {
       "get": {
         "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -122,6 +123,7 @@ func init() {
       "get": {
         "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -181,6 +183,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Create",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -217,6 +220,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.Create",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -253,6 +257,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Open",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -289,6 +294,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.Open",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -325,6 +331,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -361,6 +368,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.ReadFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -397,6 +405,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -433,6 +442,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.WriteFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -492,6 +502,7 @@ func init() {
       "get": {
         "description": "demonstrates SQL Injection via query, with vulnerable function sqlite3.exec",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -547,16 +558,17 @@ func init() {
         }
       }
     },
-    "/ssrf/Sink/query/{safety}": {
+    "/ssrf/http/query/{safety}": {
       "get": {
-        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function net/http",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
           "ssrf"
         ],
-        "operationId": "SsrfGetQuerySink",
+        "operationId": "SsrfGetQueryHTTP",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -610,6 +622,7 @@ func init() {
       "get": {
         "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -669,6 +682,7 @@ func init() {
       "get": {
         "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -705,6 +719,7 @@ func init() {
       "get": {
         "description": "demonstrates Reflected XSS via query, with vulnerable function _",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -870,6 +885,7 @@ func init() {
       "get": {
         "description": "demonstrates Command Injection via query, with vulnerable function exec.Command",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -915,6 +931,7 @@ func init() {
       "get": {
         "description": "demonstrates Command Injection via query, with vulnerable function exec.CommandContext",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -983,6 +1000,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Create",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1028,6 +1046,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.Create",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1073,6 +1092,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.Open",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1118,6 +1138,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.Open",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1163,6 +1184,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.ReadFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1208,6 +1230,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.ReadFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1253,6 +1276,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via buffered-query, with vulnerable function os.WriteFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1298,6 +1322,7 @@ func init() {
       "get": {
         "description": "demonstrates Path Traversal via query, with vulnerable function os.WriteFile",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1366,6 +1391,7 @@ func init() {
       "get": {
         "description": "demonstrates SQL Injection via query, with vulnerable function sqlite3.exec",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1430,16 +1456,17 @@ func init() {
         }
       }
     },
-    "/ssrf/Sink/query/{safety}": {
+    "/ssrf/http/query/{safety}": {
       "get": {
-        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function _",
+        "description": "demonstrates Server Side Request Forgery via query, with vulnerable function net/http",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
           "ssrf"
         ],
-        "operationId": "SsrfGetQuerySink",
+        "operationId": "SsrfGetQueryHTTP",
         "parameters": [
           {
             "enum": [
@@ -1502,6 +1529,7 @@ func init() {
       "get": {
         "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1570,6 +1598,7 @@ func init() {
       "get": {
         "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [
@@ -1615,6 +1644,7 @@ func init() {
       "get": {
         "description": "demonstrates Reflected XSS via query, with vulnerable function _",
         "produces": [
+          "text/html",
           "text/plain"
         ],
         "tags": [

@@ -126,8 +126,8 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
 		})
 	}
-	if api.SsrfSsrfGetQuerySinkHandler == nil {
-		api.SsrfSsrfGetQuerySinkHandler = ssrf.SsrfGetQuerySinkHandlerFunc(func(params ssrf.SsrfGetQuerySinkParams) middleware.Responder {
+	if api.SsrfSsrfGetQueryHTTPHandler == nil {
+		api.SsrfSsrfGetQueryHTTPHandler = ssrf.SsrfGetQueryHTTPHandlerFunc(func(params ssrf.SsrfGetQueryHTTPParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
 		})
 	}
