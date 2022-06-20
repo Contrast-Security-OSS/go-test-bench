@@ -167,7 +167,8 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	return router, dbSrc.Name()
 }
 
-//temporary fixes until remainder of code migrates to new model
+// PreMigrationFixups makes temporary fixes to routes. These fixes are
+// only needed until the remainder of the code migrates to the new model.
 func PreMigrationFixups(rmap common.RouteMap) common.RouteMap {
 	// unvalidated redirect; for now, just handle the gin method
 	ur, ok := rmap["unvalidatedRedirect"]
