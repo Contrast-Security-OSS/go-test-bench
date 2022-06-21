@@ -18,10 +18,6 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 			URL:     "http",
 			Handler: httpHandler,
 		},
-		// {
-		// 	Name:    "request",
-		// 	Handler: requestHandler,
-		// },
 	}
 	sinks = append(sinks, frameworkSinks...)
 	common.Register(common.Route{
