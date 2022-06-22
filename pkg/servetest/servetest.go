@@ -60,6 +60,7 @@ func TestRouteData(t *testing.T, rmap common.RouteMap, routeInputs RouteInputs) 
 		}
 		sort.Strings(testNames)
 		t.Errorf("mismatch between number of routes and test data:\nwant %v\n got %v", testNames, routeNames)
+		t.Logf("routes: %#v", rmap)
 	}
 	for k, v := range rmap {
 		k = strings.TrimLeft(k, "/")

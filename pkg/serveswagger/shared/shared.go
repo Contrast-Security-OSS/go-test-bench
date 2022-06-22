@@ -21,7 +21,12 @@ import (
 func FilterInputTypes(rmap common.RouteMap) {
 	allowContains := []string{
 		"query", // query, buffered-query
-		"params",
+
+		// wildcard path parameters are not allowed in openapi v2 or v3:
+		// https://github.com/OAI/OpenAPI-Specification/issues/892#issuecomment-281170254
+		//
+		// workaround is to set up as a single urlencoded param (see comments on above) -
+		// but how likely is this in a real-world swagger app?
 	}
 	for path, rt := range rmap {
 		for i := 0; i < len(rt.Inputs); {

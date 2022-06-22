@@ -519,7 +519,7 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/unvalidatedRedirect/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
+	o.handlers["GET"]["/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

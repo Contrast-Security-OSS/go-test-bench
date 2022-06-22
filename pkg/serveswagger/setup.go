@@ -55,6 +55,14 @@ func Setup() (*restapi.Server, error) {
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 	shared.FilterInputTypes(rmap)
 
+	// set up template files for legacy routes
+	for k, v := range rmap {
+		if len(v.TmplFile) == 0 {
+			v.TmplFile = strings.TrimLeft(v.Base+".gohtml", "/")
+			rmap[k] = v
+		}
+	}
+
 	// lives in generated code. initializes all route handlers other than root.
 	generatedInit(api, rmap, &SwaggerParams)
 
@@ -92,6 +100,9 @@ func Setup() (*restapi.Server, error) {
 
 // RouteHandler returns a middleware.Responder that serves our html and the vulnerable functions.
 func RouteHandler(rt common.Route, pd *common.ConstParams, req *http.Request) middleware.Responder {
+	if len(rt.Base) == 0 {
+		log.Fatalf("missing data for route: %#v\nurl=%s", rt, req.URL)
+	}
 	return &responder{
 		rt: rt,
 		params: common.Parameters{
@@ -113,7 +124,13 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 	elems := strings.Split(strings.Trim(r.req.URL.Path, "/"), "/")
 	if len(elems) < 2 {
 		// main page
-		err := common.Templates[r.rt.TmplFile].ExecuteTemplate(w, "layout.gohtml", &r.params)
+		tmpl, ok := common.Templates[r.rt.TmplFile]
+		if !ok {
+			log.Printf("missing template %s for %#v", r.rt.TmplFile, r.rt)
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		err := tmpl.ExecuteTemplate(w, "layout.gohtml", &r.params)
 		if err != nil {
 			log.Print(err.Error())
 			fmt.Fprintf(w, "template error: %s", err)

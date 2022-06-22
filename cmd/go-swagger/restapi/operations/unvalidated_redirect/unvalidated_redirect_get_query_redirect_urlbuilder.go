@@ -42,7 +42,7 @@ func (o *UnvalidatedRedirectGetQueryRedirectURL) SetBasePath(bp string) {
 func (o *UnvalidatedRedirectGetQueryRedirectURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}"
+	var _path = "/unvalidatedRedirect/http.Redirect/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {

@@ -618,7 +618,7 @@ func init() {
         }
       }
     },
-    "/unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}": {
+    "/unvalidatedRedirect/http.Redirect/query/{safety}": {
       "get": {
         "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
         "produces": [
@@ -1525,7 +1525,7 @@ func init() {
         }
       }
     },
-    "/unvalidatedRedirect//unvalidatedRedirect/http.Redirect//query/{safety}": {
+    "/unvalidatedRedirect/http.Redirect/query/{safety}": {
       "get": {
         "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
         "produces": [
