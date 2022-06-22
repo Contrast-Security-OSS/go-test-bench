@@ -9,10 +9,10 @@ import (
 )
 
 func TestRouteData(t *testing.T) {
-	_,dbFile:=Setup("don't care")
+	_, dbFile := Setup("don't care")
 	t.Cleanup(func() {
-		common.Reset(		)
-		_=os.RemoveAll(dbFile)
-	}
+		common.Reset()
+		_ = os.RemoveAll(dbFile)
+	})
 	servetest.TestRouteData(t, nil, nil)
 }

@@ -1,8 +1,8 @@
 package serveswagger
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"

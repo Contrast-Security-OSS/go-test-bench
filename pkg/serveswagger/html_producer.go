@@ -1,8 +1,9 @@
 package serveswagger
 
 import (
-	"log"
 	"io"
+	"log"
+
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
