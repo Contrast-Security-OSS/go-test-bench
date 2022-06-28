@@ -36,8 +36,11 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 	})
 }
 
+const mime = "text/plain"
+
 // perform the vulnerability, using exec.Command
-func execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
+func execHandler(mode common.Safety, in string, _ interface{}) (string, string, int) {
+
 	var cmd *exec.Cmd
 	switch mode {
 	case common.Safe:
@@ -45,11 +48,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			return "one or more args required", http.StatusBadRequest
+			return "one or more args required", mime, http.StatusBadRequest
 		}
 		cmd = exec.Command(args[0], args[1:]...)
 	case common.NOOP:
-		return "NOOP", http.StatusOK
+		return "NOOP", mime, http.StatusOK
 	default:
 		log.Fatalf("Error running execHandler. Unknown option  %q passed", mode)
 	}
@@ -63,11 +66,11 @@ func execHandler(mode common.Safety, in string, _ interface{}) (string, int) {
 		}
 		log.Print(msg)
 	}
-	return out.String(), http.StatusOK
+	return out.String(), mime, http.StatusOK
 }
 
 // perform the vulnerability, using exec.CommandContext
-func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, int) {
+func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, string, int) {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch mode {
@@ -76,11 +79,11 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, int) 
 	case common.Unsafe:
 		args := shellArgs(in)
 		if len(args) == 0 {
-			return "one or more args required", http.StatusBadRequest
+			return "one or more args required", mime, http.StatusBadRequest
 		}
 		cmd = exec.CommandContext(ctx, args[0], args[1:]...)
 	case common.NOOP:
-		return "NOOP", http.StatusOK
+		return "NOOP", mime, http.StatusOK
 	default:
 		log.Fatalf("Error running execHandlerCtx. Unknown option  %q passed", mode)
 	}
@@ -92,7 +95,7 @@ func execHandlerCtx(mode common.Safety, in string, _ interface{}) (string, int) 
 		out.WriteString(msg)
 		log.Print(msg)
 	}
-	return out.String(), http.StatusOK
+	return out.String(), mime, http.StatusOK
 }
 
 // assembles a command that will run unsanitized user input in a system shell

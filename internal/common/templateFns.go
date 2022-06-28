@@ -21,6 +21,9 @@ func FuncMap() template.FuncMap {
 		"needsCurl": needsCurl,
 		// determine http method from input type
 		"methodFromInput": MethodFromInput,
+		// create a map[string]interface{}, to pass multiple values to a template, i.e.
+		// {{template "mytmpl" strMap "key" val "key2" val2}}
+		"strMap": strMap,
 	}
 }
 
@@ -105,4 +108,21 @@ func MethodFromInput(in string) string {
 		}
 	}
 	return http.MethodGet
+}
+
+// pass multiple params to a template, like so:
+// {{ template "pathParam" strMap "Route" $routeInfo "Sink" $sink "Input" $input }}
+func strMap(in ...interface{}) (m map[string]interface{}) {
+	if len(in)%2 != 0 {
+		panic(fmt.Sprintf("template error: strMap requires an even number of args; got %d (%#v)", len(in), in))
+	}
+	m = make(map[string]interface{})
+	for i := 0; i+1 < len(in); i += 2 {
+		s, ok := in[i].(string)
+		if !ok {
+			panic(fmt.Sprintf("template error: strMap requires odd args to be strings, #%d is %T in %#v", i, in[i], in))
+		}
+		m[s] = in[i+1]
+	}
+	return m
 }

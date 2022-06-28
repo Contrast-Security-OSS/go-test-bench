@@ -1,121 +1,72 @@
 package ssrf
 
 import (
-	"html/template"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
+	"net/url"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
-// Handler is the API handler for SSRF
-func Handler(w http.ResponseWriter, r *http.Request, pd common.Parameters) (template.HTML, bool) {
-	if r.URL.Path == "/ssrf/" { //or "/ssrf"
-		return bodyHandler(w, r)
+// RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
+func RegisterRoutes(frameworkSinks ...*common.Sink) {
+	sinks := []*common.Sink{
+		{
+			Name:    "net/http",
+			URL:     "http",
+			Handler: httpHandler,
+		},
 	}
-
-	//the library being used should be stored in sep[2], path or query in sep[3]
-	sep := strings.Split(r.URL.Path, "/")
-	switch sep[2] {
-	case "default":
-		httpHandler(w, r, sep[3])
-	case "http":
-		httpHandler(w, r, sep[3])
-	case "request":
-		requestHandler(w, r, sep[3])
-	default:
-		log.Printf("THIS IS NOT A LIBRARY: %s in %s", sep[2], r.URL.Path)
-	}
-
-	return template.HTML(""), false
+	sinks = append(sinks, frameworkSinks...)
+	common.Register(common.Route{
+		Name:     "Server Side Request Forgery",
+		Link:     "https://owasp.org/www-community/attacks/Server_Side_Request_Forgery",
+		Base:     "ssrf",
+		Products: []string{"Assess"},
+		Inputs:   []string{"query", "params"},
+		Sinks:    sinks,
+		Payload:  "http://example.com",
+	})
 }
 
-func httpHandler(w http.ResponseWriter, r *http.Request, method string) {
-	var res *http.Response
-	var err error
-	userInput := common.GetUserInput(r)
-	switch method {
-	case "query":
-		if userInput != "" {
-			res, err = http.Get("http://example.com?input=" + userInput)
-		} else {
-			res, err = http.Get("http://example.com")
+func httpHandler(safety common.Safety, payload string, opaque interface{}) (data, mime string, status int) {
+	mime = "text/plain"
+	if len(payload) == 0 {
+		data = "payload required but not provided"
+		log.Println(data)
+		return data, mime, http.StatusBadRequest
+	}
+	if u, err := url.Parse(payload); err != nil {
+		data = fmt.Sprintf("can't parse url %q: %s", payload, err)
+		log.Println(data)
+		return data, mime, http.StatusBadRequest
+	} else if len(u.Scheme) == 0 {
+		log.Printf("missing scheme in url %q, adding http:// prefix...", payload)
+		payload = "http://" + payload
+	}
+	switch safety {
+	case common.Unsafe:
+		resp, err := http.Get(payload)
+		if err != nil {
+			data = fmt.Sprintf("failed to GET %q: %s", payload, err)
+			log.Println(data)
+			return data, mime, http.StatusInternalServerError
 		}
-	case "path":
-		if userInput == "" {
-			userInput = "example.com"
+		bdy, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			data = fmt.Sprintf("failed to read body from %q (upstream response %s): %s", payload, resp.Status, err)
+			log.Println(data)
+			return data, mime, http.StatusInternalServerError
 		}
-		res, err = http.Get("http://" + userInput)
-		//don't want http.Redirect(w, r, "http://" + url, http.StatusFound)
+		if ct := resp.Header.Get("Content-Type"); len(ct) > 0 {
+			mime = ct
+		}
+		return string(bdy), mime, resp.StatusCode
+	case common.NOOP:
+		return fmt.Sprintf("%s %s", safety, payload), mime, http.StatusOK
 	default:
-		log.Println("THIS IS NOT A METHOD")
-		return
+		return fmt.Sprintf("unhandled safety type %q", safety), mime, http.StatusInternalServerError
 	}
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	defer func() {
-		_ = res.Body.Close()
-	}()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Print(err)
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	_, err = w.Write(body)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), 500)
-	}
-}
-
-func requestHandler(w http.ResponseWriter, r *http.Request, method string) {
-	// var res request.SugaredResp
-	// var err error
-	// var m monacoClient
-	// switch method {
-	// case "query":
-	// 	inputs := r.URL.Query().Get("input")
-	// 	if inputs != "" {
-	// 		m.Params = map[string]string{"input": inputs}
-	// 	}
-	// 	m.URL = "https://example.com"
-	// case "path":
-	// 	m.URL = r.URL.Query().Get("input")
-	// 	if m.URL == ""{
-	// 		m.URL = "example.com"
-	// 	}
-	// 	m.URL = "http://" + m.URL
-	// default:
-	// 	log.Println("THIS IS NOT A METHOD")
-	// 	return
-	// }
-	// m.Method = "GET"
-	// client := request.Client{
-	// 	URL:    m.URL,
-	// 	Method: m.Method,
-	// 	Params: m.Params,
-	// }
-	// res, err = client.Do()
-	// if err != nil {
-	// 	log.Println(err)
-	// 	http.Error(w, err.Error(),500)
-	// 	return
-	// }
-	// _, err = w.Write(res.Data)
-	// if err != nil {
-	// 	log.Println(err)
-	// 	http.Error(w, err.Error(),500)
-	// }
-}
-
-func bodyHandler(w http.ResponseWriter, r *http.Request) (template.HTML, bool) {
-	return "ssrf.gohtml", true
 }

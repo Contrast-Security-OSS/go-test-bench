@@ -84,24 +84,34 @@ func newHandler(v common.Route) http.HandlerFunc {
 			return
 		}
 		for _, s := range v.Sinks {
-			if elems[1] == s.URL {
-				mode := common.Safety(elems[len(elems)-1])
-				switch mode {
-				case common.NOOP, common.Safe, common.Unsafe:
-					// valid modes
-				default:
-					// invalid
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-
-				in := common.GetUserInput(r)
-				data, status := s.Handler(mode, in, nil)
-				w.WriteHeader(status)
-				w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
-				fmt.Fprint(w, data)
+			if elems[1] != s.URL {
+				continue
+			}
+			// can't assume safety is last if input is via path parameters.
+			safeIdx := 3
+			if len(elems) <= safeIdx {
+				safeIdx = len(elems) - 1
+			}
+			mode := common.Safety(elems[safeIdx])
+			switch mode {
+			case common.NOOP, common.Safe, common.Unsafe:
+				// valid modes
+			default:
+				// invalid
+				w.WriteHeader(http.StatusNotFound)
 				return
 			}
+
+			in := common.GetUserInput(r)
+			data, mime, status := s.Handler(mode, in, nil)
+			w.WriteHeader(status)
+			if len(mime) == 0 {
+				mime = "text/plain"
+			}
+			w.Header().Set("Content-Type", mime)
+			w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
+			fmt.Fprint(w, data)
+			return
 		}
 		// does not match any sink or the main page
 		w.WriteHeader(http.StatusNotFound)
@@ -121,6 +131,7 @@ func Setup() {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes()
+	ssrf.RegisterRoutes()
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
@@ -141,7 +152,6 @@ func Setup() {
 		http.HandleFunc(r.Base+"/", newHandler(r))
 	}
 
-	http.HandleFunc("/ssrf/", makeHandler(ssrf.Handler, "ssrf"))
 	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidated.Handler, "unvalidatedRedirect"))
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))

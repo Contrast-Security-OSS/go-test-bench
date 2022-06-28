@@ -20,6 +20,9 @@
            <h4 class="sub-header">{{inputTitle $input}}</h4>
             {{if needsCurl $input }}
               {{ curl $addr $base $sink.URL $input $routeInfo.Payload }}
+            {{else if eq $input "params"}}
+              {{/* handle separately as the buttons need to behave differently */}}
+              {{ template "pathParam" strMap "Route" $routeInfo "Sink" $sink "Input" $input }}
             {{else}}
               <form method="{{methodFromInput $input}}" action="{{ $routeInfo.Base }}/{{ $sink.URL }}/{{ $input }}/unsafe" target="_blank">
                 <div class="form-group">
@@ -37,4 +40,4 @@
 {{template "safeButtons" .}}
 {{end}}
 
-{{template "sqlInjection" .}}
+{{template "body" .}}

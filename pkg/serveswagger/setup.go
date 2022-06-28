@@ -168,7 +168,7 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 				}
 			}
 			in := common.GetUserInput(r.req)
-			data, status := s.Handler(mode, in, p)
+			data, _, status := s.Handler(mode, in, p)
 			w.WriteHeader(status)
 			w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
 			fmt.Fprint(w, data)

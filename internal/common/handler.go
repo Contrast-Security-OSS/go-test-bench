@@ -9,7 +9,7 @@ import (
 // `opaque` can be set to some framework-specific struct - for example, gin.Context.
 //
 // Prefer statuses 200 (success), 400 (generic, expected error), and 500 (generic, unexpected error).
-type HandlerFn func(safety Safety, payload string, opaque interface{}) (data string, status int)
+type HandlerFn func(safety Safety, payload string, opaque interface{}) (data, mime string, status int)
 
 // VulnerableFnWrapper is a function wrapping something vulnerable. Used
 // to adapt things for use with GenericHandler. 'raw' indicates data
@@ -24,21 +24,22 @@ func GenericHandler(s *Sink) (HandlerFn, error) {
 	if s.VulnerableFnWrapper == nil {
 		return nil, fmt.Errorf("sink %#v: internal error - VulnerableFnWrapper cannot be nil", s)
 	}
-	return func(safety Safety, payload string, opaque interface{}) (data string, status int) {
+	return func(safety Safety, payload string, opaque interface{}) (data, mime string, status int) {
+		mime = "text/plain"
 		switch safety {
 		case Unsafe:
 			// nothing to do here
 		case Safe:
 			payload = s.Sanitize(payload)
 		case NOOP:
-			return "NOOP", http.StatusOK
+			return "NOOP", mime, http.StatusOK
 		default:
 			msg := "expect one of 'unsafe', 'safe', 'noop' - instead got " + string(safety)
-			return msg, http.StatusBadRequest
+			return msg, mime, http.StatusBadRequest
 		}
 		res, raw, err := s.VulnerableFnWrapper(opaque, payload)
 		if raw {
-			return res, http.StatusOK
+			return res, mime, http.StatusOK
 		}
 
 		status = http.StatusOK
@@ -51,6 +52,6 @@ func GenericHandler(s *Sink) (HandlerFn, error) {
 			res = "(no data returned)"
 		}
 		data = fmt.Sprintf("%q: %s action with payload=%q resulted in err=%s\nand data=\\\n%s", s.Name, safety, payload, e, res)
-		return data, status
+		return data, mime, status
 	}, nil
 }

@@ -10,7 +10,8 @@ const INPUT = "input"
 
 // GetUserInput returns the first value found in the request with the key 'input'.
 //
-// If none are found, it tries for a header with key 'credentials'.
+// If none are found, it tries for a header with key 'credentials', and finally
+// the last element in the url.
 //
 // the order of precedence when getting the result is:
 //
@@ -24,7 +25,7 @@ const INPUT = "input"
 //
 // - credentials header
 //
-func GetUserInput(r *http.Request) string {
+func GetUserInput(r *http.Request) (val string) {
 	if value := GetParamValue(r, INPUT); value != "" {
 		return value
 	}
@@ -44,12 +45,7 @@ func GetUserInput(r *http.Request) string {
 	if value := GetHeaderValue(r, "credentials"); value != "" {
 		return value
 	}
-
-	// GetPathValue is not included because we need to have the positions already defined
-	// Currently it is used directly in XSS parsing <script> ... </script> from the query path
-	// TODO - need to update the logic for the positional parameters
-
-	return ""
+	return GetPathValue(r, -1)
 }
 
 //GetParamValue returns the input value for the given key of a GET request query
@@ -57,14 +53,15 @@ func GetParamValue(r *http.Request, key string) string {
 	return r.URL.Query().Get(key)
 }
 
-//GetPathValue returns the input value as a string included in the URL - e.g. /<script>.....</script>/....
-//
-// since the path is split by "/" there is a need to combine multiple pieces into one in order to get the full
-// value accordingly, positions - holds the indices of the split string to concatenate
+// GetPathValue returns element(s) from the given position(s) in the url,
+// joined with '/'. Negative positions are allowed and start at the right.
 func GetPathValue(r *http.Request, positions ...int) string {
 	splitURL := strings.Split(r.URL.Path, "/")
 	var param []string
 	for _, v := range positions {
+		if v < 0 {
+			v = len(splitURL) + v
+		}
 		param = append(param, splitURL[v])
 	}
 	return strings.Join(param, "/")

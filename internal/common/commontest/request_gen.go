@@ -3,6 +3,7 @@ package commontest
 import (
 	"fmt"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
@@ -34,10 +35,12 @@ func UnsafeRouteRequests(r *common.Route, addr string) ([]SinkTest, error) {
 			var u string
 			if r.UsesGenericTmpl() {
 				// different param order, to more easily work with gin
-				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, s.Name, i)
+				u = path.Join(addr, r.Base, s.URL, i, "unsafe")
 			} else {
-				u = fmt.Sprintf("http://%s%s/%s/%s/unsafe", addr, r.Base, i, s.Name)
+				u = path.Join(addr, r.Base, i, s.URL, "unsafe")
 			}
+			// path.Join would break this by cleaning '//' to '/'
+			u = "http://" + u
 			req, err := http.NewRequest(method, u, nil)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create request: %w", err)
