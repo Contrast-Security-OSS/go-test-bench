@@ -118,6 +118,14 @@ func newHandler(v common.Route) http.HandlerFunc {
 	}
 }
 
+// RegisterRoutes registers all decoupled routes used by servestd. Shared with cmd/exercise.
+func RegisterRoutes() {
+	cmdi.RegisterRoutes()
+	sqli.RegisterRoutes()
+	pathtraversal.RegisterRoutes()
+	ssrf.RegisterRoutes()
+}
+
 // Setup loads templates, sets up routes, etc.
 func Setup() {
 	log.Println("Loading Templates...")
@@ -127,11 +135,8 @@ func Setup() {
 	}
 	log.Println("Templates loaded.")
 
-	// register all routes at this point.
-	cmdi.RegisterRoutes()
-	sqli.RegisterRoutes()
-	pathtraversal.RegisterRoutes()
-	ssrf.RegisterRoutes()
+	// register all routes in this function
+	RegisterRoutes()
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 

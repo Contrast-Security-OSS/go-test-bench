@@ -49,9 +49,8 @@ func TestExerciseIntegration(t *testing.T) {
 			e := &exercises{
 				addr: addr,
 			}
-			if err := e.init(t); err != nil {
-				t.Fatal(err)
-			}
+			e.init(t)
+
 			t.Run("check css asset content type", func(t *testing.T) {
 				e.checkAssets(t)
 			})

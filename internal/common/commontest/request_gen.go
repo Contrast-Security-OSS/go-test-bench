@@ -59,9 +59,8 @@ func UnsafeRouteRequests(r *common.Route, addr string) ([]SinkTest, error) {
 
 // UnsafeRequests generates a list of requests for all unsafe
 // endpoints common to all app frameworks.
-func UnsafeRequests(addr string) ([]RouteTestRequests, error) {
+func UnsafeRequests(addr string, rmap common.RouteMap) ([]RouteTestRequests, error) {
 	var reqs []RouteTestRequests
-	rmap := common.GetRouteMap()
 	if len(rmap) == 0 {
 		return nil, fmt.Errorf("init error - no routes returned by GetRouteMap")
 	}
