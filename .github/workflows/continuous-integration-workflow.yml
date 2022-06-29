@@ -38,7 +38,7 @@ jobs:
         with:
           go-version: 1.18
       - name: windows - downgrade mingw to 10.2.0
-        # TODO revert once 'go test -race' issue is fixed
+        # TODO (GO-1433) revert once 'go test -race' issue is fixed
         # see https://github.com/golang/go/issues/46099 and maybe https://github.com/golang/go/issues/35006
         if: ${{ matrix.platform == 'windows-latest' }}
         run: choco install mingw --version 10.2.0 --allow-downgrade
