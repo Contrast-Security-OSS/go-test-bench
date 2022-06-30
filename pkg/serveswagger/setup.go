@@ -12,13 +12,10 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger/shared"
+	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
-
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
-	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )
 
@@ -31,32 +28,6 @@ var SwaggerParams = common.ConstParams{
 	Logo:      "https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png",
 	Framework: "Go-Swagger",
 	Addr:      DefaultAddr,
-}
-
-// FilterInputTypes removes unsupported input types so they are not rendered.
-// NOTE: this filtering only has an effect on routes using the generic template
-// TODO(XXX): support things other than query and buffered-query
-func FilterInputTypes(rmap common.RouteMap) {
-	allowContains := []string{
-		"query", // query, buffered-query
-	}
-	for path, rt := range rmap {
-		for i := 0; i < len(rt.Inputs); {
-			allow := false
-			for _, a := range allowContains {
-				if strings.Contains(rt.Inputs[i], a) {
-					allow = true
-					break
-				}
-			}
-			if !allow {
-				rt.Inputs = append(rt.Inputs[:i], rt.Inputs[i+1:]...)
-				continue
-			}
-			i++
-		}
-		rmap[path] = rt
-	}
 }
 
 // Setup sets up the configuration for the go-swagger server
@@ -78,17 +49,26 @@ func Setup() (*restapi.Server, error) {
 	if err := common.ParseViewTemplates(); err != nil {
 		return nil, err
 	}
-	cmdi.RegisterRoutes()
-	sqli.RegisterRoutes()
-	pathtraversal.RegisterRoutes()
+	// add new routes to this function, which is shared with cmd/go-swagger/regen
+	shared.RegisterNewRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
-	FilterInputTypes(rmap)
+	shared.FilterInputTypes(rmap)
+
+	// set up template files for legacy routes
+	for k, v := range rmap {
+		if len(v.TmplFile) == 0 {
+			v.TmplFile = strings.TrimLeft(v.Base+".gohtml", "/")
+			rmap[k] = v
+		}
+	}
 
 	// lives in generated code. initializes all route handlers other than root.
 	generatedInit(api, rmap, &SwaggerParams)
 
 	server := restapi.NewServer(api)
+
+	server.Port = 8080 // put it up here so it can be overridden by flag
 
 	parser := flags.NewParser(server, flags.Default)
 	parser.ShortDescription = "go swagger server"
@@ -112,7 +92,6 @@ func Setup() (*restapi.Server, error) {
 	}
 
 	server.ConfigureAPI()
-	server.Port = 8080
 
 	SwaggerParams.Rulebar = rmap
 
@@ -121,6 +100,9 @@ func Setup() (*restapi.Server, error) {
 
 // RouteHandler returns a middleware.Responder that serves our html and the vulnerable functions.
 func RouteHandler(rt common.Route, pd *common.ConstParams, req *http.Request) middleware.Responder {
+	if len(rt.Base) == 0 {
+		log.Fatalf("missing data for route: %#v\nurl=%s", rt, req.URL)
+	}
 	return &responder{
 		rt: rt,
 		params: common.Parameters{
@@ -142,7 +124,13 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 	elems := strings.Split(strings.Trim(r.req.URL.Path, "/"), "/")
 	if len(elems) < 2 {
 		// main page
-		err := common.Templates[r.rt.TmplFile].ExecuteTemplate(w, "layout.gohtml", &r.params)
+		tmpl, ok := common.Templates[r.rt.TmplFile]
+		if !ok {
+			log.Printf("missing template %s for %#v", r.rt.TmplFile, r.rt)
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		err := tmpl.ExecuteTemplate(w, "layout.gohtml", &r.params)
 		if err != nil {
 			log.Print(err.Error())
 			fmt.Fprintf(w, "template error: %s", err)
@@ -168,8 +156,12 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 				}
 			}
 			in := common.GetUserInput(r.req)
-			data, _, status := s.Handler(mode, in, p)
+			data, mime, status := s.Handler(mode, in, p)
 			w.WriteHeader(status)
+			if len(mime) == 0 {
+				mime = "text/plain"
+			}
+			w.Header().Set("Content-Type", mime)
 			w.Header().Set("Cache-Control", "no-store") //makes development a whole lot easier
 			fmt.Fprint(w, data)
 			return

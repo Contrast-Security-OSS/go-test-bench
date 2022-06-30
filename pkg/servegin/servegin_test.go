@@ -1,6 +1,7 @@
 package servegin
 
 import (
+	"os"
 	"testing"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
@@ -8,7 +9,10 @@ import (
 )
 
 func TestRouteData(t *testing.T) {
-	Setup("don't care")
-	t.Cleanup(common.Reset)
+	_, dbFile := Setup("don't care")
+	t.Cleanup(func() {
+		common.Reset()
+		_ = os.RemoveAll(dbFile)
+	})
 	servetest.TestRouteData(t, nil, nil)
 }

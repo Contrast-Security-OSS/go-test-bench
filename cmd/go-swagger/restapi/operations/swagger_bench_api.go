@@ -100,8 +100,8 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		SsrfSsrfFrontHandler: ssrf.SsrfFrontHandlerFunc(func(params ssrf.SsrfFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfFront has not yet been implemented")
 		}),
-		SsrfSsrfGetQuerySinkHandler: ssrf.SsrfGetQuerySinkHandlerFunc(func(params ssrf.SsrfGetQuerySinkParams) middleware.Responder {
-			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
+		SsrfSsrfGetQueryHTTPHandler: ssrf.SsrfGetQueryHTTPHandlerFunc(func(params ssrf.SsrfGetQueryHTTPParams) middleware.Responder {
+			return middleware.NotImplemented("operation ssrf.SsrfGetQueryHTTP has not yet been implemented")
 		}),
 		UnvalidatedRedirectUnvalidatedRedirectFrontHandler: unvalidated_redirect.UnvalidatedRedirectFrontHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
@@ -193,8 +193,8 @@ type SwaggerBenchAPI struct {
 	SQLInjectionSQLInjectionGetQueryExecHandler sql_injection.SQLInjectionGetQueryExecHandler
 	// SsrfSsrfFrontHandler sets the operation handler for the ssrf front operation
 	SsrfSsrfFrontHandler ssrf.SsrfFrontHandler
-	// SsrfSsrfGetQuerySinkHandler sets the operation handler for the ssrf get query sink operation
-	SsrfSsrfGetQuerySinkHandler ssrf.SsrfGetQuerySinkHandler
+	// SsrfSsrfGetQueryHTTPHandler sets the operation handler for the ssrf get query HTTP operation
+	SsrfSsrfGetQueryHTTPHandler ssrf.SsrfGetQueryHTTPHandler
 	// UnvalidatedRedirectUnvalidatedRedirectFrontHandler sets the operation handler for the unvalidated redirect front operation
 	UnvalidatedRedirectUnvalidatedRedirectFrontHandler unvalidated_redirect.UnvalidatedRedirectFrontHandler
 	// UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler sets the operation handler for the unvalidated redirect get query redirect operation
@@ -335,8 +335,8 @@ func (o *SwaggerBenchAPI) Validate() error {
 	if o.SsrfSsrfFrontHandler == nil {
 		unregistered = append(unregistered, "ssrf.SsrfFrontHandler")
 	}
-	if o.SsrfSsrfGetQuerySinkHandler == nil {
-		unregistered = append(unregistered, "ssrf.SsrfGetQuerySinkHandler")
+	if o.SsrfSsrfGetQueryHTTPHandler == nil {
+		unregistered = append(unregistered, "ssrf.SsrfGetQueryHTTPHandler")
 	}
 	if o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
 		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectFrontHandler")
@@ -511,7 +511,7 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/ssrf/Sink/query/{safety}"] = ssrf.NewSsrfGetQuerySink(o.context, o.SsrfSsrfGetQuerySinkHandler)
+	o.handlers["GET"]["/ssrf/http/query/{safety}"] = ssrf.NewSsrfGetQueryHTTP(o.context, o.SsrfSsrfGetQueryHTTPHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -519,7 +519,7 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/unvalidatedRedirect/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
+	o.handlers["GET"]["/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
