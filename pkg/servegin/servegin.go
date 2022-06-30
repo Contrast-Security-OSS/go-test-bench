@@ -116,20 +116,25 @@ var ginPathTraversal = common.Sink{
 	},
 }
 
-// Setup loads templates, sets up routes, etc.
-func Setup(addr string) (router *gin.Engine, dbFile string) {
-	base["Addr"] = addr
-
-	//register all routes at this point, before AllRoutes is used.
+// RegisterRoutes registers all decoupled routes used with gin. Shared with cmd/exercise.
+func RegisterRoutes() {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes(&ginPathTraversal)
 	ssrf.RegisterRoutes()
+}
+
+// Setup loads templates, sets up routes, etc.
+func Setup(addr string) (router *gin.Engine, dbFile string) {
+	base["Addr"] = addr
+
+	//register all decoupled routes in this function
+	RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
 
 	//until all routes are migrated to the new model, we need to do a few fixups
-	rmap = preMigrationFixups(rmap)
+	rmap = PreMigrationFixups(rmap)
 
 	base["Rulebar"] = rmap
 	router = gin.Default()
@@ -162,8 +167,9 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	return router, dbSrc.Name()
 }
 
-//temporary fixes until remainder of code migrates to new model
-func preMigrationFixups(rmap common.RouteMap) common.RouteMap {
+// PreMigrationFixups makes temporary fixes to routes. These fixes are
+// only needed until the remainder of the code migrates to the new model.
+func PreMigrationFixups(rmap common.RouteMap) common.RouteMap {
 	// unvalidated redirect; for now, just handle the gin method
 	ur, ok := rmap["unvalidatedRedirect"]
 	if !ok {
