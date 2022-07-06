@@ -157,6 +157,12 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 			}
 			in := common.GetUserInput(r.req)
 			data, mime, status := s.Handler(mode, in, p)
+			if len(data) == 0 {
+				// don't unconditionally write response, as it can result in
+				// - a warning (when status changes), or
+				// - a panic (when content-length is already set and headers are written)
+				return
+			}
 			w.WriteHeader(status)
 			if len(mime) == 0 {
 				mime = "text/plain"
