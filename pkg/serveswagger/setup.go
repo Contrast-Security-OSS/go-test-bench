@@ -159,8 +159,7 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 			data, mime, status := s.Handler(mode, in, p)
 			if len(data) == 0 {
 				// don't unconditionally write response, as it can result in
-				// - a warning (when status changes), or
-				// - a panic (when content-length is already set and headers are written)
+				// - an error log of "http: superfluous response.WriteHeader call"
 				return
 			}
 			w.WriteHeader(status)
