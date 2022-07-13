@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 	"io"
 	"net/http"
 	"strings"
@@ -79,6 +81,29 @@ func (e *exercises) checkFramework(log common.Logger) {
 			e.rmap = common.PopulateRouteMap(common.AllRoutes)
 			e.rmap = servegin.PreMigrationFixups(e.rmap)
 		}
+	case "Go-Swagger":
+		if e.standalone {
+			serveswagger.Setup()
+			routes := common.Routes{}
+
+			fmt.Println(fmt.Sprintf("#%v", common.AllRoutes))
+
+			for _, route := range common.AllRoutes {
+				if route.Base != "/xss" && route.Base != "/xssJSON" {
+					if route.Base == "/cmdInjection" || route.Base == "/sqlInjection" || route.Base == "/ssrf" {
+						route.Inputs = []string{"query"}
+					}
+					if route.Base == "/pathTraversal" {
+						route.Inputs = []string{"query", "buffered-query"}
+					}
+					routes = append(routes, route)
+				}
+			}
+
+			e.rmap = common.PopulateRouteMap(routes)
+			fmt.Println(common.PopulateRouteMap(routes))
+		}
+
 	case "":
 		log.Fatalf("failed to determine application framework: no %q header", hdrname)
 	default:
