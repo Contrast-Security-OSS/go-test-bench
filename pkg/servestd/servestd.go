@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
@@ -103,7 +104,12 @@ func newHandler(v common.Route) http.HandlerFunc {
 			}
 
 			in := common.GetUserInput(r)
-			data, mime, status := s.Handler(mode, in, nil)
+			data, mime, status := s.Handler(mode, in, httpHandlerPair{w, r})
+			if len(data) == 0 {
+				// don't unconditionally write response, as it can result in
+				// - an error log of "http: superfluous response.WriteHeader call"
+				return
+			}
 			w.WriteHeader(status)
 			if len(mime) == 0 {
 				mime = "text/plain"
@@ -118,12 +124,30 @@ func newHandler(v common.Route) http.HandlerFunc {
 	}
 }
 
+type httpHandlerPair struct {
+	http.ResponseWriter
+	*http.Request
+}
+
 // RegisterRoutes registers all decoupled routes used by servestd. Shared with cmd/exercise.
 func RegisterRoutes() {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes()
 	ssrf.RegisterRoutes()
+	unvalidated.RegisterRoutes(&common.Sink{
+		Name:     "http.Redirect",
+		Sanitize: url.PathEscape,
+		VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, raw bool, err error) {
+			p, ok := opaque.(httpHandlerPair)
+			if !ok {
+				log.Fatalf("'opaque': want httpHandlerPair, got %T", opaque)
+			}
+			w, r := p.ResponseWriter, p.Request
+			http.Redirect(w, r, payload, http.StatusFound)
+			return "", true, nil
+		},
+	})
 }
 
 // Setup loads templates, sets up routes, etc.
@@ -156,8 +180,6 @@ func Setup() {
 	for _, r := range common.AllRoutes {
 		http.HandleFunc(r.Base+"/", newHandler(r))
 	}
-
-	http.HandleFunc("/unvalidatedRedirect/", makeHandler(unvalidated.Handler, "unvalidatedRedirect"))
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 

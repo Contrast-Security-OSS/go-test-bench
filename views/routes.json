@@ -1,185 +1,213 @@
 {
-    "cmdInjectionSemanticChainedCommands" :  {
-        "base"     :  "/cmdInjectionSemanticChainedCommands",
-        "name"     :  "Command Injection Semantic Chained Commands",
-        "link"     :  "https://www.owasp.org/index.php/Command_Injection",
-        "products" :  ["Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
+    "cmdInjectionSemanticChainedCommands": {
+        "base": "/cmdInjectionSemanticChainedCommands",
+        "name": "Command Injection Semantic Chained Commands",
+        "link": "https://www.owasp.org/index.php/Command_Injection",
+        "products": [
+            "Protect"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
             {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
+                "name": "",
+                "url": "",
+                "method": ""
             }
         ]
     },
-
-    "cmdInjectionSemanticDangerousPaths" :  {
-        "base"     :  "/cmdInjectionSemanticDangerousPaths",
-        "name"     :  "Command Injection Semantic Dangerous Paths",
-        "link"     :  "https://www.owasp.org/index.php/Command_Injection",
-        "products" :  ["Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
+    "cmdInjectionSemanticDangerousPaths": {
+        "base": "/cmdInjectionSemanticDangerousPaths",
+        "name": "Command Injection Semantic Dangerous Paths",
+        "link": "https://www.owasp.org/index.php/Command_Injection",
+        "products": [
+            "Protect"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
             {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
+                "name": "",
+                "url": "",
+                "method": ""
             }
         ]
     },
-
-    "nosqlInjection" :  {
-        "base"     :  "/nosqlInjection",
-        "name"     :  "NoSQL Injection",
-        "link"     :  "https://www.owasp.org/index.php/Testing_for_NoSQL_injection",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
+    "nosqlInjection": {
+        "base": "/nosqlInjection",
+        "name": "NoSQL Injection",
+        "link": "https://www.owasp.org/index.php/Testing_for_NoSQL_injection",
+        "products": [
+            "Assess",
+            "Protect"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
             {
                 "comment": "disabled",
-                "_name"   : "mongodb.Collection.Find",
-                "url"     : "\/nosqlInjection\/query\/mongodbCollectionFind",
-                "method"  : "GET"
+                "_name": "mongodb.Collection.Find",
+                "url": "\/nosqlInjection\/query\/mongodbCollectionFind",
+                "method": "GET"
             }
         ]
     },
-
-    "ssjs" :  {
-        "base"     :  "/ssjs",
-        "name"     :  "SSJS Injection",
-        "link"     : "https://ckarande.gitbooks.io/owasp-nodegoat-tutorial/content/tutorial/a1_-_server_side_js_injection.html",
-        "products" :  ["Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
-            {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
-            }
-        ]
-    },
-
-    "unsafeFileUpload" :  {
-        "base"     :  "/unsafeFileUpload",
-        "name"     :  "Unsafe File Upload",
-        "link"     :  "https : //www.owasp.org/index.php/Unrestricted_File_Upload",
-        "products" :  ["Protect"],
-        "inputs"   :  ["body"],
-        "sinks"    :  [
-            {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
-            }
-        ]
-    },
-
-    "untrustedDeserialization" :  {
-        "base"     :  "/untrustedDeserialization",
-        "name"     :  "Untrusted Deserialization",
-        "link"     : "https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data",
-        "products" :  ["Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
-            {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
-            }
-        ]
-    },
-
-    "unvalidatedRedirect" :  {
-        "base"     :  "/unvalidatedRedirect",
-        "name"     :  "Unvalidated Redirect",
-        "link"     :  "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html",
-        "products" :  ["Assess"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
-            {
-                "name"   : "http.Redirect",
-                "url"    : "http.Redirect",
-                "method" : "GET"
-            }
+    "ssjs": {
+        "base": "/ssjs",
+        "name": "SSJS Injection",
+        "link": "https://ckarande.gitbooks.io/owasp-nodegoat-tutorial/content/tutorial/a1_-_server_side_js_injection.html",
+        "products": [
+            "Protect"
         ],
-        "payload": "http://www.example.com"
-    },
-
-    "xpathInjection" :  {
-        "base"     :  "/xpathInjection",
-        "name"     :  "XPath Injection",
-        "link"     :  "https : //owasp.org/www-community/attacks/XPATH_Injection",
-        "products" :  ["Assess"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
             {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
+                "name": "",
+                "url": "",
+                "method": ""
             }
         ]
     },
-
-    "xss" :  {
-        "base"     :  "/xss",
-        "name"     :  "Reflected XSS",
-        "link"     :  "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query","buffered-query", "params", "body","buffered-body","response"],
-        "sinks"    :  [
+    "unsafeFileUpload": {
+        "base": "/unsafeFileUpload",
+        "name": "Unsafe File Upload",
+        "link": "https : //www.owasp.org/index.php/Unrestricted_File_Upload",
+        "products": [
+            "Protect"
+        ],
+        "inputs": [
+            "body"
+        ],
+        "sinks": [
+            {
+                "name": "",
+                "url": "",
+                "method": ""
+            }
+        ]
+    },
+    "untrustedDeserialization": {
+        "base": "/untrustedDeserialization",
+        "name": "Untrusted Deserialization",
+        "link": "https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data",
+        "products": [
+            "Protect"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
+            {
+                "name": "",
+                "url": "",
+                "method": ""
+            }
+        ]
+    },
+    "xpathInjection": {
+        "base": "/xpathInjection",
+        "name": "XPath Injection",
+        "link": "https : //owasp.org/www-community/attacks/XPATH_Injection",
+        "products": [
+            "Assess"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
+            {
+                "name": "",
+                "url": "",
+                "method": ""
+            }
+        ]
+    },
+    "xss": {
+        "base": "/xss",
+        "name": "Reflected XSS",
+        "link": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
+        "products": [
+            "Assess",
+            "Protect"
+        ],
+        "inputs": [
+            "query",
+            "buffered-query",
+            "params",
+            "body",
+            "buffered-body",
+            "response"
+        ],
+        "sinks": [
             {
                 "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
-                "name"   : "_",
-                "url"    : "",
-                "method" : ""
+                "name": "_",
+                "url": "",
+                "method": ""
             }
         ]
     },
-
-    "xssJSON" :  {
-        "base"     :  "/xssJSON",
-        "name"     :  "Reflected XSS JSON (Safe)",
-        "link"     : "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query", "params"],
-        "sinks"    :  [
+    "xssJSON": {
+        "base": "/xssJSON",
+        "name": "Reflected XSS JSON (Safe)",
+        "link": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
+        "products": [
+            "Assess",
+            "Protect"
+        ],
+        "inputs": [
+            "query",
+            "params"
+        ],
+        "sinks": [
             {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
+                "name": "",
+                "url": "",
+                "method": ""
             }
         ]
     },
-
-    "xxe" :  {
-        "base"     :  "/xxe",
-        "name"     :  "XXE Processing",
-        "link"     : "https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
-        "products" :  ["Assess", "Protect"],
-        "inputs"   :  ["query"],
-        "sinks"    :  [
+    "xxe": {
+        "base": "/xxe",
+        "name": "XXE Processing",
+        "link": "https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
+        "products": [
+            "Assess",
+            "Protect"
+        ],
+        "inputs": [
+            "query"
+        ],
+        "sinks": [
             {
                 "comment": "disabled, as go is not vulnerable",
-                "_name"  : "encoding.xml",
-                "url"    : "\/xxe\/query\/encodingXML",
-                "method" : "GET"
+                "_name": "encoding.xml",
+                "url": "\/xxe\/query\/encodingXML",
+                "method": "GET"
             }
         ]
     },
-
-    "paramPollution" :  {
-        "base"     :  "/parampollution",
-        "name"     :  "HTTP Parameter Pollution / Cache Controls Missing",
-        "link"     :  "https://owasp.org/www-pdf-archive/AppsecEU09_CarettoniDiPaola_v0.8.pdf",
-        "products" :  ["Assess"],
-        "inputs"   :  ["test"],
-        "sinks"    :  [
+    "paramPollution": {
+        "base": "/parampollution",
+        "name": "HTTP Parameter Pollution / Cache Controls Missing",
+        "link": "https://owasp.org/www-pdf-archive/AppsecEU09_CarettoniDiPaola_v0.8.pdf",
+        "products": [
+            "Assess"
+        ],
+        "inputs": [
+            "test"
+        ],
+        "sinks": [
             {
-                "name"   : "",
-                "url"    : "",
-                "method" : ""
+                "name": "",
+                "url": "",
+                "method": ""
             }
         ]
     }
-  }
+}

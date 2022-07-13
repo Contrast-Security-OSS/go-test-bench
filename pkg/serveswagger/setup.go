@@ -157,6 +157,11 @@ func (r *responder) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
 			}
 			in := common.GetUserInput(r.req)
 			data, mime, status := s.Handler(mode, in, p)
+			if len(data) == 0 {
+				// don't unconditionally write response, as it can result in
+				// - an error log of "http: superfluous response.WriteHeader call"
+				return
+			}
 			w.WriteHeader(status)
 			if len(mime) == 0 {
 				mime = "text/plain"
