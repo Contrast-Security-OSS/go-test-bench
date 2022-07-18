@@ -9,6 +9,8 @@ import (
 // `opaque` can be set to some framework-specific struct - for example, gin.Context.
 //
 // Prefer statuses 200 (success), 400 (generic, expected error), and 500 (generic, unexpected error).
+//
+// If a HandlerFn returns empty data, drivers should not write any data to the response.
 type HandlerFn func(safety Safety, payload string, opaque interface{}) (data, mime string, status int)
 
 // VulnerableFnWrapper is a function wrapping something vulnerable. Used

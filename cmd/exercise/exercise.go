@@ -79,7 +79,6 @@ func (e *exercises) checkFramework(log common.Logger) {
 		if e.standalone {
 			servegin.RegisterRoutes()
 			e.rmap = common.PopulateRouteMap(common.AllRoutes)
-			e.rmap = servegin.PreMigrationFixups(e.rmap)
 		}
 	case "Go-Swagger":
 		if e.standalone {
@@ -137,10 +136,6 @@ func (e *exercises) checkAssets(log common.Logger) {
 func (e *exercises) run(log common.Logger, s commontest.SinkTest) {
 	if s.ExpectedStatus == 0 {
 		s.ExpectedStatus = http.StatusOK
-	}
-	if strings.Contains(s.R.URL.Path, "unvalidatedRedirect") {
-		// temporary fixup - unvalidated redirect does not specify the input type in url
-		s.R.URL.Path = strings.ReplaceAll(s.R.URL.Path, "query/", "")
 	}
 	if e.verbose {
 		log.Logf("sending request: %s", s.R.URL.String())

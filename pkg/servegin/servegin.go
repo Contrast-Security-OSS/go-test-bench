@@ -6,13 +6,13 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/sqli"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/pathtraversal"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/ssrf"
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/unvalidated"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
@@ -78,16 +78,17 @@ func add(router *gin.Engine, rt common.Route) {
 				}
 
 				data, mime, status := s.Handler(mode, payload, c)
-				if len(data) > 0 {
-					// don't unconditionally write this, as it can result in
+				if len(data) == 0 {
+					// don't unconditionally write response, as it can result in
 					// - a warning (when status changes), or
 					// - a panic (when content-length is already set and headers are written)
-					if len(mime) == 0 {
-						mime = "text/plain"
-					}
-					c.Header("Content-Type", mime)
-					c.String(status, data)
+					return
 				}
+				if len(mime) == 0 {
+					mime = "text/plain"
+				}
+				c.Header("Content-Type", mime)
+				c.String(status, data)
 			}
 		}(s)
 		sinkPg := base.Group("/" + s.URL)
@@ -116,12 +117,26 @@ var ginPathTraversal = common.Sink{
 	},
 }
 
+var unvalidatedRedirect = common.Sink{
+	Name:     "gin.Redirect",
+	Sanitize: url.PathEscape,
+	VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, raw bool, err error) {
+		c, ok := opaque.(*gin.Context)
+		if !ok {
+			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
+		}
+		c.Redirect(http.StatusFound, payload)
+		return "", true, nil
+	},
+}
+
 // RegisterRoutes registers all decoupled routes used with gin. Shared with cmd/exercise.
 func RegisterRoutes() {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes(&ginPathTraversal)
 	ssrf.RegisterRoutes()
+	unvalidated.RegisterRoutes(&unvalidatedRedirect)
 }
 
 // Setup loads templates, sets up routes, etc.
@@ -132,9 +147,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	RegisterRoutes()
 
 	rmap := common.PopulateRouteMap(common.AllRoutes)
-
-	//until all routes are migrated to the new model, we need to do a few fixups
-	rmap = PreMigrationFixups(rmap)
 
 	base["Rulebar"] = rmap
 	router = gin.Default()
@@ -157,7 +169,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 		add(router, h)
 	}
 	addReflectedXSS(router)
-	addUnvalidatedRedirect(router)
 
 	// setting up a database to execute the built query
 	dbSrc, err := os.CreateTemp(".", "tempDatabase*.db")
@@ -165,22 +176,4 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 		panic(err)
 	}
 	return router, dbSrc.Name()
-}
-
-// PreMigrationFixups makes temporary fixes to routes. These fixes are
-// only needed until the remainder of the code migrates to the new model.
-func PreMigrationFixups(rmap common.RouteMap) common.RouteMap {
-	// unvalidated redirect; for now, just handle the gin method
-	ur, ok := rmap["unvalidatedRedirect"]
-	if !ok {
-		for k := range rmap {
-			log.Println(k)
-		}
-		log.Fatal("unvalidated redirect is missing")
-	}
-	ur.Sinks[0].Name = "gin.Redirect"
-	ur.Sinks[0].URL = strings.Replace(ur.Sinks[0].URL, "http.", "gin.", 1)
-	rmap["unvalidatedRedirect"] = ur
-
-	return rmap
 }
