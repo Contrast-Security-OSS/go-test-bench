@@ -1,15 +1,15 @@
 package main
 
 import (
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd"
 )
 
 func TestExerciseIntegration(t *testing.T) {
@@ -31,7 +31,13 @@ func TestExerciseIntegration(t *testing.T) {
 				return router
 			},
 		},
-		// TODO(GO-1397): add support for go-swagger to this test and the exercise app
+		"Go-Swagger": {
+			setup: func(t *testing.T) http.Handler {
+				server, _ := serveswagger.Setup(true)
+
+				return server.GetHandler()
+			},
+		},
 	}
 
 	for name, test := range tests {

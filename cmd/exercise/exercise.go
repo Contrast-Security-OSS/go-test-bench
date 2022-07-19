@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 	"io"
 	"net/http"
@@ -84,23 +83,13 @@ func (e *exercises) checkFramework(log common.Logger) {
 		if e.standalone {
 			serveswagger.Setup()
 			routes := common.Routes{}
+			swaggerRoutes := serveswagger.SwaggerParams.Rulebar
 
-			fmt.Println(fmt.Sprintf("#%v", common.AllRoutes))
-
-			for _, route := range common.AllRoutes {
-				if route.Base != "/xss" && route.Base != "/xssJSON" {
-					if route.Base == "/cmdInjection" || route.Base == "/sqlInjection" || route.Base == "/ssrf" {
-						route.Inputs = []string{"query"}
-					}
-					if route.Base == "/pathTraversal" {
-						route.Inputs = []string{"query", "buffered-query"}
-					}
-					routes = append(routes, route)
-				}
+			for _, route := range swaggerRoutes {
+				routes = append(routes, route)
 			}
 
 			e.rmap = common.PopulateRouteMap(routes)
-			fmt.Println(common.PopulateRouteMap(routes))
 		}
 
 	case "":

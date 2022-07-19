@@ -31,7 +31,7 @@ var SwaggerParams = common.ConstParams{
 }
 
 // Setup sets up the configuration for the go-swagger server
-func Setup() (*restapi.Server, error) {
+func Setup(testing ...bool) (*restapi.Server, error) {
 	// load up the swagger spec.
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
@@ -81,14 +81,16 @@ func Setup() (*restapi.Server, error) {
 		}
 	}
 
-	if _, err := parser.Parse(); err != nil {
-		code := 1
-		if fe, ok := err.(*flags.Error); ok {
-			if fe.Type == flags.ErrHelp {
-				code = 0
+	if len(testing) == 0 {
+		if _, err := parser.Parse(); err != nil {
+			code := 1
+			if fe, ok := err.(*flags.Error); ok {
+				if fe.Type == flags.ErrHelp {
+					code = 0
+				}
 			}
+			os.Exit(code)
 		}
-		os.Exit(code)
 	}
 
 	server.ConfigureAPI()
