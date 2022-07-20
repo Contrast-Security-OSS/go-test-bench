@@ -31,7 +31,7 @@ var SwaggerParams = common.ConstParams{
 }
 
 // Setup sets up the configuration for the go-swagger server
-func Setup(testing ...bool) (*restapi.Server, error) {
+func Setup() (*restapi.Server, error) {
 	// load up the swagger spec.
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
@@ -70,7 +70,7 @@ func Setup(testing ...bool) (*restapi.Server, error) {
 
 	server.Port = 8080 // put it up here so it can be overridden by flag
 
-	parser := flags.NewParser(server, flags.Default)
+	parser := flags.NewParser(server, flags.Default|flags.IgnoreUnknown)
 	parser.ShortDescription = "go swagger server"
 	parser.LongDescription = "an intentionally vulnerable app built with go-swagger"
 	server.ConfigureFlags()
@@ -81,16 +81,14 @@ func Setup(testing ...bool) (*restapi.Server, error) {
 		}
 	}
 
-	if len(testing) == 0 {
-		if _, err := parser.Parse(); err != nil {
-			code := 1
-			if fe, ok := err.(*flags.Error); ok {
-				if fe.Type == flags.ErrHelp {
-					code = 0
-				}
+	if _, err := parser.Parse(); err != nil {
+		code := 1
+		if fe, ok := err.(*flags.Error); ok {
+			if fe.Type == flags.ErrHelp {
+				code = 0
 			}
-			os.Exit(code)
 		}
+		os.Exit(code)
 	}
 
 	server.ConfigureAPI()

@@ -33,7 +33,7 @@ func TestExerciseIntegration(t *testing.T) {
 		},
 		"Go-Swagger": {
 			setup: func(t *testing.T) http.Handler {
-				server, _ := serveswagger.Setup(true)
+				server, _ := serveswagger.Setup()
 
 				return server.GetHandler()
 			},
