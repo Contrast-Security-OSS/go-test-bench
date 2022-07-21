@@ -82,14 +82,6 @@ func (e *exercises) checkFramework(log common.Logger) {
 	case "Go-Swagger":
 		if e.standalone {
 			serveswagger.Setup()
-			routes := common.Routes{}
-			swaggerRoutes := serveswagger.SwaggerParams.Rulebar
-
-			for _, route := range swaggerRoutes {
-				routes = append(routes, route)
-			}
-
-			e.rmap = common.PopulateRouteMap(routes)
 		}
 
 	case "":
