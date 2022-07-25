@@ -127,31 +127,6 @@
             }
         ]
     },
-    "xss": {
-        "base": "/xss",
-        "name": "Reflected XSS",
-        "link": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
-        "products": [
-            "Assess",
-            "Protect"
-        ],
-        "inputs": [
-            "query",
-            "buffered-query",
-            "params",
-            "body",
-            "buffered-body",
-            "response"
-        ],
-        "sinks": [
-            {
-                "comment": "no sinks used in template, but a link does need to appear in sidebar - make the name non-empty",
-                "name": "_",
-                "url": "",
-                "method": ""
-            }
-        ]
-    },
     "xssJSON": {
         "base": "/xssJSON",
         "name": "Reflected XSS JSON (Safe)",
