@@ -70,6 +70,7 @@ func Setup() (*restapi.Server, error) {
 
 	server.Port = 8080 // put it up here so it can be overridden by flag
 
+	// flags.IgnoreUnknown is used to skip flags that are added from integration test since they are not available in flags.Default
 	parser := flags.NewParser(server, flags.Default|flags.IgnoreUnknown)
 	parser.ShortDescription = "go swagger server"
 	parser.LongDescription = "an intentionally vulnerable app built with go-swagger"
