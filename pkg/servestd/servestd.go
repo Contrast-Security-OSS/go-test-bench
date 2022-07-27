@@ -129,36 +129,6 @@ type httpHandlerPair struct {
 	*http.Request
 }
 
-var xssSink = common.Sink{
-	Name:     "reflectedXss",
-	Sanitize: url.PathEscape,
-	Handler: func(safety common.Safety, payload string, opaque interface{}) (data, mime string, status int) {
-		p, ok := opaque.(httpHandlerPair)
-		if !ok {
-			log.Fatalf("'opaque': want httpHandlerPair, got %T", opaque)
-		}
-
-		switch p.Request.FormValue("source") {
-		case "buffered-query":
-			payload = xss.CommonBufferedHandler(safety, payload)
-		case "buffered-body":
-			payload = xss.CommonBufferedHandler(safety, payload)
-		case "params":
-			payload = xss.CommonBufferedHandler(safety, p.Request.FormValue("param"))
-		default:
-			payload = xss.CommonHandler(safety, payload)
-		}
-
-		p.ResponseWriter.WriteHeader(http.StatusOK)
-		_, err := p.ResponseWriter.Write([]byte(payload))
-		if err != nil {
-			log.Printf("writing xss payload %s for %s: error %s", payload, p.Request.URL, err)
-		}
-
-		return "", "text/plain", http.StatusOK
-	},
-}
-
 // RegisterRoutes registers all decoupled routes used by servestd. Shared with cmd/exercise.
 func RegisterRoutes() {
 	cmdi.RegisterRoutes()
@@ -178,7 +148,7 @@ func RegisterRoutes() {
 			return "", true, nil
 		},
 	})
-	xss.RegisterRoutes(&xssSink)
+	xss.RegisterRoutes()
 }
 
 // Setup loads templates, sets up routes, etc.

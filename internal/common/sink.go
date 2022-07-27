@@ -34,6 +34,10 @@ type Sink struct {
 	// nil when this is set.
 	VulnerableFnWrapper VulnerableFnWrapper
 
+	// the mime type used when VulnerableFnWrapper returns true for R1 (raw);
+	// defaults to text/plain.
+	RawMime string
+
 	// http status that we expect to be returned for unsafe queries (used in testing)
 	// defaults to http.StatusOK if unset
 	ExpectedUnsafeStatus int

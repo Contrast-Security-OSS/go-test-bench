@@ -131,36 +131,6 @@ var unvalidatedRedirect = common.Sink{
 	},
 }
 
-var xssSink = common.Sink{
-	Name:     "reflectedXss",
-	Sanitize: url.PathEscape,
-	Handler: func(safety common.Safety, payload string, opaque interface{}) (data, mime string, status int) {
-		c, ok := opaque.(*gin.Context)
-		if !ok {
-			log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
-		}
-
-		switch c.Param("source") {
-		case "buffered-query":
-			payload = xss.CommonBufferedHandler(safety, payload)
-		case "buffered-body":
-			payload = xss.CommonBufferedHandler(safety, payload)
-		case "params":
-			payload = xss.CommonBufferedHandler(safety, c.Param("param"))
-		default:
-			payload = xss.CommonHandler(safety, payload)
-		}
-
-		c.Writer.WriteHeader(http.StatusOK)
-		_, err := c.Writer.WriteString(payload)
-		if err != nil {
-			log.Printf("writing xss payload %s for %s: error %s", payload, c.Request.URL.Path, err)
-		}
-
-		return "", "text/plain", http.StatusOK
-	},
-}
-
 // RegisterRoutes registers all decoupled routes used with gin. Shared with cmd/exercise.
 func RegisterRoutes() {
 	cmdi.RegisterRoutes()
@@ -168,7 +138,7 @@ func RegisterRoutes() {
 	pathtraversal.RegisterRoutes(&ginPathTraversal)
 	ssrf.RegisterRoutes()
 	unvalidated.RegisterRoutes(&unvalidatedRedirect)
-	xss.RegisterRoutes(&xssSink)
+	xss.RegisterRoutes()
 }
 
 // Setup loads templates, sets up routes, etc.
