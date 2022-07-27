@@ -27,7 +27,7 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 		Link:     "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
 		Base:     "xss",
 		Products: []string{"Assess", "Protect"},
-		Inputs:   []string{"query", "buffered-query", "params", "body", "buffered-body"},
+		Inputs:   []string{"query", "buffered-query", "params", "body", "buffered-body", "response"},
 		Sinks:    sinks,
 		Payload:  "<script>alert(1);</script>",
 	})
