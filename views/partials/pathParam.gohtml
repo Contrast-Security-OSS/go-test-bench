@@ -21,7 +21,7 @@ $(() => {
   const state = {
     action: "{{ .Route.Base }}/{{ .Sink.URL }}/{{ .Input }}/{safety}/{site}",
     safety: "default",
-    site: "http://example.com"
+    site: "{{ .Route.Payload }}"
   };
   if(state.safety==='default'){
     //initial state
