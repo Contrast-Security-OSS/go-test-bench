@@ -184,8 +184,6 @@ func Setup() {
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
-	//http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
-
 	pub, err := common.LocateDir("public", 5)
 	if err != nil {
 		log.Fatal(err)

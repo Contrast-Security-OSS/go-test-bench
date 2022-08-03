@@ -5,7 +5,7 @@
 
 {{- /* outside the form so it won't be sent as a query */ -}}
 <label>Payload</label>
-<input id="{{.Sink.URL}}paraminput" class="form-control" value="{{ .Route.Payload }}" />
+<input id="{{.Sink.URL}}paraminput" class="form-control" value="<html><img src=a onerror=alert(1)>" />
 
 <form class='{{.Sink.URL}}param' method="{{methodFromInput .Input}}" action="{{ .Route.Base }}/{{ .Sink.URL }}/{{ .Input }}/unsafe/{{ .Route.Payload }}" target="_blank">
 {{/* normal buttons get injected after any .form-group - don't use that class, as they would interfere */}}
@@ -21,7 +21,7 @@ $(() => {
   const state = {
     action: "{{ .Route.Base }}/{{ .Sink.URL }}/{{ .Input }}/{safety}/{site}",
     safety: "default",
-    site: "{{ .Route.Payload }}"
+    site: "<html><img src=a onerror=alert(1)>"
   };
   if(state.safety==='default'){
     //initial state
