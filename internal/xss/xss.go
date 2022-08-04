@@ -29,6 +29,6 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 		Products: []string{"Assess", "Protect"},
 		Inputs:   []string{"query", "buffered-query", "params", "body", "buffered-body", "response"},
 		Sinks:    sinks,
-		Payload:  "<script>alert(1);</script>",
+		Payload:  "<html><img src=a onerror=alert(1)>",
 	})
 }
