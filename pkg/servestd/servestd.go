@@ -148,6 +148,7 @@ func RegisterRoutes() {
 			return "", true, nil
 		},
 	})
+	xss.RegisterRoutes()
 }
 
 // Setup loads templates, sets up routes, etc.
@@ -182,8 +183,6 @@ func Setup() {
 	}
 
 	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
-
-	http.HandleFunc("/xss/", makeHandler(xss.Handler, "xss"))
 
 	pub, err := common.LocateDir("public", 5)
 	if err != nil {

@@ -41,6 +41,9 @@ func GenericHandler(s *Sink) (HandlerFn, error) {
 		}
 		res, raw, err := s.VulnerableFnWrapper(opaque, payload)
 		if raw {
+			if len(s.RawMime) > 0 {
+				mime = s.RawMime
+			}
 			return res, mime, http.StatusOK
 		}
 

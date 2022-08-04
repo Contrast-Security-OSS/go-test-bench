@@ -1,6 +1,7 @@
 package servegin
 
 import (
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/xss"
 	"log"
 	"net/http"
 	"net/url"
@@ -137,6 +138,7 @@ func RegisterRoutes() {
 	pathtraversal.RegisterRoutes(&ginPathTraversal)
 	ssrf.RegisterRoutes()
 	unvalidated.RegisterRoutes(&unvalidatedRedirect)
+	xss.RegisterRoutes()
 }
 
 // Setup loads templates, sets up routes, etc.
@@ -168,7 +170,6 @@ func Setup(addr string) (router *gin.Engine, dbFile string) {
 	for _, h := range common.AllRoutes {
 		add(router, h)
 	}
-	addReflectedXSS(router)
 
 	// setting up a database to execute the built query
 	dbSrc, err := os.CreateTemp(".", "tempDatabase*.db")
