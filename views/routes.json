@@ -35,26 +35,6 @@
             }
         ]
     },
-    "nosqlInjection": {
-        "base": "/nosqlInjection",
-        "name": "NoSQL Injection",
-        "link": "https://www.owasp.org/index.php/Testing_for_NoSQL_injection",
-        "products": [
-            "Assess",
-            "Protect"
-        ],
-        "inputs": [
-            "query"
-        ],
-        "sinks": [
-            {
-                "comment": "disabled",
-                "_name": "mongodb.Collection.Find",
-                "url": "\/nosqlInjection\/query\/mongodbCollectionFind",
-                "method": "GET"
-            }
-        ]
-    },
     "ssjs": {
         "base": "/ssjs",
         "name": "SSJS Injection",
@@ -109,44 +89,6 @@
             }
         ]
     },
-    "xpathInjection": {
-        "base": "/xpathInjection",
-        "name": "XPath Injection",
-        "link": "https : //owasp.org/www-community/attacks/XPATH_Injection",
-        "products": [
-            "Assess"
-        ],
-        "inputs": [
-            "query"
-        ],
-        "sinks": [
-            {
-                "name": "",
-                "url": "",
-                "method": ""
-            }
-        ]
-    },
-    "xssJSON": {
-        "base": "/xssJSON",
-        "name": "Reflected XSS JSON (Safe)",
-        "link": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)#Stored_and_Reflected_XSS_Attacks",
-        "products": [
-            "Assess",
-            "Protect"
-        ],
-        "inputs": [
-            "query",
-            "params"
-        ],
-        "sinks": [
-            {
-                "name": "",
-                "url": "",
-                "method": ""
-            }
-        ]
-    },
     "xxe": {
         "base": "/xxe",
         "name": "XXE Processing",
@@ -164,24 +106,6 @@
                 "_name": "encoding.xml",
                 "url": "\/xxe\/query\/encodingXML",
                 "method": "GET"
-            }
-        ]
-    },
-    "paramPollution": {
-        "base": "/parampollution",
-        "name": "HTTP Parameter Pollution / Cache Controls Missing",
-        "link": "https://owasp.org/www-pdf-archive/AppsecEU09_CarettoniDiPaola_v0.8.pdf",
-        "products": [
-            "Assess"
-        ],
-        "inputs": [
-            "test"
-        ],
-        "sinks": [
-            {
-                "name": "",
-                "url": "",
-                "method": ""
             }
         ]
     }
