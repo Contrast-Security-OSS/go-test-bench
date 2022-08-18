@@ -1,7 +1,6 @@
 package common
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -189,28 +188,8 @@ func GetRouteMap() RouteMap {
 
 // PopulateRouteMap returns a RouteMap, for use in nav bar template.
 func PopulateRouteMap(routes Routes) RouteMap {
-	rmap = make(RouteMap)
-	//add legacy routes
-	log.Println("Loading routes.json from ./views/routes.json")
-	path, err := FindViewsDir()
-	if err != nil {
-		log.Fatal("cannot find routes.json")
-	}
-	path += "/routes.json"
-	data, err := os.ReadFile(path)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if err = json.Unmarshal(data, &rmap); err != nil {
-		log.Fatal(err)
-	}
-	//add migrated routes
+	rmap = make(RouteMap, len(routes))
 	for _, r := range routes {
-		if _, ok := rmap[r.Base]; ok {
-			log.Println("overwriting route - can be removed from json: ", r.Base, r)
-			//or is duplicated within routes
-		}
 		rmap[r.Base] = r
 	}
 	//clean up
