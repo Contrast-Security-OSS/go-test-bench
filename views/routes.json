@@ -89,24 +89,4 @@
             }
         ]
     },
-    "xxe": {
-        "base": "/xxe",
-        "name": "XXE Processing",
-        "link": "https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
-        "products": [
-            "Assess",
-            "Protect"
-        ],
-        "inputs": [
-            "query"
-        ],
-        "sinks": [
-            {
-                "comment": "disabled, as go is not vulnerable",
-                "_name": "encoding.xml",
-                "url": "\/xxe\/query\/encodingXML",
-                "method": "GET"
-            }
-        ]
-    }
 }
