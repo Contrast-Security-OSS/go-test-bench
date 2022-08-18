@@ -40,18 +40,6 @@ services:
       - .:/etc/contrast:ro
     networks:
       - extbridge
-  # TODO: Add back in with nosql injection support
-  # mongo:
-  #   container_name: mongo
-  #   hostname: mongo
-  #   image: mongo:latest
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: rootpassword
-  #   ports:
-  #     - 27017:27017    
-  #   networks:
-  #     - extbridge
 networks:
   extbridge:
     driver: bridge
