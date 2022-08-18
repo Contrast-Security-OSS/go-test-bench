@@ -167,22 +167,11 @@ func Setup() {
 
 	log.Println("Server startup at: " + Pd.Addr)
 
-	// Attempt to connect to MongoDB with a 30 second timeout
-	// err = nosql.MongoInit(time.Second * 30)
-	// if err != nil {
-	// 	log.Printf("Could not connect the Mongo client: err = %s", err)
-	// 	os.Exit(1)
-	// }
-
-	//defer nosql.MongoKill()
-
 	http.HandleFunc("/", rootHandler)
 
 	for _, r := range common.AllRoutes {
 		http.HandleFunc(r.Base+"/", newHandler(r))
 	}
-
-	// http.HandleFunc("/nosqlInjection/", makeHandler(nosql.Handler, "nosqlInjection"))
 
 	pub, err := common.LocateDir("public", 5)
 	if err != nil {

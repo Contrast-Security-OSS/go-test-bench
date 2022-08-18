@@ -4,22 +4,10 @@ services:
     build: .
     ports:
       - '8080:8080'
-    #depends_on:
-      #- mongo
   gin:
-    build: 
+    build:
       context: .
       args:
         FRAMEWORK: gin
     ports:
       - '8080:8080'
-    #depends_on:
-      #- mongo
-  # TODO: Add back in with nosql injection support
-  # mongo:
-  #   image: mongo:latest
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: rootpassword
-  #   ports:
-  #     - 27017:27017

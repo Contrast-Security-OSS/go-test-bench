@@ -35,26 +35,6 @@
             }
         ]
     },
-    "nosqlInjection": {
-        "base": "/nosqlInjection",
-        "name": "NoSQL Injection",
-        "link": "https://www.owasp.org/index.php/Testing_for_NoSQL_injection",
-        "products": [
-            "Assess",
-            "Protect"
-        ],
-        "inputs": [
-            "query"
-        ],
-        "sinks": [
-            {
-                "comment": "disabled",
-                "_name": "mongodb.Collection.Find",
-                "url": "\/nosqlInjection\/query\/mongodbCollectionFind",
-                "method": "GET"
-            }
-        ]
-    },
     "ssjs": {
         "base": "/ssjs",
         "name": "SSJS Injection",
