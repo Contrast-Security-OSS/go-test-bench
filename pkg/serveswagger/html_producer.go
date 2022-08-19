@@ -11,7 +11,7 @@ import (
 // The runtime.Producer argument of each handler for the server relies on it to render the pages for the UI.
 func HTMLProducer(w io.Writer, data interface{}) error {
 	var (
-		t                  = common.Templates["underConstruction.gohtml"]
+		t                  = common.Templates["pageUnsupported.gohtml"]
 		params interface{} = SwaggerParams
 	)
 	if str, ok := data.(string); ok {
