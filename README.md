@@ -60,10 +60,8 @@ The development [team](docs/acknowledgements.md).
   * exception: vulnerable functions from a particular framework (see below)
 * framework-specific code is located under `cmd/` and `pkg/`
 * html templates and css are under `views/`
-* vulnerability and route data
-  * old data is in `views/routes.json`
-  * new data is in go structs, located in the relevant package under `internal/`
-  * we are in the process of migrating all data from routes.json to the new form.
+* vulnerability and route data is in go structs, 
+  located in the relevant package under `internal/`
 
 ### quirks
 
