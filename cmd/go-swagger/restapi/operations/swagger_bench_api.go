@@ -25,7 +25,6 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/sql_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
 )
 
@@ -103,20 +102,14 @@ func NewSwaggerBenchAPI(spec *loads.Document) *SwaggerBenchAPI {
 		SsrfSsrfGetQueryHTTPHandler: ssrf.SsrfGetQueryHTTPHandlerFunc(func(params ssrf.SsrfGetQueryHTTPParams) middleware.Responder {
 			return middleware.NotImplemented("operation ssrf.SsrfGetQueryHTTP has not yet been implemented")
 		}),
-		UnvalidatedRedirectUnvalidatedRedirectFrontHandler: unvalidated_redirect.UnvalidatedRedirectFrontHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
-		}),
-		UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler: unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectParams) middleware.Responder {
-			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectGetQueryRedirect has not yet been implemented")
-		}),
 		XSSXSSFrontHandler: xss.XSSFrontHandlerFunc(func(params xss.XSSFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSFront has not yet been implemented")
 		}),
-		XSSXSSGetBufferedQuerySinkHandler: xss.XSSGetBufferedQuerySinkHandlerFunc(func(params xss.XSSGetBufferedQuerySinkParams) middleware.Responder {
-			return middleware.NotImplemented("operation xss.XSSGetBufferedQuerySink has not yet been implemented")
+		XSSXSSGetBufferedQueryReflectedXSSHandler: xss.XSSGetBufferedQueryReflectedXSSHandlerFunc(func(params xss.XSSGetBufferedQueryReflectedXSSParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetBufferedQueryReflectedXSS has not yet been implemented")
 		}),
-		XSSXSSGetQuerySinkHandler: xss.XSSGetQuerySinkHandlerFunc(func(params xss.XSSGetQuerySinkParams) middleware.Responder {
-			return middleware.NotImplemented("operation xss.XSSGetQuerySink has not yet been implemented")
+		XSSXSSGetQueryReflectedXSSHandler: xss.XSSGetQueryReflectedXSSHandlerFunc(func(params xss.XSSGetQueryReflectedXSSParams) middleware.Responder {
+			return middleware.NotImplemented("operation xss.XSSGetQueryReflectedXSS has not yet been implemented")
 		}),
 		SwaggerServerRootHandler: swagger_server.RootHandlerFunc(func(params swagger_server.RootParams) middleware.Responder {
 			return middleware.NotImplemented("operation swagger_server.Root has not yet been implemented")
@@ -195,16 +188,12 @@ type SwaggerBenchAPI struct {
 	SsrfSsrfFrontHandler ssrf.SsrfFrontHandler
 	// SsrfSsrfGetQueryHTTPHandler sets the operation handler for the ssrf get query HTTP operation
 	SsrfSsrfGetQueryHTTPHandler ssrf.SsrfGetQueryHTTPHandler
-	// UnvalidatedRedirectUnvalidatedRedirectFrontHandler sets the operation handler for the unvalidated redirect front operation
-	UnvalidatedRedirectUnvalidatedRedirectFrontHandler unvalidated_redirect.UnvalidatedRedirectFrontHandler
-	// UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler sets the operation handler for the unvalidated redirect get query redirect operation
-	UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler
 	// XSSXSSFrontHandler sets the operation handler for the XSS front operation
 	XSSXSSFrontHandler xss.XSSFrontHandler
-	// XSSXSSGetBufferedQuerySinkHandler sets the operation handler for the XSS get buffered query sink operation
-	XSSXSSGetBufferedQuerySinkHandler xss.XSSGetBufferedQuerySinkHandler
-	// XSSXSSGetQuerySinkHandler sets the operation handler for the XSS get query sink operation
-	XSSXSSGetQuerySinkHandler xss.XSSGetQuerySinkHandler
+	// XSSXSSGetBufferedQueryReflectedXSSHandler sets the operation handler for the XSS get buffered query reflected XSS operation
+	XSSXSSGetBufferedQueryReflectedXSSHandler xss.XSSGetBufferedQueryReflectedXSSHandler
+	// XSSXSSGetQueryReflectedXSSHandler sets the operation handler for the XSS get query reflected XSS operation
+	XSSXSSGetQueryReflectedXSSHandler xss.XSSGetQueryReflectedXSSHandler
 	// SwaggerServerRootHandler sets the operation handler for the root operation
 	SwaggerServerRootHandler swagger_server.RootHandler
 
@@ -338,20 +327,14 @@ func (o *SwaggerBenchAPI) Validate() error {
 	if o.SsrfSsrfGetQueryHTTPHandler == nil {
 		unregistered = append(unregistered, "ssrf.SsrfGetQueryHTTPHandler")
 	}
-	if o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
-		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectFrontHandler")
-	}
-	if o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler == nil {
-		unregistered = append(unregistered, "unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandler")
-	}
 	if o.XSSXSSFrontHandler == nil {
 		unregistered = append(unregistered, "xss.XSSFrontHandler")
 	}
-	if o.XSSXSSGetBufferedQuerySinkHandler == nil {
-		unregistered = append(unregistered, "xss.XSSGetBufferedQuerySinkHandler")
+	if o.XSSXSSGetBufferedQueryReflectedXSSHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetBufferedQueryReflectedXSSHandler")
 	}
-	if o.XSSXSSGetQuerySinkHandler == nil {
-		unregistered = append(unregistered, "xss.XSSGetQuerySinkHandler")
+	if o.XSSXSSGetQueryReflectedXSSHandler == nil {
+		unregistered = append(unregistered, "xss.XSSGetQueryReflectedXSSHandler")
 	}
 	if o.SwaggerServerRootHandler == nil {
 		unregistered = append(unregistered, "swagger_server.RootHandler")
@@ -515,23 +498,15 @@ func (o *SwaggerBenchAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/unvalidatedRedirect"] = unvalidated_redirect.NewUnvalidatedRedirectFront(o.context, o.UnvalidatedRedirectUnvalidatedRedirectFrontHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/unvalidatedRedirect/http.Redirect/query/{safety}"] = unvalidated_redirect.NewUnvalidatedRedirectGetQueryRedirect(o.context, o.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
 	o.handlers["GET"]["/xss"] = xss.NewXSSFront(o.context, o.XSSXSSFrontHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/xss/Sink/buffered-query/{safety}"] = xss.NewXSSGetBufferedQuerySink(o.context, o.XSSXSSGetBufferedQuerySinkHandler)
+	o.handlers["GET"]["/xss/reflectedXss/buffered-query/{safety}"] = xss.NewXSSGetBufferedQueryReflectedXSS(o.context, o.XSSXSSGetBufferedQueryReflectedXSSHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/xss/Sink/query/{safety}"] = xss.NewXSSGetQuerySink(o.context, o.XSSXSSGetQuerySinkHandler)
+	o.handlers["GET"]["/xss/reflectedXss/query/{safety}"] = xss.NewXSSGetQueryReflectedXSS(o.context, o.XSSXSSGetQueryReflectedXSSHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

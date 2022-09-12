@@ -12,8 +12,8 @@ import (
 	"strings"
 )
 
-// XSSGetBufferedQuerySinkURL generates an URL for the XSS get buffered query sink operation
-type XSSGetBufferedQuerySinkURL struct {
+// XSSGetQueryReflectedXSSURL generates an URL for the XSS get query reflected XSS operation
+type XSSGetQueryReflectedXSSURL struct {
 	Safety string
 
 	Input string
@@ -26,7 +26,7 @@ type XSSGetBufferedQuerySinkURL struct {
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *XSSGetBufferedQuerySinkURL) WithBasePath(bp string) *XSSGetBufferedQuerySinkURL {
+func (o *XSSGetQueryReflectedXSSURL) WithBasePath(bp string) *XSSGetQueryReflectedXSSURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -34,21 +34,21 @@ func (o *XSSGetBufferedQuerySinkURL) WithBasePath(bp string) *XSSGetBufferedQuer
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *XSSGetBufferedQuerySinkURL) SetBasePath(bp string) {
+func (o *XSSGetQueryReflectedXSSURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *XSSGetBufferedQuerySinkURL) Build() (*url.URL, error) {
+func (o *XSSGetQueryReflectedXSSURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/xss/Sink/buffered-query/{safety}"
+	var _path = "/xss/reflectedXss/query/{safety}"
 
 	safety := o.Safety
 	if safety != "" {
 		_path = strings.Replace(_path, "{safety}", safety, -1)
 	} else {
-		return nil, errors.New("safety is required on XSSGetBufferedQuerySinkURL")
+		return nil, errors.New("safety is required on XSSGetQueryReflectedXSSURL")
 	}
 
 	_basePath := o._basePath
@@ -67,7 +67,7 @@ func (o *XSSGetBufferedQuerySinkURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *XSSGetBufferedQuerySinkURL) Must(u *url.URL, err error) *url.URL {
+func (o *XSSGetQueryReflectedXSSURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -78,17 +78,17 @@ func (o *XSSGetBufferedQuerySinkURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *XSSGetBufferedQuerySinkURL) String() string {
+func (o *XSSGetQueryReflectedXSSURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *XSSGetBufferedQuerySinkURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *XSSGetQueryReflectedXSSURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on XSSGetBufferedQuerySinkURL")
+		return nil, errors.New("scheme is required for a full url on XSSGetQueryReflectedXSSURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on XSSGetBufferedQuerySinkURL")
+		return nil, errors.New("host is required for a full url on XSSGetQueryReflectedXSSURL")
 	}
 
 	base, err := o.Build()
@@ -102,6 +102,6 @@ func (o *XSSGetBufferedQuerySinkURL) BuildFull(scheme, host string) (*url.URL, e
 }
 
 // StringFull returns the string representation of a complete url
-func (o *XSSGetBufferedQuerySinkURL) StringFull(scheme, host string) string {
+func (o *XSSGetQueryReflectedXSSURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }
