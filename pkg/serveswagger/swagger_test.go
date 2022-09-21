@@ -7,7 +7,8 @@ import (
 )
 
 func TestCheckTimestamps(t *testing.T) {
-	cmd := exec.Command("git", "diff", "../../pkg/serverswagger")
+	exec.Command("go", "generate", "./cmd/go-swagger/restapi")
+	cmd := exec.Command("git", "diff", "../../pkg/serveswagger")
 
 	stdout, err := cmd.Output()
 
