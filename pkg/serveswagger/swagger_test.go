@@ -3,11 +3,16 @@ package serveswagger
 import (
 	"os/exec"
 	"regexp"
+	"strings"
 	"testing"
 )
 
 func TestCheckTimestamps(t *testing.T) {
-	exec.Command("go", "generate", "./cmd/go-swagger/restapi")
+	cmdGenerate := exec.Command("go", "generate", "./cmd/go-swagger/restapi")
+	if err := cmdGenerate.Run(); err != nil{
+		t.Fatal(err.Error())
+	}
+
 	cmd := exec.Command("git", "diff", "../../pkg/serveswagger")
 
 	stdout, err := cmd.Output()
@@ -16,13 +21,24 @@ func TestCheckTimestamps(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	updates, _ := regexp.Compile(`@@.*@@`)
-	generatedLines, _ := regexp.Compile(`// Generated at [0-9]{4}-[0-9]{2}`)
+	lines := strings.Split(string(stdout), "\n")
+	var changes []string
+	for _ ,line := range lines {
+		if len(line) == 0 {
+			continue
+		}
+		if line[0] == '-' || line[0] == '+' {
+			changes = append(changes, line)
+		}
+	}
 
-	matchesUpdates := updates.FindAllStringSubmatch(string(stdout), -1)
-	matchesGeneratedLines := generatedLines.FindAllStringSubmatch(string(stdout), -1)
+	// changes now contains every changed/added/removed line, and no
+	// context lines. Every one of those lines should match the regexp.
 
-	if len(matchesUpdates) != len(matchesGeneratedLines) {
-		t.Fatal("Not only generated files are changed!")
+	generatedLines := regexp.MustCompile(`// Generated at [0-9]{4}-[0-9]{2}`)
+	for _, line := range changes {
+		if !generatedLines.Match([]byte(line)) {
+			t.Errorf("changed line %s does not match regexp",line)
+		}
 	}
 }
