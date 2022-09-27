@@ -35,7 +35,7 @@ func TestCheckTimestamps(t *testing.T) {
 		if len(line) == 0 {
 			continue
 		}
-		if line[0] == '-' || line[0] == '+' {
+		if (line[0] == '-' && line[1] != '-') || (line[0] == '+' && line[1] != '+') {
 			changes = append(changes, line)
 		}
 	}
