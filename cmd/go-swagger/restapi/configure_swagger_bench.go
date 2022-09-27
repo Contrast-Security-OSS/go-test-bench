@@ -22,8 +22,8 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
-//go:generate go run ../regen/regen.go
 //go:generate rm -rf ./operations/
+//go:generate go run ../regen/regen.go
 
 //original generate command: //go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
 
