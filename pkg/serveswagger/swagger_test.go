@@ -14,8 +14,7 @@ func TestCheckTimestamps(t *testing.T) {
 	cmdGenerate := exec.Command("go", "generate", "../../cmd/go-swagger/restapi")
 	cmdGenerate.Stderr = &stderr
 	if err := cmdGenerate.Run(); err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-		t.Fatal(err.Error())
+		t.Fatal("(" + err.Error() + ") - " + fmt.Sprint(err) + ": " + stderr.String())
 	}
 	if stderr.Len() == 0 {
 		t.Fatal("There is no output from generate command.")
