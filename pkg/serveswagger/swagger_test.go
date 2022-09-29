@@ -80,4 +80,19 @@ func TestCheckTimestamps(t *testing.T) {
 	for _, line := range mismatchLines {
 		t.Errorf("changed line %q does not match regexp", line)
 	}
+	if t.Failed() {
+		stat, err := exec.Command("git", "status").CombinedOutput()
+		if err != nil {
+			t.Logf("running git status: %s", err)
+		}
+		t.Logf("git status output:\n%s", string(stat))
+
+		vers, err := exec.Command("swagger", "version").CombinedOutput()
+		if err != nil {
+			t.Logf("getting swagger version: %s", err)
+		}
+		t.Logf("swagger version output:\n%s", string(vers))
+		t.Logf(`your local swagger version must match the CI version (see
+	.github/workflows/continuous-integration-workflow.yml, near line 42)`)
+	}
 }
