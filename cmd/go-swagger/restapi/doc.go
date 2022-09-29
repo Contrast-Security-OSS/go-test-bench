@@ -2,20 +2,20 @@
 
 // Package restapi swagger-bench
 //
-//  An API built with go-swagger to generate intentionally vulnerable endpoints
-//  Schemes:
-//    http
-//  Host: localhost
-//  BasePath: /
-//  Version: 1.0.0
+//	An API built with go-swagger to generate intentionally vulnerable endpoints
+//	Schemes:
+//	  http
+//	Host: localhost
+//	BasePath: /
+//	Version: 1.0.0
 //
-//  Consumes:
-//    - application/io.goswagger.go-test-bench.v1+json
+//	Consumes:
+//	  - application/io.goswagger.go-test-bench.v1+json
 //
-//  Produces:
-//    - text/html
-//    - application/io.goswagger.go-test-bench.v1+json
-//    - text/plain
+//	Produces:
+//	  - text/html
+//	  - application/io.goswagger.go-test-bench.v1+json
+//	  - text/plain
 //
 // swagger:meta
 package restapi

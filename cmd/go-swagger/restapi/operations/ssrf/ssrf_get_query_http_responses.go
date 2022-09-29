@@ -14,7 +14,8 @@ import (
 // SsrfGetQueryHTTPOKCode is the HTTP code returned for type SsrfGetQueryHTTPOK
 const SsrfGetQueryHTTPOKCode int = 200
 
-/*SsrfGetQueryHTTPOK returns the rendered response as a string
+/*
+SsrfGetQueryHTTPOK returns the rendered response as a string
 
 swagger:response ssrfGetQueryHttpOK
 */
@@ -53,7 +54,8 @@ func (o *SsrfGetQueryHTTPOK) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
-/*SsrfGetQueryHTTPDefault Error occured
+/*
+SsrfGetQueryHTTPDefault Error occured
 
 swagger:response ssrfGetQueryHttpDefault
 */

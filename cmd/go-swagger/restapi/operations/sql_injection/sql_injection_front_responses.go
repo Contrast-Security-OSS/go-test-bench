@@ -14,7 +14,8 @@ import (
 // SQLInjectionFrontOKCode is the HTTP code returned for type SQLInjectionFrontOK
 const SQLInjectionFrontOKCode int = 200
 
-/*SQLInjectionFrontOK served front end for SQL Injection page of Swagger API
+/*
+SQLInjectionFrontOK served front end for SQL Injection page of Swagger API
 
 swagger:response sqlInjectionFrontOK
 */
@@ -53,7 +54,8 @@ func (o *SQLInjectionFrontOK) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
-/*SQLInjectionFrontDefault error occured
+/*
+SQLInjectionFrontDefault error occured
 
 swagger:response sqlInjectionFrontDefault
 */

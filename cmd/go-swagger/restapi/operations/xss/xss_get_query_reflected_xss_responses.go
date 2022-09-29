@@ -14,7 +14,8 @@ import (
 // XSSGetQueryReflectedXSSOKCode is the HTTP code returned for type XSSGetQueryReflectedXSSOK
 const XSSGetQueryReflectedXSSOKCode int = 200
 
-/*XSSGetQueryReflectedXSSOK returns the rendered response as a string
+/*
+XSSGetQueryReflectedXSSOK returns the rendered response as a string
 
 swagger:response xssGetQueryReflectedXssOK
 */
@@ -53,7 +54,8 @@ func (o *XSSGetQueryReflectedXSSOK) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
-/*XSSGetQueryReflectedXSSDefault Error occured
+/*
+XSSGetQueryReflectedXSSDefault Error occured
 
 swagger:response xssGetQueryReflectedXssDefault
 */

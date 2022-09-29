@@ -29,10 +29,10 @@ func NewSQLInjectionGetQueryExec(ctx *middleware.Context, handler SQLInjectionGe
 	return &SQLInjectionGetQueryExec{Context: ctx, Handler: handler}
 }
 
-/* SQLInjectionGetQueryExec swagger:route GET /sqlInjection/sqlite3.exec/query/{safety} sql_injection sqlInjectionGetQueryExec
+/*
+	SQLInjectionGetQueryExec swagger:route GET /sqlInjection/sqlite3.exec/query/{safety} sql_injection sqlInjectionGetQueryExec
 
 demonstrates SQL Injection via query, with vulnerable function sqlite3.exec
-
 */
 type SQLInjectionGetQueryExec struct {
 	Context *middleware.Context

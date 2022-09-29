@@ -14,7 +14,8 @@ import (
 // SQLInjectionGetQueryExecOKCode is the HTTP code returned for type SQLInjectionGetQueryExecOK
 const SQLInjectionGetQueryExecOKCode int = 200
 
-/*SQLInjectionGetQueryExecOK returns the rendered response as a string
+/*
+SQLInjectionGetQueryExecOK returns the rendered response as a string
 
 swagger:response sqlInjectionGetQueryExecOK
 */
@@ -53,7 +54,8 @@ func (o *SQLInjectionGetQueryExecOK) WriteResponse(rw http.ResponseWriter, produ
 	}
 }
 
-/*SQLInjectionGetQueryExecDefault Error occured
+/*
+SQLInjectionGetQueryExecDefault Error occured
 
 swagger:response sqlInjectionGetQueryExecDefault
 */

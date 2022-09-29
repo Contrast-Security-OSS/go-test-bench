@@ -29,10 +29,10 @@ func NewCmdInjectionGetQueryCommandContext(ctx *middleware.Context, handler CmdI
 	return &CmdInjectionGetQueryCommandContext{Context: ctx, Handler: handler}
 }
 
-/* CmdInjectionGetQueryCommandContext swagger:route GET /cmdInjection/exec.CommandContext/query/{safety} cmd_injection cmdInjectionGetQueryCommandContext
+/*
+	CmdInjectionGetQueryCommandContext swagger:route GET /cmdInjection/exec.CommandContext/query/{safety} cmd_injection cmdInjectionGetQueryCommandContext
 
 demonstrates Command Injection via query, with vulnerable function exec.CommandContext
-
 */
 type CmdInjectionGetQueryCommandContext struct {
 	Context *middleware.Context

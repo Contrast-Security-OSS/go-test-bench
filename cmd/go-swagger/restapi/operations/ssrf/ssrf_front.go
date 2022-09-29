@@ -29,10 +29,10 @@ func NewSsrfFront(ctx *middleware.Context, handler SsrfFrontHandler) *SsrfFront 
 	return &SsrfFront{Context: ctx, Handler: handler}
 }
 
-/* SsrfFront swagger:route GET /ssrf ssrf ssrfFront
+/*
+	SsrfFront swagger:route GET /ssrf ssrf ssrfFront
 
 front page of the Server Side Request Forgery vulnerability
-
 */
 type SsrfFront struct {
 	Context *middleware.Context

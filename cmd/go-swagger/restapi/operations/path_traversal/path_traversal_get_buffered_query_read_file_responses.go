@@ -14,7 +14,8 @@ import (
 // PathTraversalGetBufferedQueryReadFileOKCode is the HTTP code returned for type PathTraversalGetBufferedQueryReadFileOK
 const PathTraversalGetBufferedQueryReadFileOKCode int = 200
 
-/*PathTraversalGetBufferedQueryReadFileOK returns the rendered response as a string
+/*
+PathTraversalGetBufferedQueryReadFileOK returns the rendered response as a string
 
 swagger:response pathTraversalGetBufferedQueryReadFileOK
 */
@@ -53,7 +54,8 @@ func (o *PathTraversalGetBufferedQueryReadFileOK) WriteResponse(rw http.Response
 	}
 }
 
-/*PathTraversalGetBufferedQueryReadFileDefault Error occured
+/*
+PathTraversalGetBufferedQueryReadFileDefault Error occured
 
 swagger:response pathTraversalGetBufferedQueryReadFileDefault
 */

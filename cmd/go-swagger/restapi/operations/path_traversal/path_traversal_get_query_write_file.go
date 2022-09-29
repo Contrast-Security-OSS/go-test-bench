@@ -29,10 +29,10 @@ func NewPathTraversalGetQueryWriteFile(ctx *middleware.Context, handler PathTrav
 	return &PathTraversalGetQueryWriteFile{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetQueryWriteFile swagger:route GET /pathTraversal/os.WriteFile/query/{safety} path_traversal pathTraversalGetQueryWriteFile
+/*
+	PathTraversalGetQueryWriteFile swagger:route GET /pathTraversal/os.WriteFile/query/{safety} path_traversal pathTraversalGetQueryWriteFile
 
 demonstrates Path Traversal via query, with vulnerable function os.WriteFile
-
 */
 type PathTraversalGetQueryWriteFile struct {
 	Context *middleware.Context

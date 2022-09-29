@@ -29,10 +29,10 @@ func NewPathTraversalFront(ctx *middleware.Context, handler PathTraversalFrontHa
 	return &PathTraversalFront{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalFront swagger:route GET /pathTraversal path_traversal pathTraversalFront
+/*
+	PathTraversalFront swagger:route GET /pathTraversal path_traversal pathTraversalFront
 
 front page of the Path Traversal vulnerability
-
 */
 type PathTraversalFront struct {
 	Context *middleware.Context

@@ -29,10 +29,10 @@ func NewXSSGetQueryReflectedXSS(ctx *middleware.Context, handler XSSGetQueryRefl
 	return &XSSGetQueryReflectedXSS{Context: ctx, Handler: handler}
 }
 
-/* XSSGetQueryReflectedXSS swagger:route GET /xss/reflectedXss/query/{safety} xss xssGetQueryReflectedXss
+/*
+	XSSGetQueryReflectedXSS swagger:route GET /xss/reflectedXss/query/{safety} xss xssGetQueryReflectedXss
 
 demonstrates Reflected XSS via query, with vulnerable function reflectedXss
-
 */
 type XSSGetQueryReflectedXSS struct {
 	Context *middleware.Context
