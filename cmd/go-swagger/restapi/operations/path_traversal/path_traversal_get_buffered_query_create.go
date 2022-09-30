@@ -29,10 +29,10 @@ func NewPathTraversalGetBufferedQueryCreate(ctx *middleware.Context, handler Pat
 	return &PathTraversalGetBufferedQueryCreate{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetBufferedQueryCreate swagger:route GET /pathTraversal/os.Create/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryCreate
+/*
+	PathTraversalGetBufferedQueryCreate swagger:route GET /pathTraversal/os.Create/buffered-query/{safety} path_traversal pathTraversalGetBufferedQueryCreate
 
 demonstrates Path Traversal via buffered-query, with vulnerable function os.Create
-
 */
 type PathTraversalGetBufferedQueryCreate struct {
 	Context *middleware.Context

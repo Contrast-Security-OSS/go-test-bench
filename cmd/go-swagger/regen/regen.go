@@ -198,7 +198,7 @@ func exportIdentifier(id string) string {
 	//swagger replaces lowercase initialisms that the linter would complain about
 	// swag: https://github.com/go-openapi/swag/blob/e09cc4d/util.go#L41
 	// upstream: https://github.com/golang/lint/blob/3390df4df2787994aea98de825b964ac7944b817/lint.go#L732-L769
-	initialisms := []string{"xss", "xsrf", "sql", "json", "http"}
+	initialisms := []string{"xss", "xsrf", "sql", "json", "http", "Xss"}
 	for _, s := range initialisms {
 		id = strings.ReplaceAll(id, s, strings.ToUpper(s))
 	}

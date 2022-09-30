@@ -18,11 +18,11 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/sql_injection"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/swagger_server"
-	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/unvalidated_redirect"
 	"github.com/Contrast-Security-OSS/go-test-bench/cmd/go-swagger/restapi/operations/xss"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 )
 
+//go:generate rm -rf ./operations/
 //go:generate go run ../regen/regen.go
 
 //original generate command: //go:generate swagger generate server --target ../../go-swagger --name SwaggerBench --spec ../swagger.yml --principal interface{} --exclude-main
@@ -131,28 +131,18 @@ func configureAPI(api *operations.SwaggerBenchAPI) http.Handler {
 			return middleware.NotImplemented("operation ssrf.SsrfGetQuerySink has not yet been implemented")
 		})
 	}
-	if api.UnvalidatedRedirectUnvalidatedRedirectFrontHandler == nil {
-		api.UnvalidatedRedirectUnvalidatedRedirectFrontHandler = unvalidated_redirect.UnvalidatedRedirectFrontHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectFrontParams) middleware.Responder {
-			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectFront has not yet been implemented")
-		})
-	}
-	if api.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler == nil {
-		api.UnvalidatedRedirectUnvalidatedRedirectGetQueryRedirectHandler = unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectHandlerFunc(func(params unvalidated_redirect.UnvalidatedRedirectGetQueryRedirectParams) middleware.Responder {
-			return middleware.NotImplemented("operation unvalidated_redirect.UnvalidatedRedirectGetQueryRedirect has not yet been implemented")
-		})
-	}
 	if api.XSSXSSFrontHandler == nil {
 		api.XSSXSSFrontHandler = xss.XSSFrontHandlerFunc(func(params xss.XSSFrontParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSFront has not yet been implemented")
 		})
 	}
-	if api.XSSXSSGetBufferedQuerySinkHandler == nil {
-		api.XSSXSSGetBufferedQuerySinkHandler = xss.XSSGetBufferedQuerySinkHandlerFunc(func(params xss.XSSGetBufferedQuerySinkParams) middleware.Responder {
+	if api.XSSXSSGetBufferedQueryReflectedXSSHandler == nil {
+		api.XSSXSSGetBufferedQueryReflectedXSSHandler = xss.XSSGetBufferedQueryReflectedXSSHandlerFunc(func(params xss.XSSGetBufferedQueryReflectedXSSParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSGetBufferedQuerySink has not yet been implemented")
 		})
 	}
-	if api.XSSXSSGetQuerySinkHandler == nil {
-		api.XSSXSSGetQuerySinkHandler = xss.XSSGetQuerySinkHandlerFunc(func(params xss.XSSGetQuerySinkParams) middleware.Responder {
+	if api.XSSXSSGetQueryReflectedXSSHandler == nil {
+		api.XSSXSSGetQueryReflectedXSSHandler = xss.XSSGetQueryReflectedXSSHandlerFunc(func(params xss.XSSGetQueryReflectedXSSParams) middleware.Responder {
 			return middleware.NotImplemented("operation xss.XSSGetQuerySink has not yet been implemented")
 		})
 	}

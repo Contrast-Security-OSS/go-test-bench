@@ -29,10 +29,10 @@ func NewXSSFront(ctx *middleware.Context, handler XSSFrontHandler) *XSSFront {
 	return &XSSFront{Context: ctx, Handler: handler}
 }
 
-/* XSSFront swagger:route GET /xss xss xssFront
+/*
+	XSSFront swagger:route GET /xss xss xssFront
 
 front page of the Reflected XSS vulnerability
-
 */
 type XSSFront struct {
 	Context *middleware.Context

@@ -16,7 +16,8 @@ import (
 // RootOKCode is the HTTP code returned for type RootOK
 const RootOKCode int = 200
 
-/*RootOK serves to display the root of the swagger API for the test bench
+/*
+RootOK serves to display the root of the swagger API for the test bench
 
 swagger:response rootOK
 */
@@ -55,7 +56,8 @@ func (o *RootOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer
 	}
 }
 
-/*RootDefault generic error response
+/*
+RootDefault generic error response
 
 swagger:response rootDefault
 */

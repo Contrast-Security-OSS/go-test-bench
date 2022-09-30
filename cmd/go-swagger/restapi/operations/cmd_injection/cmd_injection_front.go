@@ -29,10 +29,10 @@ func NewCmdInjectionFront(ctx *middleware.Context, handler CmdInjectionFrontHand
 	return &CmdInjectionFront{Context: ctx, Handler: handler}
 }
 
-/* CmdInjectionFront swagger:route GET /cmdInjection cmd_injection cmdInjectionFront
+/*
+	CmdInjectionFront swagger:route GET /cmdInjection cmd_injection cmdInjectionFront
 
 front page of the Command Injection vulnerability
-
 */
 type CmdInjectionFront struct {
 	Context *middleware.Context

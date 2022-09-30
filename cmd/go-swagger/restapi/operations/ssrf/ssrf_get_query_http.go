@@ -29,10 +29,10 @@ func NewSsrfGetQueryHTTP(ctx *middleware.Context, handler SsrfGetQueryHTTPHandle
 	return &SsrfGetQueryHTTP{Context: ctx, Handler: handler}
 }
 
-/* SsrfGetQueryHTTP swagger:route GET /ssrf/http/query/{safety} ssrf ssrfGetQueryHttp
+/*
+	SsrfGetQueryHTTP swagger:route GET /ssrf/http/query/{safety} ssrf ssrfGetQueryHttp
 
 demonstrates Server Side Request Forgery via query, with vulnerable function net/http
-
 */
 type SsrfGetQueryHTTP struct {
 	Context *middleware.Context

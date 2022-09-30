@@ -14,7 +14,8 @@ import (
 // PathTraversalGetBufferedQueryOpenOKCode is the HTTP code returned for type PathTraversalGetBufferedQueryOpenOK
 const PathTraversalGetBufferedQueryOpenOKCode int = 200
 
-/*PathTraversalGetBufferedQueryOpenOK returns the rendered response as a string
+/*
+PathTraversalGetBufferedQueryOpenOK returns the rendered response as a string
 
 swagger:response pathTraversalGetBufferedQueryOpenOK
 */
@@ -53,7 +54,8 @@ func (o *PathTraversalGetBufferedQueryOpenOK) WriteResponse(rw http.ResponseWrit
 	}
 }
 
-/*PathTraversalGetBufferedQueryOpenDefault Error occured
+/*
+PathTraversalGetBufferedQueryOpenDefault Error occured
 
 swagger:response pathTraversalGetBufferedQueryOpenDefault
 */

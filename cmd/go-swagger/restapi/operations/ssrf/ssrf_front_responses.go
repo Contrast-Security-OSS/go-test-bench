@@ -14,7 +14,8 @@ import (
 // SsrfFrontOKCode is the HTTP code returned for type SsrfFrontOK
 const SsrfFrontOKCode int = 200
 
-/*SsrfFrontOK served front end for Server Side Request Forgery page of Swagger API
+/*
+SsrfFrontOK served front end for Server Side Request Forgery page of Swagger API
 
 swagger:response ssrfFrontOK
 */
@@ -53,7 +54,8 @@ func (o *SsrfFrontOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 	}
 }
 
-/*SsrfFrontDefault error occured
+/*
+SsrfFrontDefault error occured
 
 swagger:response ssrfFrontDefault
 */

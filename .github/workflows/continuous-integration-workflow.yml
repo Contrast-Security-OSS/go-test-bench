@@ -38,7 +38,9 @@ jobs:
         with:
           go-version: 1.19
       - name: Test
-        run: go test -v ./... -race -coverprofile=coverage.txt -covermode=atomic
+        run: |
+          go install github.com/go-swagger/go-swagger/cmd/swagger@v0.30.3
+          go test -v ./... -race -coverprofile=coverage.txt -covermode=atomic
       - name: Push Coverage to codecov.io
         uses: codecov/codecov-action@v1
         with:

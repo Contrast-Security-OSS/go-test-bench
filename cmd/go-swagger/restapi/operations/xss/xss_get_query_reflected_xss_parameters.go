@@ -15,19 +15,19 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewXSSGetBufferedQuerySinkParams creates a new XSSGetBufferedQuerySinkParams object
+// NewXSSGetQueryReflectedXSSParams creates a new XSSGetQueryReflectedXSSParams object
 //
 // There are no default values defined in the spec.
-func NewXSSGetBufferedQuerySinkParams() XSSGetBufferedQuerySinkParams {
+func NewXSSGetQueryReflectedXSSParams() XSSGetQueryReflectedXSSParams {
 
-	return XSSGetBufferedQuerySinkParams{}
+	return XSSGetQueryReflectedXSSParams{}
 }
 
-// XSSGetBufferedQuerySinkParams contains all the bound params for the XSS get buffered query sink operation
+// XSSGetQueryReflectedXSSParams contains all the bound params for the XSS get query reflected XSS operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters XSSGetBufferedQuerySink
-type XSSGetBufferedQuerySinkParams struct {
+// swagger:parameters XSSGetQueryReflectedXSS
+type XSSGetQueryReflectedXSSParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -47,8 +47,8 @@ type XSSGetBufferedQuerySinkParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewXSSGetBufferedQuerySinkParams() beforehand.
-func (o *XSSGetBufferedQuerySinkParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewXSSGetQueryReflectedXSSParams() beforehand.
+func (o *XSSGetQueryReflectedXSSParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -71,7 +71,7 @@ func (o *XSSGetBufferedQuerySinkParams) BindRequest(r *http.Request, route *midd
 }
 
 // bindInput binds and validates parameter Input from query.
-func (o *XSSGetBufferedQuerySinkParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *XSSGetQueryReflectedXSSParams) bindInput(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("input", "query", rawData)
 	}
@@ -92,7 +92,7 @@ func (o *XSSGetBufferedQuerySinkParams) bindInput(rawData []string, hasKey bool,
 }
 
 // bindSafety binds and validates parameter Safety from path.
-func (o *XSSGetBufferedQuerySinkParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *XSSGetQueryReflectedXSSParams) bindSafety(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -110,7 +110,7 @@ func (o *XSSGetBufferedQuerySinkParams) bindSafety(rawData []string, hasKey bool
 }
 
 // validateSafety carries on validations for parameter Safety
-func (o *XSSGetBufferedQuerySinkParams) validateSafety(formats strfmt.Registry) error {
+func (o *XSSGetQueryReflectedXSSParams) validateSafety(formats strfmt.Registry) error {
 
 	if err := validate.EnumCase("safety", "path", o.Safety, []interface{}{"safe", "unsafe", "noop"}, true); err != nil {
 		return err

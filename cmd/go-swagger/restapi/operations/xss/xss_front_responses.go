@@ -14,7 +14,8 @@ import (
 // XSSFrontOKCode is the HTTP code returned for type XSSFrontOK
 const XSSFrontOKCode int = 200
 
-/*XSSFrontOK served front end for Reflected XSS page of Swagger API
+/*
+XSSFrontOK served front end for Reflected XSS page of Swagger API
 
 swagger:response xssFrontOK
 */
@@ -53,7 +54,8 @@ func (o *XSSFrontOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 }
 
-/*XSSFrontDefault error occured
+/*
+XSSFrontDefault error occured
 
 swagger:response xssFrontDefault
 */

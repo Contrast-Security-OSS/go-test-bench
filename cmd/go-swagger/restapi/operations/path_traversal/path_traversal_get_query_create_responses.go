@@ -14,7 +14,8 @@ import (
 // PathTraversalGetQueryCreateOKCode is the HTTP code returned for type PathTraversalGetQueryCreateOK
 const PathTraversalGetQueryCreateOKCode int = 200
 
-/*PathTraversalGetQueryCreateOK returns the rendered response as a string
+/*
+PathTraversalGetQueryCreateOK returns the rendered response as a string
 
 swagger:response pathTraversalGetQueryCreateOK
 */
@@ -53,7 +54,8 @@ func (o *PathTraversalGetQueryCreateOK) WriteResponse(rw http.ResponseWriter, pr
 	}
 }
 
-/*PathTraversalGetQueryCreateDefault Error occured
+/*
+PathTraversalGetQueryCreateDefault Error occured
 
 swagger:response pathTraversalGetQueryCreateDefault
 */

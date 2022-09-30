@@ -14,7 +14,8 @@ import (
 // CmdInjectionGetQueryCommandContextOKCode is the HTTP code returned for type CmdInjectionGetQueryCommandContextOK
 const CmdInjectionGetQueryCommandContextOKCode int = 200
 
-/*CmdInjectionGetQueryCommandContextOK returns the rendered response as a string
+/*
+CmdInjectionGetQueryCommandContextOK returns the rendered response as a string
 
 swagger:response cmdInjectionGetQueryCommandContextOK
 */
@@ -53,7 +54,8 @@ func (o *CmdInjectionGetQueryCommandContextOK) WriteResponse(rw http.ResponseWri
 	}
 }
 
-/*CmdInjectionGetQueryCommandContextDefault Error occured
+/*
+CmdInjectionGetQueryCommandContextDefault Error occured
 
 swagger:response cmdInjectionGetQueryCommandContextDefault
 */

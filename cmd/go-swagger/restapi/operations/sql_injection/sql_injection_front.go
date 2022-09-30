@@ -29,10 +29,10 @@ func NewSQLInjectionFront(ctx *middleware.Context, handler SQLInjectionFrontHand
 	return &SQLInjectionFront{Context: ctx, Handler: handler}
 }
 
-/* SQLInjectionFront swagger:route GET /sqlInjection sql_injection sqlInjectionFront
+/*
+	SQLInjectionFront swagger:route GET /sqlInjection sql_injection sqlInjectionFront
 
 front page of the SQL Injection vulnerability
-
 */
 type SQLInjectionFront struct {
 	Context *middleware.Context

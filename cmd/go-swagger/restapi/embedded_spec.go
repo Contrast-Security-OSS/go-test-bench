@@ -595,66 +595,6 @@ func init() {
         }
       }
     },
-    "/unvalidatedRedirect": {
-      "get": {
-        "produces": [
-          "text/html"
-        ],
-        "tags": [
-          "unvalidated_redirect"
-        ],
-        "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "UnvalidatedRedirectFront",
-        "responses": {
-          "200": {
-            "description": "served front end for Unvalidated Redirect page of Swagger API",
-            "schema": {
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "error occured"
-          }
-        }
-      }
-    },
-    "/unvalidatedRedirect/http.Redirect/query/{safety}": {
-      "get": {
-        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
-        "produces": [
-          "text/html",
-          "text/plain"
-        ],
-        "tags": [
-          "unvalidated_redirect"
-        ],
-        "operationId": "UnvalidatedRedirectGetQueryRedirect",
-        "parameters": [
-          {
-            "$ref": "#/parameters/safetyParam"
-          },
-          {
-            "type": "string",
-            "description": "the user provided input for the query vulnerability",
-            "name": "input",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
     "/xss": {
       "get": {
         "produces": [
@@ -678,9 +618,9 @@ func init() {
         }
       }
     },
-    "/xss/Sink/buffered-query/{safety}": {
+    "/xss/reflectedXss/buffered-query/{safety}": {
       "get": {
-        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function reflectedXss",
         "produces": [
           "text/html",
           "text/plain"
@@ -688,7 +628,7 @@ func init() {
         "tags": [
           "xss"
         ],
-        "operationId": "XSSGetBufferedQuerySink",
+        "operationId": "XSSGetBufferedQueryReflectedXSS",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -715,9 +655,9 @@ func init() {
         }
       }
     },
-    "/xss/Sink/query/{safety}": {
+    "/xss/reflectedXss/query/{safety}": {
       "get": {
-        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "description": "demonstrates Reflected XSS via query, with vulnerable function reflectedXss",
         "produces": [
           "text/html",
           "text/plain"
@@ -725,7 +665,7 @@ func init() {
         "tags": [
           "xss"
         ],
-        "operationId": "XSSGetQuerySink",
+        "operationId": "XSSGetQueryReflectedXSS",
         "parameters": [
           {
             "$ref": "#/parameters/safetyParam"
@@ -1502,75 +1442,6 @@ func init() {
         }
       }
     },
-    "/unvalidatedRedirect": {
-      "get": {
-        "produces": [
-          "text/html"
-        ],
-        "tags": [
-          "unvalidated_redirect"
-        ],
-        "summary": "front page of the Unvalidated Redirect vulnerability",
-        "operationId": "UnvalidatedRedirectFront",
-        "responses": {
-          "200": {
-            "description": "served front end for Unvalidated Redirect page of Swagger API",
-            "schema": {
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "error occured"
-          }
-        }
-      }
-    },
-    "/unvalidatedRedirect/http.Redirect/query/{safety}": {
-      "get": {
-        "description": "demonstrates Unvalidated Redirect via query, with vulnerable function http.Redirect",
-        "produces": [
-          "text/html",
-          "text/plain"
-        ],
-        "tags": [
-          "unvalidated_redirect"
-        ],
-        "operationId": "UnvalidatedRedirectGetQueryRedirect",
-        "parameters": [
-          {
-            "enum": [
-              "safe",
-              "unsafe",
-              "noop"
-            ],
-            "type": "string",
-            "description": "safety qualifier",
-            "name": "safety",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "the user provided input for the query vulnerability",
-            "name": "input",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "returns the rendered response as a string",
-            "schema": {
-              "description": "The response when succesful query happens",
-              "type": "string"
-            }
-          },
-          "default": {
-            "description": "Error occured"
-          }
-        }
-      }
-    },
     "/xss": {
       "get": {
         "produces": [
@@ -1594,9 +1465,9 @@ func init() {
         }
       }
     },
-    "/xss/Sink/buffered-query/{safety}": {
+    "/xss/reflectedXss/buffered-query/{safety}": {
       "get": {
-        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function _",
+        "description": "demonstrates Reflected XSS via buffered-query, with vulnerable function reflectedXss",
         "produces": [
           "text/html",
           "text/plain"
@@ -1604,7 +1475,7 @@ func init() {
         "tags": [
           "xss"
         ],
-        "operationId": "XSSGetBufferedQuerySink",
+        "operationId": "XSSGetBufferedQueryReflectedXSS",
         "parameters": [
           {
             "enum": [
@@ -1640,9 +1511,9 @@ func init() {
         }
       }
     },
-    "/xss/Sink/query/{safety}": {
+    "/xss/reflectedXss/query/{safety}": {
       "get": {
-        "description": "demonstrates Reflected XSS via query, with vulnerable function _",
+        "description": "demonstrates Reflected XSS via query, with vulnerable function reflectedXss",
         "produces": [
           "text/html",
           "text/plain"
@@ -1650,7 +1521,7 @@ func init() {
         "tags": [
           "xss"
         ],
-        "operationId": "XSSGetQuerySink",
+        "operationId": "XSSGetQueryReflectedXSS",
         "parameters": [
           {
             "enum": [

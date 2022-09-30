@@ -29,10 +29,10 @@ func NewPathTraversalGetQueryReadFile(ctx *middleware.Context, handler PathTrave
 	return &PathTraversalGetQueryReadFile{Context: ctx, Handler: handler}
 }
 
-/* PathTraversalGetQueryReadFile swagger:route GET /pathTraversal/os.ReadFile/query/{safety} path_traversal pathTraversalGetQueryReadFile
+/*
+	PathTraversalGetQueryReadFile swagger:route GET /pathTraversal/os.ReadFile/query/{safety} path_traversal pathTraversalGetQueryReadFile
 
 demonstrates Path Traversal via query, with vulnerable function os.ReadFile
-
 */
 type PathTraversalGetQueryReadFile struct {
 	Context *middleware.Context

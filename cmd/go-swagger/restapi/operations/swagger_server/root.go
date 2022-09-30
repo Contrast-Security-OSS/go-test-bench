@@ -29,10 +29,10 @@ func NewRoot(ctx *middleware.Context, handler RootHandler) *Root {
 	return &Root{Context: ctx, Handler: handler}
 }
 
-/* Root swagger:route GET / swagger-server root
+/*
+	Root swagger:route GET / swagger-server root
 
 Root root API
-
 */
 type Root struct {
 	Context *middleware.Context

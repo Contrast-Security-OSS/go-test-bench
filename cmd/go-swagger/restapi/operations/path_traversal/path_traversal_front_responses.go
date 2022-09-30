@@ -14,7 +14,8 @@ import (
 // PathTraversalFrontOKCode is the HTTP code returned for type PathTraversalFrontOK
 const PathTraversalFrontOKCode int = 200
 
-/*PathTraversalFrontOK served front end for Path Traversal page of Swagger API
+/*
+PathTraversalFrontOK served front end for Path Traversal page of Swagger API
 
 swagger:response pathTraversalFrontOK
 */
@@ -53,7 +54,8 @@ func (o *PathTraversalFrontOK) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
-/*PathTraversalFrontDefault error occured
+/*
+PathTraversalFrontDefault error occured
 
 swagger:response pathTraversalFrontDefault
 */

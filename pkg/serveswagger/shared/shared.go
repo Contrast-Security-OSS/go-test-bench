@@ -6,6 +6,7 @@
 package shared
 
 import (
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/xss"
 	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
@@ -53,4 +54,5 @@ func RegisterNewRoutes() {
 	sqli.RegisterRoutes()
 	pathtraversal.RegisterRoutes()
 	ssrf.RegisterRoutes()
+	xss.RegisterRoutes()
 }
