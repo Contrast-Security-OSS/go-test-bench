@@ -1,13 +1,11 @@
-package servestd
+package servejschmidt
 
 import (
-	"html/template"
-	"strings"
-
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/injection/cmdi"
@@ -16,84 +14,27 @@ import (
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/ssrf"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/unvalidated"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/xss"
+	"github.com/julienschmidt/httprouter"
 )
 
 // Pd is unchanging parameter data shared between all routes.
 var Pd = common.ConstParams{
 	Year:      2022,
 	Logo:      "https://blog.golang.org/gopher/header.jpg",
-	Framework: "stdlib",
+	Framework: "Julienschmidt",
 }
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-	var t *template.Template
-	if r.URL.Path == "/" {
-		t = common.Templates["index.gohtml"]
-	} else {
-		t = common.Templates["pageUnsupported.gohtml"]
-		w.WriteHeader(http.StatusNotFound)
-	}
-	w.Header().Set("Application-Framework", "Stdlib")
-	err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
-	if err != nil {
-		log.Print(err.Error())
-	}
-}
-
-func makeHandler(fn func(http.ResponseWriter, *http.Request, common.Parameters) (template.HTML, bool), name string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var parms = common.Parameters{
-			ConstParams: Pd,
-			Name:        name,
-		}
-		data, useLayout := fn(w, r, parms)
-		if useLayout {
-			err := common.Templates[string(data)].ExecuteTemplate(w, "layout.gohtml", &parms)
-			if err != nil {
-				log.Print(err.Error())
-			}
-		} else {
-			fmt.Fprint(w, data)
-		}
-	}
-}
-
-func newHandler(v common.Route) http.HandlerFunc {
-	for _, s := range v.Sinks {
-		if s.Handler == nil {
-			var err error
-			s.Handler, err = common.GenericHandler(s)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	}
-	return func(w http.ResponseWriter, r *http.Request) {
+func newHandler(v common.Route) func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		log.Println(v.Name, r.URL.Path)
-		var parms = common.Parameters{
-			ConstParams: Pd,
-			Name:        v.Base,
-		}
-		elems := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-		if len(elems) < 2 {
-			// main page
-			err := common.Templates[v.TmplFile].ExecuteTemplate(w, "layout.gohtml", &parms)
-			if err != nil {
-				log.Print(err.Error())
-				fmt.Fprintf(w, "template error: %s", err)
-			}
-			return
-		}
+
+		// Split off the first element from elems, which should be the mode.
+		mode := strings.Split(strings.Trim(p.ByName("elems"), "/"), "/")[0]
 		for _, s := range v.Sinks {
-			if elems[1] != s.URL {
+			if p.ByName("sink") != s.URL {
 				continue
 			}
-			// can't assume safety is last if input is via path parameters.
-			safeIdx := 3
-			if len(elems) <= safeIdx {
-				safeIdx = len(elems) - 1
-			}
-			mode := common.Safety(elems[safeIdx])
+			mode := common.Safety(mode)
 			switch mode {
 			case common.NOOP, common.Safe, common.Unsafe:
 				// valid modes
@@ -124,12 +65,53 @@ func newHandler(v common.Route) http.HandlerFunc {
 	}
 }
 
+func add(router *httprouter.Router, rt common.Route) {
+	for _, s := range rt.Sinks {
+		if s.Handler == nil {
+			var err error
+			s.Handler, err = common.GenericHandler(s)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+	// main page
+	router.GET(rt.Base+"/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		log.Println(rt.Name, r.URL.Path)
+		var parms = common.Parameters{
+			ConstParams: Pd,
+			Name:        rt.Base,
+		}
+		err := common.Templates[rt.TmplFile].ExecuteTemplate(w, "layout.gohtml", &parms)
+		if err != nil {
+			log.Print(err.Error())
+			fmt.Fprintf(w, "template error: %s", err)
+		}
+	})
+
+	// Julienshmidt only allows one request method for each route,
+	// so each input method has to be a separate route.
+
+	router.GET(rt.Base+"/:sink/query/*elems", newHandler(rt))
+	router.GET(rt.Base+"/:sink/buffered-query/*elems", newHandler(rt))
+	router.GET(rt.Base+"/:sink/headers/*elems", newHandler(rt))
+	router.GET(rt.Base+"/:sink/headers-json/*elems", newHandler(rt))
+	router.GET(rt.Base+"/:sink/params/*elems", newHandler(rt))
+	router.GET(rt.Base+"/:sink/response/*elems", newHandler(rt))
+
+	router.POST(rt.Base+"/:sink/body/*elems", newHandler(rt))
+	router.POST(rt.Base+"/:sink/buffered-body/*elems", newHandler(rt))
+	router.POST(rt.Base+"/:sink/cookies/*elems", newHandler(rt))
+
+}
+
 type httpHandlerPair struct {
 	http.ResponseWriter
 	*http.Request
 }
 
-// RegisterRoutes registers all decoupled routes used by servestd. Shared with cmd/exercise.
+// RegisterRoutes registers all decoupled routes used by servejschmidt. Shared with cmd/exercise.
+// Right now, this func has the same behavior as servestd.RegisterRoutes
 func RegisterRoutes() {
 	cmdi.RegisterRoutes()
 	sqli.RegisterRoutes()
@@ -152,7 +134,7 @@ func RegisterRoutes() {
 }
 
 // Setup loads templates, sets up routes, etc.
-func Setup() {
+func Setup() *httprouter.Router {
 	log.Println("Loading Templates...")
 	err := common.ParseViewTemplates()
 	if err != nil {
@@ -165,17 +147,30 @@ func Setup() {
 
 	Pd.Rulebar = common.PopulateRouteMap(common.AllRoutes)
 
+	router := httprouter.New()
+
 	log.Println("Server startup at: " + Pd.Addr)
 
-	http.HandleFunc("/", rootHandler)
+	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		t := common.Templates["index.gohtml"]
+		w.Header().Set("Application-Framework", "Julienschmidt")
+		err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
+		if err != nil {
+			log.Print(err.Error())
+		}
+	})
 
 	for _, r := range common.AllRoutes {
-		http.HandleFunc(r.Base+"/", newHandler(r))
+		// router.GET(r.Base+"/*elems", newHandler(r))
+		add(router, r)
 	}
 
 	pub, err := common.LocateDir("public", 5)
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(pub))))
+	router.ServeFiles("/assets/*filepath", http.Dir(pub))
+
+	return router
+
 }

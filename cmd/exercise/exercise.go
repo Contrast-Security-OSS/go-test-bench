@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servejschmidt"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common/commontest"
@@ -83,7 +85,11 @@ func (e *exercises) checkFramework(log common.Logger) {
 		if e.standalone {
 			serveswagger.Setup()
 		}
-
+	case "Julienschmidt":
+		if e.standalone {
+			servejschmidt.RegisterRoutes()
+			e.rmap = common.PopulateRouteMap(common.AllRoutes)
+		}
 	case "":
 		log.Fatalf("failed to determine application framework: no %q header", hdrname)
 	default:

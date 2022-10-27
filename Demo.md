@@ -43,6 +43,7 @@ The Go Test Bench supports the following frameworks:
 
 * std (standard library `net/http`)
 * [gin](https://github.com/gin-gonic/gin)
+* [julienschmidt](https://github.com/julienschmidt/httprouter)
 
 If no framework is specified, the standard library is used.
 

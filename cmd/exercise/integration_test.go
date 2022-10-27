@@ -1,15 +1,17 @@
 package main
 
 import (
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd"
-	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servejschmidt"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 )
 
 func TestExerciseIntegration(t *testing.T) {
@@ -36,6 +38,11 @@ func TestExerciseIntegration(t *testing.T) {
 				server, _ := serveswagger.Setup()
 
 				return server.GetHandler()
+			},
+		},
+		"Julienschmidt": {
+			setup: func(_ *testing.T) http.Handler {
+				return servejschmidt.Setup()
 			},
 		},
 	}
