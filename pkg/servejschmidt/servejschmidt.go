@@ -91,17 +91,18 @@ func add(router *httprouter.Router, rt common.Route) {
 
 	// Julienshmidt only allows one request method for each route,
 	// so each input method has to be a separate route.
-
-	router.GET(rt.Base+"/:sink/query/*elems", newHandler(rt))
-	router.GET(rt.Base+"/:sink/buffered-query/*elems", newHandler(rt))
-	router.GET(rt.Base+"/:sink/headers/*elems", newHandler(rt))
-	router.GET(rt.Base+"/:sink/headers-json/*elems", newHandler(rt))
-	router.GET(rt.Base+"/:sink/params/*elems", newHandler(rt))
-	router.GET(rt.Base+"/:sink/response/*elems", newHandler(rt))
-
-	router.POST(rt.Base+"/:sink/body/*elems", newHandler(rt))
-	router.POST(rt.Base+"/:sink/buffered-body/*elems", newHandler(rt))
-	router.POST(rt.Base+"/:sink/cookies/*elems", newHandler(rt))
+	postInputs := map[string]struct{}{ // These input types use a POST request instead of GET
+		"body":          {},
+		"buffered-body": {},
+		"cookies":       {},
+	}
+	for _, input := range rt.Inputs {
+		if _, ok := postInputs[input]; ok {
+			router.POST(rt.Base+"/:sink/"+input+"/*elems", newHandler(rt))
+		} else {
+			router.GET(rt.Base+"/:sink/"+input+"/*elems", newHandler(rt))
+		}
+	}
 
 }
 
