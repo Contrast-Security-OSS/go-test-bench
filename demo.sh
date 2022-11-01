@@ -29,6 +29,9 @@ elif [[ "$1" == "update" ]] ; then
 elif [[ "$1" == "gin" ]]; then
     echo "Starting Go Demo Container for Gin framework"
     docker-compose -f docker-compose.demo.yml up gin
+elif [[ "$1" == "julienschmidt" ]]; then
+    echo "Starting Go Demo Container for Julienschmidt/httprouter framework"
+    docker-compose -f docker-compose.demo.yml up julienschmidt
 else
     echo "Starting Go Demo Container for standard library"
     docker-compose -f docker-compose.demo.yml up std

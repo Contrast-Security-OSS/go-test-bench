@@ -29,7 +29,7 @@ security professionals. Any maintainers are welcome to make pull requests.
     ./app
 ```
 
-To run with gin instead, substitute `gin` for `std` in the build command; likewise for `go-swagger`.
+To run with gin instead, substitute `gin` for `std` in the build command; likewise for `go-swagger` and `julienschmidt`.
 
 View app at [http://localhost:8080](http://localhost:8080)
 
@@ -40,6 +40,8 @@ View app at [http://localhost:8080](http://localhost:8080)
     docker-compose up std -d
     # Alternative: To stand up application with Gin framework
     # docker-compose up gin -d
+    # To stand up application with Julienschmidt/httprouter:
+    # docker-compose up julienschmidt -d
 
     # To stop app container and related service containers
     docker-compose down
