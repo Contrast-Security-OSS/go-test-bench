@@ -162,7 +162,6 @@ func Setup() *httprouter.Router {
 	})
 
 	for _, r := range common.AllRoutes {
-		// router.GET(r.Base+"/*elems", newHandler(r))
 		add(router, r)
 	}
 
