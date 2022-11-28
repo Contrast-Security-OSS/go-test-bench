@@ -1,4 +1,5 @@
-FROM golang:1.17 AS builder
+ARG GO_VERSION=latest
+FROM golang:${GO_VERSION} AS builder
 ARG FRAMEWORK=std
 
 WORKDIR /build
@@ -8,14 +9,9 @@ COPY . .
 RUN apt-get update
 RUN apt-get install -y gnupg2 ca-certificates curl software-properties-common
 
-# Add the contrast public key
-ADD https://pkg.contrastsecurity.com/api/gpg/key/public ./publickey
-RUN apt-key add ./publickey
-RUN add-apt-repository "deb https://pkg.contrastsecurity.com/debian-public/ focal contrast"
-
-# Install contrast-go
-RUN apt-get update
-RUN apt-get install -y contrast-go
+# Install contrast-go via contrast-go-installer
+ARG CONTRAST_GO_VERSION=latest
+RUN go run github.com/contrast-security-oss/contrast-go-installer@latest $CONTRAST_GO_VERSION
 
 # Fetch dependencies.
 RUN go mod download
@@ -38,6 +34,7 @@ COPY --from=builder /build/views ./views
 COPY --from=builder /build/public ./public
 COPY --from=builder /build/app ./app
 COPY --from=builder /build/fakepasswd /etc/passwd
+COPY --from=builder /etc/ssl/certs /etc/ssl/certs
 
 # Execute the testbench agent
 ENTRYPOINT ["./app", "-addr=:8080"]

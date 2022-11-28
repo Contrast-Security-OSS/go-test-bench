@@ -1,21 +1,12 @@
 version: '3.8'
 services:
-  svc:
-    container_name: contrastservice
-    hostname: contrastservice
-    image: ghcr.io/contrast-security-inc/contrast-service:latest
-    env_file:
-      - demo.env
-    volumes:
-      - .:/etc/contrast:ro
-    networks:
-      - extbridge
   std:
-    depends_on:
-      - svc
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile.agent
+      args:
+        GO_VERSION: 1.19
     ports:
       - 8080:8080
     env_file:
@@ -25,13 +16,13 @@ services:
     networks:
       - extbridge
   gin:
-    depends_on:
-      - svc
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile.agent
       args:
         FRAMEWORK: gin
+        GO_VERSION: 1.19
     ports:
       - 8080:8080
     env_file:
@@ -41,13 +32,13 @@ services:
     networks:
       - extbridge
   julienschmidt:
-    depends_on:
-      - svc
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile.agent
       args:
         FRAMEWORK: julienschmidt
+        GO_VERSION: 1.19
     ports:
       - 8080:8080
     env_file:
