@@ -88,8 +88,6 @@ func add(router chi.Router, rt common.Route) {
 		}
 	})
 
-	// Julienshmidt only allows one request method for each route,
-	// so each input method has to be a separate route.
 	postInputs := map[string]struct{}{ // These input types use a POST request instead of GET
 		"body":          {},
 		"buffered-body": {},
