@@ -74,6 +74,18 @@ func add(router chi.Router, rt common.Route) {
 			}
 		}
 	}
+	// requests to main page without trailing slash are redirected
+	// with trailing slash included to mimic behavior of other frameworks
+	router.Get(rt.Base, func(w http.ResponseWriter, r *http.Request) {
+		var path string
+		if r.URL.RawQuery != "" {
+			path = fmt.Sprintf("%s?%s", rt.Base+"/", r.URL.RawQuery)
+		} else {
+			path = rt.Base + "/"
+		}
+		redirectURL := fmt.Sprintf("//%s%s", r.Host, path)
+		http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
+	})
 	// main page
 	router.Get(rt.Base+"/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println(rt.Name, r.URL.Path)
@@ -159,7 +171,6 @@ func Setup() chi.Router {
 			log.Print(err.Error())
 		}
 	})
-
 	for _, r := range common.AllRoutes {
 		add(router, r)
 	}
