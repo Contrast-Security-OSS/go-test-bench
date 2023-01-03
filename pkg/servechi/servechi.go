@@ -20,7 +20,7 @@ import (
 // Pd is unchanging parameter data shared between all routes.
 var Pd = common.ConstParams{
 	Year:      2022,
-	Logo:      "https://blog.golang.org/gopher/header.jpg",
+	Logo:      "https://cdn.jsdelivr.net/gh/go-chi/chi@master/_examples/chi.svg",
 	Framework: "Chi",
 }
 
@@ -153,7 +153,7 @@ func Setup() chi.Router {
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		t := common.Templates["index.gohtml"]
-		w.Header().Set("Application-Framework", "Julienschmidt")
+		w.Header().Set("Application-Framework", "Chi")
 		err := t.ExecuteTemplate(w, "layout.gohtml", Pd)
 		if err != nil {
 			log.Print(err.Error())
