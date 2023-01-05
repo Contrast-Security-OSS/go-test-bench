@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/gin-contrib/multitemplate v0.0.0-20210428235909-8a2f6dd269a0
 	github.com/gin-gonic/gin v1.7.4
+	github.com/go-chi/chi v1.5.4
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/loads v0.21.1
 	github.com/go-openapi/runtime v0.23.3

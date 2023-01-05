@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servechi"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servejschmidt"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/serveswagger"
 
@@ -88,6 +89,11 @@ func (e *exercises) checkFramework(log common.Logger) {
 	case "Julienschmidt":
 		if e.standalone {
 			servejschmidt.RegisterRoutes()
+			e.rmap = common.PopulateRouteMap(common.AllRoutes)
+		}
+	case "Chi":
+		if e.standalone {
+			servechi.RegisterRoutes()
 			e.rmap = common.PopulateRouteMap(common.AllRoutes)
 		}
 	case "":

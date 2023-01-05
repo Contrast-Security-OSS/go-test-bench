@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servechi"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servegin"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servejschmidt"
 	"github.com/Contrast-Security-OSS/go-test-bench/pkg/servestd"
@@ -43,6 +44,11 @@ func TestExerciseIntegration(t *testing.T) {
 		"Julienschmidt": {
 			setup: func(_ *testing.T) http.Handler {
 				return servejschmidt.Setup()
+			},
+		},
+		"Chi": {
+			setup: func(_ *testing.T) http.Handler {
+				return servechi.Setup()
 			},
 		},
 	}
