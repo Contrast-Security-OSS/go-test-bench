@@ -1,8 +1,12 @@
 package xss
 
 import (
-	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"log"
+	"net/http"
 	"net/url"
+
+	"github.com/Contrast-Security-OSS/go-test-bench/internal/common"
+	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes is to be called to add the routes in this package to common.AllRoutes.
@@ -11,7 +15,12 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 		{
 			Name:     "reflectedXss",
 			Sanitize: url.PathEscape,
-			VulnerableFnWrapper: func(_ interface{}, payload string) (data string, raw bool, err error) {
+			VulnerableFnWrapper: func(opaque interface{}, payload string) (data string, raw bool, err error) {
+				c, ok := opaque.(*gin.Context)
+				if !ok {
+					log.Fatalf("'opaque': want *gin.Context, got %T", opaque)
+				}
+				c.Data(http.StatusOK, "text/html", []byte(payload))
 				return payload, true, nil
 			},
 			RawMime: "text/html",
