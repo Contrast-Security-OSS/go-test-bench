@@ -1,40 +1,27 @@
 ARG GO_VERSION=latest
 FROM golang:${GO_VERSION} AS builder
-ARG FRAMEWORK=std
 
 WORKDIR /build
+
 COPY . .
 
-# Install the necessary ubuntu dependencies
-RUN apt-get update
-RUN apt-get install -y gnupg2 ca-certificates curl software-properties-common
+# Install contrast-go
+RUN go run github.com/contrast-security-oss/contrast-go-installer@latest latest
 
-# Install contrast-go via contrast-go-installer
-ARG CONTRAST_GO_VERSION=latest
-RUN go run github.com/contrast-security-oss/contrast-go-installer@latest $CONTRAST_GO_VERSION
+# Build the app with contrast-go
+ARG FRAMEWORK=std
+RUN CGO_ENABLED=0 contrast-go build -o go-test-bench ./cmd/${FRAMEWORK}
 
-# Fetch dependencies.
-RUN go mod download
-
-# Build the binary
-RUN contrast-go build \
-    -ldflags='-w -s -extldflags "-static"' \
-    -o app \
-    ./cmd/${FRAMEWORK}
-
-# Create /etc/passwd to help showcase path traversal vulnerability.
-RUN echo "root:x:0:0:root:/root:/bin/bash" >> ./fakepasswd && \
-    echo "catty:x:42:42:boh:/etc/contrastsecurity:/bin/bash" >> ./fakepasswd
-
-# Move the finished build to a scratch container
-FROM scratch
-
-# Copy the testbench to the new scratch container
+# Move the finished build to a more minimal container
+FROM alpine:latest
 COPY --from=builder /build/views ./views
 COPY --from=builder /build/public ./public
-COPY --from=builder /build/app ./app
-COPY --from=builder /build/fakepasswd /etc/passwd
-COPY --from=builder /etc/ssl/certs /etc/ssl/certs
+COPY --from=builder /build/go-test-bench ./go-test-bench
 
-# Execute the testbench agent
-ENTRYPOINT ["./app", "-addr=:8080"]
+# Copy over the Contrast configuration file. All configuration can be done with
+# environment variables as well. See our docs for more details:
+#
+# https://docs.contrastsecurity.com/en/go-configuration.html
+COPY ./contrast_security.yaml .
+
+ENTRYPOINT ["./go-test-bench", "-addr=:8080"]
