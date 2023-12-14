@@ -32,7 +32,7 @@ func RegisterRoutes(frameworkSinks ...*common.Sink) {
 		Products: []string{"Assess", "Protect"},
 		Inputs:   []string{"query", "cookies"},
 		Sinks:    sinks,
-		Payload:  "hello there! && echo hack hack hack",
+		Payload:  "echo hello there! && echo hack hack hack",
 	})
 }
 
