@@ -5,13 +5,16 @@
 [![GoDoc](https://godoc.org/github.com/Contrast-Security-OSS/go-test-bench?status.svg)](https://pkg.go.dev/github.com/Contrast-Security-OSS/go-test-bench)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Intentionally vulnerable go app. Used Go's standard library, `net/http`,
-for client/server implementations. For more info on this framework, visit
-[net/http](https://golang.org/pkg/net/http/).
+An intentionally vulnerable go app, now available in these refreshing flavors:
+* `cmd/std` uses Go's standard library, [`net/http`](https://golang.org/pkg/net/http/).
+* `cmd/gin` uses [github.com/gin-gonic/gin](https://github.com/gin-gonic/gin)
+* `cmd/chi` uses [github.com/go-chi/chi](https://github.com/go-chi/chi)
+* `cmd/go-swagger` uses [github.com/go-openapi](https://github.com/go-openapi).
+* `cmd/julienschmidt` uses [github.com/julienschmidt/httprouter](https://github.com/julienschmidt/httprouter)
 
 The go-test-bench application includes vulnerabilities from the OWASP Top
 10 and is intended to be used as an educational tool for developers and
-security professionals. Any maintainers are welcome to make pull requests.
+security professionals. PRs welcome!
 
 > For customer demonstrations [click here to follow the Demo.md readme](./Demo.md).
 
@@ -23,15 +26,19 @@ security professionals. Any maintainers are welcome to make pull requests.
 
 ## How to Run Locally
 
-* standard library
+To run with the standard library,
 ```bash
     go build -o app ./cmd/std
     ./app
 ```
 
-To run with gin instead, substitute `gin` for `std` in the build command; likewise for `go-swagger` and `julienschmidt`.
+To run with gin instead, substitute `gin` for `std` in the build command,
+and likewise for `chi`, `go-swagger`, or `julienschmidt`.
 
-View app at [http://localhost:8080](http://localhost:8080)
+The app can be viewed in your browser at [http://localhost:8080](http://localhost:8080)
+
+Note that the app loads resources from subdirs, so you _will_ need to run from
+the dir this README.md is in.
 
 ## How to Run Using Docker
 
@@ -62,14 +69,19 @@ The development [team](docs/acknowledgements.md).
   * exception: vulnerable functions from a particular framework (see below)
 * framework-specific code is located under `cmd/` and `pkg/`
 * html templates and css are under `views/`
-* vulnerability and route data is in go structs, 
+* vulnerability and route data is in go structs,
   located in the relevant package under `internal/`
 
 ### quirks
 
-Each framework is different. We've tried to separate framework logic from vulnerability logic so that adding a framework necessitates a minimum of changes to vulnerability logic, and vice versa.
+Each framework is different. We've tried to separate framework logic from
+vulnerability logic so that adding a framework necessitates a minimum of
+changes to vulnerability logic, and vice versa.
 
 #### swagger
-Swagger is a bit unique, in that it has a lot of generated code and requires a swagger spec. To maintain a single source of truth, we generate the swagger spec from our route data. We also generate boilerplate tying a route handler to each swagger endpoint.
+Swagger is a bit unique, in that it has a lot of generated code and requires a
+swagger spec. To maintain a single source of truth, we generate the swagger
+spec from our route data. We also generate boilerplate tying a route handler to
+each swagger endpoint.
 
 For details, see [cmd/go-swagger/README.md](cmd/go-swagger/README.md)
