@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@6c1fd22b67f7a7c42ad9a45c0f4197434035e429 # v5
         with:
           go-version: "1.23"
       - name: Run gofmt
@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@6c1fd22b67f7a7c42ad9a45c0f4197434035e429 # v5
         with:
           go-version: "1.23"
       - name: Test
@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@6c1fd22b67f7a7c42ad9a45c0f4197434035e429 # v5
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
