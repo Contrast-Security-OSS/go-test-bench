@@ -27,9 +27,16 @@ Move into the go-test-bench directory.
 
 `cd go-test-bench`
 
-## Step 3 - Copy contrast_security.yaml to the go-test-bench directory
+## Step 3 - Download contrast_security.yaml to the go-test-bench directory
 
-Download your configuration YAML file from the Contrast environment by selecting the "Add agent" button.
+To download your configuration YAML file from the Contrast environment, select "Add new" at the top right.
+Select "Application". Select "Go" for your language, and select your operating system. Click "Install manually",
+and choose "Direct download" for your installation method. Scroll down to "Configure the agent" >
+"Use Connection Token" > "Use configuration editor".
+
+In the configuration edtor, click "Export" in the top right. Click YAML > "Download".
+
+To move the yaml file to the go-test-bench directory, run
 
 `cp /path/to/config/contrast_security.yaml .`
 
@@ -44,6 +51,8 @@ The Go Test Bench supports the following frameworks:
 * std (standard library `net/http`)
 * [gin](https://github.com/gin-gonic/gin)
 * [julienschmidt](https://github.com/julienschmidt/httprouter)
+* [chi](https://github.com/go-chi/chi)
+* [go-swagger](https://github.com/go-swagger/go-swagger)
 
 If no framework is specified, the standard library is used.
 
@@ -55,32 +64,8 @@ If no framework is specified, the standard library is used.
 
 ---
 
-## Maintaining your DEMO Environment
-
-### Updating
-
-To ensure an updated environment for demonstrations execute the following command from the go-test-bench directory.
-
-```bash
-./demo.sh update
-```
-
-### Resetting your DEMO environment
-
-To ensure a clean and updated environment for demonstrations execute the following command from the go-test-bench directory.
-
-```bash
-./demo.sh reset
-```
-
-This will re-build your test bench with the most recent copies of the go-agent, contrast-service and test bench.
-
 ## Troubleshooting
 
 ### I updated my config but nothing changed
 
-If you've updated your config locally you will need to reset your environment using the following command from your go-test-bench directory.
-
-```bash
-./demo.sh reset
-```
+If you've updated your config locally you will need to rebuild the image by running `./demo.sh` again.
