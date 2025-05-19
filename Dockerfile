@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.21
+ARG GO_VERSION=latest
 FROM golang:${GO_VERSION} AS builder
 
 WORKDIR /build

@@ -43,18 +43,14 @@ the dir this README.md is in.
 ## How to Run Using Docker
 
 ```bash
-    # To stand up application with standard library
-    docker-compose up std -d
-    # Alternative: To stand up application with Gin framework
-    # docker-compose up gin -d
-    # To stand up application with Julienschmidt/httprouter:
-    # docker-compose up julienschmidt -d
-
-    # To stop app container and related service containers
-    docker-compose down
+    docker build -t image-name .
+    docker run -p 8080:8080 image-name
 ```
 
-View app at [http://0.0.0.0:8080](http://0.0.0.0:8080)
+To run with gin instead, pass in `--build-args FRAMEWORK=gin` in the build command,
+and likewise for `chi`, `go-swagger`, or `julienschmidt`.
+
+View app at [http://localhost:8080](http://localhost:8080)
 
 ## Acknowledgements
 

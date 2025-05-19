@@ -1,38 +1,18 @@
 #!/bin/bash
 
-function clean() {
-    echo "Stopping Go Demo Containers"
-    docker-compose -f docker-compose.demo.yml stop
-
-    echo "Removing Go Demo Containers"
-    docker-compose -f docker-compose.demo.yml rm
-}
-
-function rebuild() {
-    echo "Re-Building Go Demo Environment"
-    docker-compose -f docker-compose.demo.yml build --no-cache
-}
-
-if [[ "$1" == "reset" ]]
-then
-    clean
-    rebuild
-elif [[ "$1" == "update" ]] ; then
-    
-    clean
-
-    echo "Updating Go Test Bench"
-    git stash
-    git pull origin
-
-    rebuild
-elif [[ "$1" == "gin" ]]; then
+if [[ "$1" == "gin" ]]; then
     echo "Starting Go Demo Container for Gin framework"
-    docker-compose -f docker-compose.demo.yml up gin
 elif [[ "$1" == "julienschmidt" ]]; then
     echo "Starting Go Demo Container for Julienschmidt/httprouter framework"
-    docker-compose -f docker-compose.demo.yml up julienschmidt
+elif [[ "$1" == "go-swagger" ]]; then
+    echo "Starting Go Demo Container for Swagger framework"
+elif [[ "$1" == "chi" ]]; then
+    echo "Starting Go Demo Container for Chi v5 framework"
 else
     echo "Starting Go Demo Container for standard library"
-    docker-compose -f docker-compose.demo.yml up std
+    docker build -f Dockerfile.agent -t contrast-go-demo .
+    docker run -p 8080:8080 contrast-go-demo
+    exit 0
 fi
+docker build --build-arg FRAMEWORK=$1 -f Dockerfile.agent -t contrast-go-demo .
+docker run -p 8080:8080 contrast-go-demo
