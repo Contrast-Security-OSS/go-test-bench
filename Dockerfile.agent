@@ -1,3 +1,7 @@
+# Contrast supports the two most recently released Go major versions.
+# See our docs for more details:
+#
+# https://docs.contrastsecurity.com/en/go-supported-technologies.html
 ARG GO_VERSION=latest
 FROM golang:${GO_VERSION} AS builder
 
